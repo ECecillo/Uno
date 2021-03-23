@@ -1,13 +1,6 @@
 #ifndef CARTE_H
 #define CARTE_H
 
-#include <string>
-#include <set>
-
-using namespace std;
-
-const set <string> ValeursCartes = {"0","1","2","3","4","5","6","7","8","9","inverse","passe","+2","joker","super joker"};
-const set <string> CouleursCartes = {"rouge","bleu","vert","jaune"};
 
 
 /**
@@ -18,7 +11,8 @@ const set <string> CouleursCartes = {"rouge","bleu","vert","jaune"};
 class Carte
 {
 private:
-		string valeur,couleur;
+		unsigned int valeur;	// entre 0 et 14 (10 inverse, 11 passe, 12 +2, 13 +4, 14 jocker)
+		unsigned int couleur;	// entre 1 et 4 (1 rouge, 2 vert, 3 bleu, 4 jaune)
 
 	 
 
@@ -36,10 +30,10 @@ public:
 		* Constructeur avec valeur et couleur.
 		* 
 		* @param 
-		* [in] string valeur
-		* [in] string couleur
+		* [in] valeur entier naturel entre 0 et 14 
+		* [in] couleur entier naturel entre 1 et 4
 		*/
-		Carte(const string v,const string c);
+		Carte(const unsigned int v,const unsigned int c);
 
 		/**
 		* @brief 
@@ -55,7 +49,7 @@ public:
 		* @return
 		* Chaîne de caractères
 		*/
-		string getValeur () const;
+		unsigned int getValeur () const;
 
 		/**
 		* @brief 
@@ -64,7 +58,16 @@ public:
 		* @return
 		* Chaîne de caractères
 		*/
-		string getCouleur () const;
+		unsigned int getCouleur () const;
+
+		/**
+		* @brief 
+		* Opérateur <.
+		* 
+		* @return
+		* Vrai si la couleur et la valeur sont inférieures à celles de la carte passée en paramètre
+		*/
+		bool operator < (const Carte c) const;
 
 
 		
