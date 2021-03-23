@@ -6,27 +6,31 @@ using namespace std;
 
 Carte::Carte () 
 {
-    valeur="";
-    couleur="";
+    valeur=0;
+    couleur=0;
 }
 
-Carte::Carte (const string v, const string c) 
+Carte::Carte (const unsigned int v, const unsigned int c) 
 {
-    assert(CouleursCartes.find(c)!=CouleursCartes.end());
-    assert(ValeursCartes.find(v)!=ValeursCartes.end());
+    assert(v<=14);
+    assert(c>=1 && c<=4);
     valeur = v;
     couleur = c;
 }
 
 Carte::~Carte () {}
 
-string Carte::getValeur () const 
+unsigned int Carte::getValeur () const 
 {
     return valeur;
 }
 
-string Carte::getCouleur () const 
+unsigned int Carte::getCouleur () const 
 {
     return couleur;
 }
 
+bool Carte::operator < (const Carte c) const
+{
+    return couleur<c.couleur| (couleur == c.couleur && valeur<c.valeur);
+}
