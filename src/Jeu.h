@@ -1,70 +1,45 @@
-
+#ifndef _JEU_
 
 class Jeu
 {
 private:
-		unsigned int nombreJoueurs;
-		
-
-	 
+	unsigned int nombreJoueurs;
 
 public:
-		pioche; //pile de Cartes
-		talon; //pile de Cartes
-		joueurs; //tableau de Joueurs
-		sensJeu; //entier
-		couleurActive; //chaine de caractères
-		joueurActif; //lien sur Joueur
-		
+	pioche;		   //pile de Cartes
+	talon;		   //pile de Cartes
+	joueurs;	   //tableau de Joueurs
+	sensJeu;	   //entier
+	couleurActive; //chaine de caractères
+	joueurActif;   //lien sur Joueur
 
+	Jeu();
 
-		
-		Jeu();
+	Jeu(int, int, char[]);
 
+	~Jeu();
 
-		Jeu(entier,entier,tableau de chaines de caractères);
+	void initJeu();
 
-		
-		~Jeu();
+	void afficherJoueurActif();
 
+	bool carteValide(Carte);
 
-		void initJeu();
+	void piocheVide();
 
+	void boucleJeu();
 
-		void afficherJoueurActif();
+	bool testUno();
 
+	void joueUno();
 
-		bool carteValide(Carte);
+	void contreUno();
 
+	void piocherCarte();
 
-		void piocheVide();
+	void poserCarte();
 
-
-		void boucleJeu();
-
-
-		bool testUno();
-
-
-		void joueUno();
-
-
-		void contreUno();
-
-
-
-		void piocherCarte();
-
-
-
-		void poserCarte();
-
-		
-
-		void testRegression();
-
-		
-				
+	void testRegression();
 };
 
 #endif
