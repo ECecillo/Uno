@@ -1,17 +1,68 @@
 #ifndef _JEU_
+#define _JEU_
+
+#include <stack> // Pour les piles.
+#include <queue>
+#include <Joueur.h>
+#include <Terrain.h>
+#include <Carte.h>
+
+using namespace std;
 
 class Jeu
 {
 private:
+public:
+	/**
+	 * @brief 
+	 * Pile du jeux de cartes.
+	 */
+	stack<Carte> pioche;
+
+	/**
+	 * @brief 
+	 * Talon du jeux de cartes sur lequels les joueurs joueront leurs cartes.
+	 * A la fin si on a épuisé la Pioche, on empile ce qu'il y a dans le tas dans la pioche.  
+	 */
+	queue<Carte> talon;
+	
+	/**
+	 * @brief 
+	 * Tableau de Joueurs.
+	 */
+	Joueur *joueurs;
+
+	/**
+	 * @brief 
+	 * Nombre de Joueurs dans la partie.
+	 */
 	unsigned int nombreJoueurs;
 
-public:
-	pioche;		   //pile de Cartes
-	talon;		   //pile de Cartes
-	joueurs;	   //tableau de Joueurs
-	sensJeu;	   //entier
-	couleurActive; //chaine de caractères
-	joueurActif;   //lien sur Joueur
+	/**
+	 * @brief 
+	 * 0 ou 1 :
+	 * 0 on joue vers la droite.
+	 * 1 on joue vers la gauche.
+	 */
+	unsigned int sensJeu;
+	
+	/**
+	 * @brief 
+	 * Entier [1....4] :
+	 * 1.Rouge.
+	 * 2.Vert.
+	 * 3.Bleu. 
+	 * 4.Jaune.
+	 */
+	//unsigned int couleurActive; On va plutot utiliser les infos que l'on range dans le talon, on accèdera aux infos grâce à back() pour la file.
+
+	/**
+	 * @brief 
+	 * Numéro du joueur qui est en train de jouer.
+	 */
+	int joueurActif;
+
+	// ==============================================================================================================
 
 	Jeu();
 
@@ -20,6 +71,8 @@ public:
 	~Jeu();
 
 	void initJeu();
+
+	void initCarte(); // Initialise la pioche.
 
 	void afficherJoueurActif();
 
@@ -38,6 +91,13 @@ public:
 	void piocherCarte();
 
 	void poserCarte();
+
+	/**
+	 * @brief 
+	 * Affiche un message et fais en sorte que numéro joueur puisse joueur.
+	 * @return int 
+	 */
+	int quiJoue();
 
 	void testRegression();
 };

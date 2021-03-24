@@ -3,8 +3,8 @@
 class Carte
 {
 private:
-		string valeur;
-		string couleur;
+		int valeur;
+		int couleur;
 
 	 
 
