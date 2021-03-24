@@ -30,7 +30,7 @@ unsigned int Carte::getCouleur () const
     return couleur;
 }
 
-bool Carte::operator < (const Carte c) const
+bool Carte::operator < (const Carte & c) const
 {
-    return couleur<c.couleur| (couleur == c.couleur && valeur<c.valeur);
+    return (couleur<c.couleur) || (couleur == c.couleur && valeur<c.valeur);
 }
