@@ -47,7 +47,7 @@ public:
 		* Accesseur: récupère la valeur de la carte.
 		* 
 		* @return
-		* Chaîne de caractères
+		* Entier naturel (10 pour inverse, 11 pour passe, 12 pour +2, 13 pour +4, 14 pour jocker)
 		*/
 		unsigned int getValeur () const;
 
@@ -56,18 +56,19 @@ public:
 		* Accesseur: récupère la couleur de la carte.
 		* 
 		* @return
-		* Chaîne de caractères
+		* Entier naturel (1 pour rouge, 2 pour vert, 3 pour bleu, 4 pour jaune)
 		*/
 		unsigned int getCouleur () const;
 
+		
 		/**
 		* @brief 
 		* Opérateur <.
 		* 
 		* @return
-		* Vrai si la couleur et la valeur sont inférieures à celles de la carte passée en paramètre
+		* Vrai si la couleur est inférieure à celle de la carte passée en paramètre ou si les couleurs sont identiques et la valeur est inférieure à celle de la carte passée en paramètre
 		*/
-		bool operator < (const Carte c) const;
+		bool operator < (const Carte & c) const;
 
 
 		
