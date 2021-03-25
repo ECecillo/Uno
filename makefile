@@ -1,4 +1,4 @@
-CORE = main.cpp Jeu.cpp Carte.cpp # Pacman.cpp core/Terrain.cpp core/Jeu.cpp core/Fantome.cpp
+CORE = main.cpp Jeu.cpp Carte.cpp Joueur.cpp # Pacman.cpp core/Terrain.cpp core/Jeu.cpp core/Fantome.cpp
 
 SRCS_TXT = $(CORE) #txt/txtJeu.cpp txt/winTxt.cpp txt/main_txt.cpp
 FINAL_TARGET_TXT = uno_txt

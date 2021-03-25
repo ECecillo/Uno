@@ -30,7 +30,7 @@ public:
 	 * @brief 
 	 * Tableau de Joueurs.
 	 */
-	//Joueur *joueurs;
+	Joueur *joueurs;
 
 	/**
 	 * @brief 
@@ -78,14 +78,7 @@ public:
 	 */
 	void initCarte();
 
-	/**
-	 * @brief 
-	 * 
-	 * @param v 
-	 * @return true : on a encore 
-	 * @return false 
-	 */
-	bool chercheValeurZero(vector<vector<int>> v);
+	void initTalon();
 
 	void afficherJoueurActif();
 
