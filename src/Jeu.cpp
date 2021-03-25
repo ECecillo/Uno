@@ -31,37 +31,47 @@ Jeu::Jeu()
     finPartie = false;
 }
 
-Jeu::Jeu(const vector<Joueur> &joueur, const vector<bool> variante)
+Jeu::Jeu(const vector<Joueur> &joueur, const vector<bool> variante, const unsigned int nbIA)
 {
     initCarte();
     nombreJoueurs = joueur.size();
+    //nombreIA = nbIA;
 
     default_random_engine re(time(0));
     uniform_int_distribution<int> distrib{1, nombreJoueurs};
-    
+
     joueurActif = distrib(re); // On génère un numéro de joueur aléatoire pour le début de la partie.
 
-    sensJeu = 1; // On tournera à gauche.
+    sensJeu = 1;      // On tournera à gauche.
     distribueCarte(); // On donne les cartes au joueurs
-    initTalon(); // On initialise le Talon.
-
+    initTalon();      // On initialise le Talon.
 }
 
-void Jeu::distribueCarte () {
-    for(int i = 0; i < nombreJoueurs; i++) {
-        for(int j = 0; j < 7; j++) {
+void Jeu::distribueCarte()
+{
+    for (int i = 0; i < nombreJoueurs; i++)
+    {
+        for (int j = 0; j < 7; j++)
+        {
             joueurs[i].main[j] = pioche.top();
             pioche.pop();
         }
     }
 }
 
-bool Jeu::carteValide(const Carte c) const { 
-    
-    if(c.getValeur() == talon.front() || c.getCouleur() == talon.front())
-
+bool Jeu::carteValide(const Carte c) const
+{
+    return c == talon.front(); // On compare la carte que l'on a passé en paramètre à celle qui est actuelement retourné sur le talon.
 }
 
+void Jeu::piocherCarte()
+{
+    joueurs[joueurActif].main.push_back(pioche.top());
+}
+
+void Jeu::poserCarte() {
+    //talon.push();
+}
 
 void Jeu::initCarte()
 {
