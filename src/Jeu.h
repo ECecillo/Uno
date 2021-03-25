@@ -84,7 +84,7 @@ public:
 	 * @param joueur 
 	 * @param variante 
 	 */
-	Jeu(const vector<Joueur> &joueur, const vector<bool> variante);
+	Jeu(const vector<Joueur> &joueur, const vector<bool> variante, const unsigned int nbIA);
 
 	~Jeu();
 
@@ -108,6 +108,11 @@ public:
 	 */
 	void distribueCarte();
 
+
+	/**
+	 * @brief 
+	 * 
+	 */
 	void afficherJoueurActif();
 
 	/**
@@ -134,14 +139,38 @@ public:
 
 	void boucleJeu();
 
+	/**
+	 * @brief 
+	 * 
+	 * @return true : Il ne reste que 1 seul carte au joueur, on peut afficher un message pour faire un uno. 
+	 * @return false : Le joueur ne peut pas encore "dire" UNO. 
+	 */
 	bool testUno();
 
+	/**
+	 * @brief 
+	 * Le joueur a cliqué avant sur le bouton UNO,
+	 * on termine le tour et les autres joueurs ne peuvent plus dire contre Uno.
+	 */
 	void joueUno();
 
+	/**
+	 * @brief 
+	 * Les joueurs ont cliqués sur CONTRE UNO avant le joueur concerné,
+	 * le joueur qui n'a pas appuyé doit donc piocher 2 cartes et le tour se termine.
+	 */
 	void contreUno();
 
+	/**
+	 * @brief 
+	 * On met dans la main du joueur une carte provenant de la pioche.
+	 */
 	void piocherCarte();
 
+	/**
+	 * @brief 
+	 * Le joueur met une carte dans le Talon et on enlève la carte posé de la main du joueur.
+	 */
 	void poserCarte();
 
 	/**
