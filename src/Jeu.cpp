@@ -4,22 +4,23 @@
 #include <algorithm>
 #include <string.h>
 #include <vector>
-#include <time.h>
 #include <Jeu.h>
 #include <unistd.h>
+#include <random>
+#include <chrono>
 
 using namespace std;
 
 Jeu::~Jeu()
 {
 
-    //delete[] joueurs;
-    //joueurs = NULL;
+    delete[] joueurs;
+    joueurs = NULL;
 }
 
 Jeu::Jeu()
 {
-    //joueurs = NULL;
+    joueurs = NULL;
     nombreJoueurs = 0;
     sensJeu = 1;
 
@@ -28,41 +29,12 @@ Jeu::Jeu()
 
 void Jeu::initJeu()
 {
+    initCarte();
+    initTalon();
 }
-
-/* bool chercheValeurZero (vector<vector<int>> vec) {
-    for(auto& v: vec) {
-        // On cherche si dans le vecteur on a encore un 0, si on en a 1 en cherchant alors vecteur pas encore complétement à 0.
-        return find(v.begin(), v.end(), 0) != v.end(); 
-    }
-}
- */
 
 void Jeu::initCarte()
 {
-    /* vector<vector<int>> jeuCarte(15, vector<int>(4)); // Créer un vecteur [14][4]
-
-    // Version avec une boucle for
-    unsigned int i, j = 0;
-    // Génère le tableau d'occurence
-    for (i = 0; i < 15; i++)
-    {
-        for (j = 0; j < 4; j++)
-        {
-            if (i == 13 || i == 14)
-            {
-                // 12 : carte +4,
-                // 13 : changement de couleur.
-                cout << "Contenu tableau jeuCarte[" << i << "][" << j << "] : " << jeuCarte[i][j] << endl;
-                jeuCarte[i][j] = 1;
-            }
-            else
-            {
-                jeuCarte[i][j] = 2;
-                cout << "Contenu tableau jeuCarte[" << i << "][" << j << "] : " << jeuCarte[i][j] << endl;
-            }
-        }
-    } */
     unsigned int i, j = 0;
 
     vector<Carte> jeuCarte;
@@ -92,54 +64,32 @@ void Jeu::initCarte()
         }
     }
 
-    // vecteur jeuCarte[109].
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(jeuCarte.begin(), jeuCarte.end(), std::default_random_engine(seed));
 
-    srand(time(NULL));
-
-    Carte tmp;
-    vector<int> indiceChoisis;
-    unsigned int k = 0;
-    int n = 0;
+    unsigned int l = 0;
     do
     {
-        i = rand() % (108 - k);
-        if (find(indiceChoisis.begin(), indiceChoisis.end(), i) != indiceChoisis.end())
-        {
-            // TODO : faire un tableau dans lequelle on met des nombres aléatoire entre 0 et 108.
-            //cout << i << endl;
-            n++;
-            cout << n << endl;
+        pioche.push(jeuCarte[l]);
+        l++;
+    } while (l < jeuCarte.size());
+}
 
-            continue;
-        }
-        indiceChoisis.push_back(i);
-        //tmp = jeuCarte[i];
 
-        //jeuCarte[i] = jeuCarte[k]; // A supprimer ?
-        pioche.push(jeuCarte[i]);
-        k++;
-        // ensuite on échange la carte i avec la carte K
-    } while (k <= 108);
-    /* do
-    {
-        i = rand() % 14 + 1;
-        j = rand() % 4 + 1;
+void Jeu::initTalon() {
+    
+    talon.push(pioche.top()); // Carte mis dans la talon, celle sur laquelle on va jouer.
+    pioche.pop(); // Elle dans la file, on la supprime de la pile.
+}
 
-        if (jeuCarte[i][j] == 0)
-        {
-            cmpt++;
-            continue;
-        }
-        //pioche.push(Carte(i, j));
-
-        jeuCarte[i][j] -= 1;
-
-    } while (cmpt != 56); */
+void Jeu::piocheVide() {
+    
 }
 
 void Jeu::testRegression()
 {
 
+    // On regarde ce que l'on met dans la pile pour vérifier que l'initialisation se fait correctement.
     if (pioche.empty())
     {
         cout << "La pioche est vide il y a un problème dans l'initialisation des cartes." << endl;
