@@ -1,8 +1,6 @@
 #include "Joueur.h"
 #include <iostream>
 #include <cassert>
-#include <vector>
-#include <iterator>
 
 using namespace std;
 
