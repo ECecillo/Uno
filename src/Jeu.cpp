@@ -82,7 +82,11 @@ void Jeu::initTalon() {
     pioche.pop(); // Elle dans la file, on la supprime de la pile.
 }
 
-void Jeu::piocheVide() {
+bool Jeu::piocheVide() { // Dis si la pioche est vide ou non.
+    return pioche.empty() == true;
+}
+
+void Jeu::relancePiocheJeu() {
     
 }
 

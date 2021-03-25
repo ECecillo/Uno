@@ -78,13 +78,29 @@ public:
 	 */
 	void initCarte();
 
+	/**
+	 * @brief 
+	 * Initialise le Talon à partir de la pioche.
+	 */
 	void initTalon();
 
 	void afficherJoueurActif();
 
 	bool carteValide(Carte);
 
-	void piocheVide();
+	/**
+	 * @brief 
+	 * Vérifie que la pioche est vide.
+	 * @return true : La pioche est vide.
+	 * @return false : la pioche n'est pas vide.
+	 */
+	bool piocheVide(); 
+
+	/**
+	 * @brief 
+	 * Si la pioche est vide et que le jeu n'est pas terminé on réinit la pioche avec Talon.
+	 */
+	void relancePiocheJeu();
 
 	void boucleJeu();
 
