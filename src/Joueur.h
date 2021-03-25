@@ -1,12 +1,15 @@
+#ifndef JOUEUR_H
+#define JOUEUR_H
 
 
+#include <string.h>
+#include <Carte.h>
+#include <iostream>
 class Joueur
 {
 private:
-		string nom;
-		Carte * main; //vector
-
-	 
+		char nom;
+		Carte * main;
 
 public:
 		/**
