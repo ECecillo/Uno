@@ -62,6 +62,11 @@ public:
 	 */
 	int joueurActif;
 
+	/**
+	 * @brief 
+	 * Booleen qui permettra de dire que la Partie est terminé.
+	 */
+	bool finPartie;
 	// ==============================================================================================================
 
 	Jeu();
