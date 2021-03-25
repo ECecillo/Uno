@@ -40,6 +40,12 @@ public:
 
 	/**
 	 * @brief 
+	 * Nombre d'ordinateur dans la partie.
+	 */
+	unsigned int nombreIA;
+
+	/**
+	 * @brief 
 	 * 0 ou 1 :
 	 * 0 on joue vers la droite.
 	 * 1 on joue vers la gauche.
@@ -71,7 +77,14 @@ public:
 
 	Jeu();
 
-	Jeu(int, int, char[]);
+	/**
+	 * @brief Construit un objet Jeu avec un tableau de joueurs en paramètre 
+	 * (où on peut récupérer le nombre de joueurs ...)
+	 * 
+	 * @param joueur 
+	 * @param variante 
+	 */
+	Jeu(const vector<Joueur> &joueur, const vector<bool> variante);
 
 	~Jeu();
 
@@ -89,9 +102,21 @@ public:
 	 */
 	void initTalon();
 
+	/**
+	 * @brief 
+	 * Distribue les 7 cartes nécessaires à chaque joueur au début du jeu.
+	 */
+	void distribueCarte();
+
 	void afficherJoueurActif();
 
-	bool carteValide(Carte);
+	/**
+	 * @brief Vérifie si la carte qui va être posé est valide ou non.
+	 * 
+	 * @return true 
+	 * @return false 
+	 */
+	bool carteValide(const Carte) const;
 
 	/**
 	 * @brief 
