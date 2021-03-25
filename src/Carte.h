@@ -68,6 +68,8 @@ public:
 		*/
 		bool operator < (const Carte c) const;
 
+		bool operator == (const Carte c, const Carte c2) const;
+
 
 		
 				

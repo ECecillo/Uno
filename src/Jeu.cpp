@@ -6,6 +6,7 @@
 #include <vector>
 #include <Jeu.h>
 #include <unistd.h>
+#include <time.h>
 #include <random>
 #include <chrono>
 
@@ -16,6 +17,8 @@ Jeu::~Jeu()
 
     delete[] joueurs;
     joueurs = NULL;
+
+    nombreJoueurs = 0;
 }
 
 Jeu::Jeu()
@@ -25,13 +28,40 @@ Jeu::Jeu()
     sensJeu = 1;
 
     joueurActif = 0;
+    finPartie = false;
 }
 
-void Jeu::initJeu()
+Jeu::Jeu(const vector<Joueur> &joueur, const vector<bool> variante)
 {
     initCarte();
-    initTalon();
+    nombreJoueurs = joueur.size();
+
+    default_random_engine re(time(0));
+    uniform_int_distribution<int> distrib{1, nombreJoueurs};
+    
+    joueurActif = distrib(re); // On génère un numéro de joueur aléatoire pour le début de la partie.
+
+    sensJeu = 1; // On tournera à gauche.
+    distribueCarte(); // On donne les cartes au joueurs
+    initTalon(); // On initialise le Talon.
+
 }
+
+void Jeu::distribueCarte () {
+    for(int i = 0; i < nombreJoueurs; i++) {
+        for(int j = 0; j < 7; j++) {
+            joueurs[i].main[j] = pioche.top();
+            pioche.pop();
+        }
+    }
+}
+
+bool Jeu::carteValide(const Carte c) const { 
+    
+    if(c.getValeur() == talon.front() || c.getCouleur() == talon.front())
+
+}
+
 
 void Jeu::initCarte()
 {
@@ -77,7 +107,6 @@ void Jeu::initCarte()
 
 void Jeu::initTalon()
 {
-
     talon.push(pioche.top()); // Carte mis dans la talon, celle sur laquelle on va jouer.
     pioche.pop();             // Elle dans la file, on la supprime de la pile.
 }
@@ -89,7 +118,7 @@ bool Jeu::piocheVide()
 
 void Jeu::relancePiocheJeu()
 {
-    // Préalablement : on vérifie que la pioche est vide et que le bool finPartie != true (fin de la partie).
+    // Préalablement : on vérifie que la pioche est vide et que le bool fin != true (fin de la partie).
     while (talon.empty() != true)
     {
         // Tant que le talon n'est pas vite on met des cartes.
