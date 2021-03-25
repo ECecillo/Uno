@@ -66,11 +66,9 @@ public:
 		* @return
 		* Vrai si la couleur et la valeur sont inférieures à celles de la carte passée en paramètre
 		*/
-		bool operator < (const Carte c) const;
+		friend bool operator< (const Carte& c, const Carte& c2);
 
-		bool operator == (const Carte c, const Carte c2) const;
-
-
+		friend bool operator== (const Carte& c, const Carte& c2);
 		
 				
 };
