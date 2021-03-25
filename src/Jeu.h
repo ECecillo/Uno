@@ -1,5 +1,5 @@
-#ifndef _JEU_
-#define _JEU_
+#ifndef JEU_H
+#define JEU_H
 
 #include <stack> // Pour les piles.
 #include <queue>
@@ -25,12 +25,12 @@ public:
 	 * A la fin si on a épuisé la Pioche, on empile ce qu'il y a dans le tas dans la pioche.  
 	 */
 	queue<Carte> talon;
-	
+
 	/**
 	 * @brief 
 	 * Tableau de Joueurs.
 	 */
-	Joueur *joueurs;
+	//Joueur *joueurs;
 
 	/**
 	 * @brief 
@@ -45,7 +45,7 @@ public:
 	 * 1 on joue vers la gauche.
 	 */
 	unsigned int sensJeu;
-	
+
 	/**
 	 * @brief 
 	 * Entier [1....4] :
@@ -72,7 +72,20 @@ public:
 
 	void initJeu();
 
-	void initCarte(); // Initialise la pioche.
+	/**
+	 * @brief 
+	 * Initialise la pioche.
+	 */
+	void initCarte();
+
+	/**
+	 * @brief 
+	 * 
+	 * @param v 
+	 * @return true : on a encore 
+	 * @return false 
+	 */
+	bool chercheValeurZero(vector<vector<int>> v);
 
 	void afficherJoueurActif();
 
