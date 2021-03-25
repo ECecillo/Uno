@@ -75,19 +75,29 @@ void Jeu::initCarte()
     } while (l < jeuCarte.size());
 }
 
+void Jeu::initTalon()
+{
 
-void Jeu::initTalon() {
-    
     talon.push(pioche.top()); // Carte mis dans la talon, celle sur laquelle on va jouer.
-    pioche.pop(); // Elle dans la file, on la supprime de la pile.
+    pioche.pop();             // Elle dans la file, on la supprime de la pile.
 }
 
-bool Jeu::piocheVide() { // Dis si la pioche est vide ou non.
+bool Jeu::piocheVide()
+{ // Dis si la pioche est vide ou non.
     return pioche.empty() == true;
 }
 
-void Jeu::relancePiocheJeu() {
-    
+void Jeu::relancePiocheJeu()
+{
+    // Préalablement : on vérifie que la pioche est vide et que le bool finPartie != true (fin de la partie).
+    while (talon.empty() != true)
+    {
+        // Tant que le talon n'est pas vite on met des cartes.
+        pioche.push(talon.front());
+        talon.pop();
+    }
+    // On réinit le talon avec la dernière carte ajouté à la pioche.
+    initTalon();
 }
 
 void Jeu::testRegression()
