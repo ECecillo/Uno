@@ -4,34 +4,37 @@
 
 using namespace std;
 
-Carte::Carte () 
+Carte::Carte()
 {
-    valeur=0;
-    couleur=0;
+    valeur = 0;
+    couleur = 0;
 }
 
-Carte::Carte (const unsigned int v, const unsigned int c) 
+Carte::Carte(const unsigned int v, const unsigned int c)
 {
-    assert(v<=14);
-    assert(c>=1 && c<=4);
+    assert(v <= 14);
+    assert(c >= 1 && c <= 4);
     valeur = v;
     couleur = c;
 }
 
-Carte::~Carte () {}
+Carte::~Carte() {}
 
-unsigned int Carte::getValeur () const 
+unsigned int Carte::getValeur() const
 {
     return valeur;
 }
 
-unsigned int Carte::getCouleur () const 
+unsigned int Carte::getCouleur() const
 {
     return couleur;
 }
 
-/* bool Carte::operator < (const Carte c) const
+bool operator<(const Carte &c, const Carte &c2)
 {
-    return couleur <    c.couleur| (couleur == c.couleur && valeur<c.valeur);
-} */
-
+    return (c.valeur < c2.couleur) || (c.couleur == c2.couleur && c.valeur < c2.valeur);
+}
+bool operator==(const Carte &c, const Carte &c2)
+{
+    return (c.couleur == c2.couleur && c.valeur == c2.valeur);
+}
