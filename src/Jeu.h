@@ -6,6 +6,7 @@
 #include <Joueur.h>
 #include <Terrain.h>
 #include <Carte.h>
+#include <ActionJoueur.h>
 
 using namespace std;
 
