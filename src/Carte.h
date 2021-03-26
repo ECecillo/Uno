@@ -64,12 +64,20 @@ public:
 		* Opérateur <.
 		* 
 		* @return
-		* Vrai si la couleur et la valeur sont inférieures à celles de la carte passée en paramètre
+		* Vrai si la couleur de la première carte est inférieure à celle de la deuxième carte ou si les couleurs sont identiques et la valeur de la première carte est inférieure à celle de la deuxième carte
 		*/
-		friend bool operator< (const Carte& c, const Carte& c2);
+		friend bool operator < (const Carte& c, const Carte& c2);
 
-		friend bool operator== (const Carte& c, const Carte& c2);
-		
+
+		/**
+		* @brief 
+		* Opérateur ==.
+		* 
+		* @return
+		* Vrai si les couleurs et les valeurs des 2 cartes sont identiques
+		*/
+		friend bool operator == (const Carte& c, const Carte& c2);
+
 				
 };
 
