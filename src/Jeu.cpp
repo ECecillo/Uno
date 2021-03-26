@@ -69,13 +69,14 @@ void Jeu::piocherCarte()
     joueurs[joueurActif].main.push_back(pioche.top());
 }
 
-void Jeu::poserCarte() {
+void Jeu::poserCarte(const char clique) {
     //talon.push();
 }
  bool Jeu::testUno() {
-     showUno = true;
+    //  
+    showUno = true;
 
-     
+
  }
 
 void Jeu::initCarte()
