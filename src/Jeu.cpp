@@ -72,6 +72,11 @@ void Jeu::piocherCarte()
 void Jeu::poserCarte() {
     //talon.push();
 }
+ bool Jeu::testUno() {
+     showUno = true;
+
+     
+ }
 
 void Jeu::initCarte()
 {

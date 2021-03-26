@@ -73,6 +73,12 @@ public:
 	 * Booleen qui permettra de dire que la Partie est terminé.
 	 */
 	bool finPartie;
+
+	/**
+	 * @brief 
+	 * Variable qui permettra de dire si l'on affiche le bouton UNO ou non.
+	 */
+	bool showUno;
 	// ==============================================================================================================
 
 	Jeu();
