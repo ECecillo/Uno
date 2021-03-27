@@ -38,13 +38,18 @@ Jeu::Jeu(const vector<Joueur> &joueur, const vector<bool> variante, const unsign
     //nombreIA = nbIA;
 
     default_random_engine re(time(0));
-    uniform_int_distribution<int> distrib{1, nombreJoueurs};
+    uniform_int_distribution<int> distrib{1, nombreJoueurs + nombreIA};
 
     joueurActif = distrib(re); // On génère un numéro de joueur aléatoire pour le début de la partie.
 
     sensJeu = 1;      // On tournera à gauche.
     distribueCarte(); // On donne les cartes au joueurs
     initTalon();      // On initialise le Talon.
+
+    if (testUno())
+    {
+        actionJoueur('s'); // x et y à 0 car on a pas besoin de coord ici.
+    }
 }
 
 void Jeu::distribueCarte()
@@ -69,8 +74,83 @@ void Jeu::piocherCarte()
     joueurs[joueurActif].main.push_back(pioche.top());
 }
 
-void Jeu::poserCarte() {
-    //talon.push();
+void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x = 0, const int y = 0) // Fenêtre
+{
+    switch (action)
+    {
+    case 'q':
+        // On déplace le curseur * à gauche.
+
+        break;
+    case 'd':
+        // On déplace le curseur * à droite.
+
+        break;
+    /* case 'c':
+        if ((x >= (5/16*dimx) && y >= (3/8*dimy))&&
+        ( x <= (7/16*dimx) && y <= (5/8*dimy)))
+        { // On clique sur la pioche.
+            piocherCarte();
+        }
+        if ((x >= (13/16*dimx) && y >= (dimy*7/16)) &&
+        (x <= 15/16*dimx) && (y <= (9/16*dimy)) ) 
+        { // On clique sur passer.
+        }
+        if ((x >= (1/32*dimx) && y >= (dimy*1/32)) &&
+        (x <= (1/4*dimx) && (y <= (1/6*dimy))))
+        { // On clique sur Paramètres.
+        
+        }
+    */
+    case 's': // On appuie sur espace
+        // On doit regarder quelle joueur à appuyer sur espace en premier.
+        break;
+    case 'e':
+    {
+        // On appuie sur la touche entrée.
+        unsigned int indiceCarte; // Indice de de la carte à faire disparaitre.
+        string er;                //Message d'erreur à afficher.
+        poserCarte(c, indiceCarte, er);
+
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void Jeu::poserCarte(const Carte c, unsigned int &indiceCarte, string &messageErreur)
+{
+    if (carteValide(c))
+    {                  // La carte qu'il veut poser est valide
+        talon.push(c); // On pousse la carte que le joueur voulait jouer.
+        joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
+        // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
+
+        // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
+    }
+    else
+    {
+        messageErreur = "Cette carte ne peut pas être déposé.";
+    }
+}
+
+bool Jeu::testUno()
+{
+    //
+    showUno = true;
+}
+
+void Jeu::termineTour()
+{
+    if (joueurActif == nombreJoueurs + nombreIA)
+    {
+        joueurActif = 0;
+    }
+    else
+    {
+        joueurActif++;
+    }
 }
 
 void Jeu::initCarte()
