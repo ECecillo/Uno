@@ -11,15 +11,18 @@
 class Carte
 {
 private:
-		unsigned int valeur;	// entre 0 et 14 (10 inverse, 11 passe, 12 +2, 13 +4, 14 jocker)
+		unsigned int valeur;	// entre 0 et 14 (10 inverse, 11 passe, 12 +2, 13 +4, 14 joker)
 		unsigned int couleur;	// entre 1 et 4 (1 rouge, 2 vert, 3 bleu, 4 jaune)
+		int dimx;
+		int dimy;
+		char carte [dimy][dimy];// dessin de la Carte en version txt
 
 	 
 
 public:
 		/**
 		* @brief 
-		* Constructeur par défaut.
+		* Constructeur par défaut: initialise valeur et couleur à 0, carte comme une carte vierge.
 		* 
 		*/
 		Carte();
@@ -78,7 +81,7 @@ public:
 		* @return
 		* Vrai si les couleurs et les valeurs des 2 cartes sont identiques
 		*/
-		friend bool operator == (const Carte& c, const Carte& c2);
+		bool operator == (const Carte& c);
 
 
 
