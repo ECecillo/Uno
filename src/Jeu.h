@@ -73,6 +73,12 @@ public:
 	 * Booleen qui permettra de dire que la Partie est terminé.
 	 */
 	bool finPartie;
+
+	/**
+	 * @brief 
+	 * Variable qui permettra de dire si l'on affiche le bouton UNO ou non.
+	 */
+	bool showUno;
 	// ==============================================================================================================
 
 	Jeu();
@@ -149,7 +155,7 @@ public:
 
 	/**
 	 * @brief 
-	 * Le joueur a cliqué avant sur le bouton UNO,
+	 * Le joueur a appuyé avant sur ESPACE ce qui provoque le UNO,
 	 * on termine le tour et les autres joueurs ne peuvent plus dire contre Uno.
 	 */
 	void joueUno();
@@ -170,8 +176,10 @@ public:
 	/**
 	 * @brief 
 	 * Le joueur met une carte dans le Talon et on enlève la carte posé de la main du joueur.
+	 * @param indiceCarte : l'indice de la carte que le joueur veut poser.
+	 * @param messageErreur : Message d'erreur à afficher avec l'interface Graphique.
 	 */
-	void poserCarte();
+	void poserCarte(const Carte c,unsigned int& indiceCarte, string &messageErreur);
 
 	/**
 	 * @brief 
@@ -179,6 +187,10 @@ public:
 	 * @return int 
 	 */
 	int quiJoue();
+
+	void termineTour();
+
+	void actionJoueur(const char action, const Carte c,const int x, const int y);
 
 	void testRegression();
 };
