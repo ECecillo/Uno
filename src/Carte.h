@@ -15,11 +15,14 @@ private:
 		unsigned int couleur;	// entre 1 et 4 (1 rouge, 2 vert, 3 bleu, 4 jaune)
 		int dimx;
 		int dimy;
-		char carte [dimy][dimy];// dessin de la Carte en version txt
+		
 
 	 
 
 public:
+		char carte [dimy][dimy];// dessin de la Carte en version txt
+		
+		
 		/**
 		* @brief 
 		* Constructeur par défaut: initialise valeur et couleur à 0, carte comme une carte vierge.
