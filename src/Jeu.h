@@ -76,10 +76,19 @@ public:
 
 	/**
 	 * @brief 
+	 * Bool qui permet de signifier que c'est la fin du tour.
+	 * true : tour terminé on déclenche termineTour().
+	 * false : tour pas terminé.
+	 */
+	bool finTour;
+
+	/**
+	 * @brief 
 	 * Variable qui permettra de dire si l'on affiche le bouton UNO ou non.
 	 */
 	bool showUno;
-	// ==============================================================================================================
+
+	// =========================================== FONCTION / Procédure ===============================================================
 
 	Jeu();
 
