@@ -12,6 +12,19 @@
 
 using namespace std;
 
+Jeu::Jeu()
+{
+    joueurs = NULL;
+    nombreJoueurs = 0;
+    sensJeu = 1;
+    nombreIA = 0;
+
+    joueurActif = 0;
+    finPartie = false;
+    finTour = false;
+    showUno = false;
+}
+
 Jeu::~Jeu()
 {
 
@@ -21,21 +34,11 @@ Jeu::~Jeu()
     nombreJoueurs = 0;
 }
 
-Jeu::Jeu()
-{
-    joueurs = NULL;
-    nombreJoueurs = 0;
-    sensJeu = 1;
-
-    joueurActif = 0;
-    finPartie = false;
-}
-
 Jeu::Jeu(const vector<Joueur> &joueur, const vector<bool> variante, const unsigned int nbIA)
 {
     initCarte();
     nombreJoueurs = joueur.size();
-    //nombreIA = nbIA;
+    nombreIA = nbIA;
 
     default_random_engine re(time(0));
     uniform_int_distribution<int> distrib{1, nombreJoueurs + nombreIA};
@@ -45,7 +48,12 @@ Jeu::Jeu(const vector<Joueur> &joueur, const vector<bool> variante, const unsign
     sensJeu = 1;      // On tournera à gauche.
     distribueCarte(); // On donne les cartes au joueurs
     initTalon();      // On initialise le Talon.
-
+    finTour = false;
+    
+    
+    if (finTour) {
+        termineTour();
+    }
     if (testUno())
     {
         actionJoueur('s'); // x et y à 0 car on a pas besoin de coord ici.
@@ -84,7 +92,8 @@ void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x =
         break;
     case 'd':
         // On déplace le curseur * à droite.
-
+        
+        
         break;
     /* case 'c':
         if ((x >= (5/16*dimx) && y >= (3/8*dimy))&&
@@ -108,7 +117,7 @@ void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x =
     case 'e':
     {
         // On appuie sur la touche entrée.
-        unsigned int indiceCarte; // Indice de de la carte à faire disparaitre.
+        unsigned int indiceCarte; // Indice de de la carte qui sera joué.
         string er;                //Message d'erreur à afficher.
         poserCarte(c, indiceCarte, er);
 
@@ -131,7 +140,8 @@ void Jeu::poserCarte(const Carte c, unsigned int &indiceCarte, string &messageEr
     }
     else
     {
-        messageErreur = "Cette carte ne peut pas être déposé.";
+        messageErreur = "Cette carte ne peut pas être déposé."; 
+        // Voir si on ajoute d'autre message.
     }
 }
 
