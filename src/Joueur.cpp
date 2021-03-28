@@ -129,6 +129,119 @@ void Joueur::modifMainTxt()
     dessinerMainTxt();
 }
 
+// écrit la carte du talon et le nombre de cartes de la pioche dans tableJoueur de chaque joueur
+// t talon, p pioche
+void Joueur::modifTalonPiocheTxt(const queue<Carte> & t, const stack<Carte> & p)
+{
+    // écrit la carte du talon dans tableJoueur
+    unsigned int v = t.front().getValeur();
+    unsigned int c = t.front().getCouleur();
+    if (v>=0 && v<=9) tableJoueur[15][105] = '0'+v;
+    else
+        switch (v) {
+			case 10:
+				carte[15][104] = 'i';
+                carte[15][105] = 'n';
+                carte[15][106] = 'v';
+				break;
+			case 11:
+				carte[15][104] = 'p';
+                carte[15][105] = 'a';
+                carte[15][106] = 's';
+				break;
+			case 12:
+                carte[15][105] = '+';
+                carte[15][106] = '2';
+				break;
+			case 13:
+				carte[15][105] = '+';
+                carte[15][106] = '4';
+				break;
+            case 14:
+				carte[15][103] = 'j';
+                carte[15][104] = 'o';
+                carte[15][105] = 'k';
+                carte[15][106] = 'e';
+                carte[15][107] = 'r';
+				break;
+        }
+    switch (c) {
+        case 1:
+            carte[16][103] = 'r';
+            carte[16][104] = 'o';
+            carte[16][105] = 'u';
+            carte[16][106] = 'g';
+            carte[16][107] = 'e';
+            break;
+        case 2:
+            carte[16][104] = 'v';
+            carte[16][105] = 'e';
+            carte[16][106] = 'r';
+            carte[16][107] = 't';
+            break;
+        case 3:
+            carte[16][104] = 'b';
+            carte[16][105] = 'l';
+            carte[16][106] = 'e';
+            carte[16][107] = 'u';
+            break;
+        case 4:
+            carte[16][103] = 'j';
+            carte[16][104] = 'a';
+            carte[16][105] = 'u';
+            carte[16][106] = 'n';
+            carte[16][107] = 'e';
+            break;
+    }
+
+    // écrit le nombre de cartes de la pioche dans tableJoueur
+    unsigned int taille = p.size();
+    if (taille >= 100) 
+    {
+        tableJoueur[15][72] = '1';
+        tableJoueur[15][73] = '0'+ (taille-100) / 10;
+        tableJoueur[15][74] = '0'+ taille % 10;
+    }
+    else
+        if (taille >= 10)
+        {
+            tableJoueur[15][72] = '0'+ taille / 10;
+            tableJoueur[15][73] = '0' + taille % 10;
+        }
+        else tableJoueur[15][73] = '0' + taille;
+}
+
+void Joueur::modifAdversairesTxt(const Joueur * jo, const unsigned int sens, const unsigned int nbjoueurs)
+{
+    assert(sens==0 || sens==1);
+    unsigned int pos = (180-(nbjoueurs-1)*11-(nbjoueurs-2))/2;
+    if (sens == 1)
+    {
+        for (unsigned int i = 0; i<nbjoueurs; i++)
+        {
+            for (unsigned int j = 0; j<nbjoueurs-1; j++)
+            {
+                jo[i].tableJoueur[0][pos+12*j] = jo[i-1-j].numeroJoueur;
+                jo[i].tableJoueur[4][pos+12*j+4] = (jo[i-1-j].main.size()) / 10;
+                jo[i].tableJoueur[4][pos+12*j+5] = (jo[i-1-j].main.size()) % 10;
+            }
+        }
+    }
+    else
+    {
+        for (unsigned int i = 0; i<nbjoueurs; i++)
+        {
+            for (unsigned int j = 0; j<nbjoueurs-1; j++)
+            {
+                jo[i].tableJoueur[0][pos+12*j] = jo[i-1-4+j].numeroJoueur;
+                jo[i].tableJoueur[4][pos+12*j+4] = (jo[i-1-4+j].main.size()) / 10;
+                jo[i].tableJoueur[4][pos+12*j+5] = (jo[i-1-4+j].main.size()) % 10;
+            }
+        }
+    }
+    
+}
+
 // gagnant si la main est vide
 bool Joueur::gagnant ()
 {
