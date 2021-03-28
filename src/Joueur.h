@@ -43,7 +43,35 @@ public:
 		*/
 		~Joueur();
 
+		
+		/**
+		* @brief 
+		* Insère une carte dans table du Joueur.
+		* 
+		*/
+		void insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte & c);
 
+		/**
+		* @brief 
+		* Insère une carte adversaire avec le nom de l'adversairedans table du Joueur.
+		* 
+		*/
+		void insererCarteAdversairePositionJ(unsigned int indj, unsigned int num);
+
+		/**
+		* @brief 
+		* Effece les cartes en mettant un espace dans le tableu tableJeu.
+		* 
+		*/
+		void effacerMain();
+
+		/**
+		* @brief 
+		* Dessine toutes les cartes de la main dans la table du joueur.
+		* 
+		*/
+		void Joueur::dessinerMain()
+		
 		/**
 		* @brief 
 		* Détermine si le joueur est gagnant.
@@ -53,6 +81,23 @@ public:
 		*/
 		bool gagnant();
 
+		/**
+		* @brief 
+		* Accesseur: récupère la largeur de la table du joueur.
+		* 
+		* @return
+		* Entier
+		*/
+		unsigned int getLarg () const;
+
+		/**
+		* @brief 
+		* Accesseur: récupère la hauteur de la table du joueur.
+		* 
+		* @return
+		* Entier
+		*/
+		unsigned int getHaut () const;
 
 
 		
