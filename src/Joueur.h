@@ -46,38 +46,59 @@ public:
 		
 		/**
 		* @brief 
-		* Insère une carte dans la tableJoueur.
+		* Insère une carte dans la tableJoueur pour la version txt.
 		* 
 		*/
 		void insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte & c);
 
 		/**
 		* @brief 
-		* Insère une carte adversaire avec le nom de l'adversaire dans tableJoueur.
+		* Insère une carte adversaire avec le nom de l'adversaire dans tableJoueur pour la version txt.
 		* 
 		*/
 		void insererCarteAdversairePositionJ(unsigned int indj, unsigned int num);
 
 		/**
 		* @brief 
-		* Efface les cartes en mettant un espace dans la tableJoueur .
+		* Efface les cartes en mettant un espace dans la tableJoueur pour la version txt.
 		* 
 		*/
 		void effacerMainTxt();
 
 		/**
 		* @brief 
-		* Dessine toutes les cartes de la main dans tableJoueur.
+		* Dessine toutes les cartes de la main dans tableJoueur pour la version txt.
 		* 
 		*/
 		void dessinerMainTxt()
 
 		/**
 		* @brief 
-		* Actualise les cartes de la main dans tableJoueur.
+		* Actualise les cartes de la main dans tableJoueur pour la version txt.
 		* 
 		*/
 		void modifMainTxt();
+
+		/**
+		* @brief 
+		* Actualise le talon et la pioche dans tableJoueur pour la version txt.
+		* 
+		* @param
+		* [in] queue de Carte pour le talon
+		* [in] stack de Carte pour la pioche
+		*/
+		void modifTalonPiocheTxt(const queue<Carte> & t, const stack<Carte> & p);
+		
+		/**
+		* @brief 
+		* Actualise les adversaires dans tableJoueur pour la version txt.
+		* 
+		* @param
+		* [in] tableau de Joueur
+		* [in] unsigned int sens de jeu, 1 vers la gauche, o vers la droite
+		* [in] unsigned int nombre de joueurs
+		*/
+		void modifAdversairesTxt(const Joueur * jo, unsigned int sens, unsigned int nbjoueurs);
 		
 		/**
 		* @brief 
