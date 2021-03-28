@@ -10,13 +10,14 @@ using namespace std;
 class Joueur
 {
 private:
-
-	 
+		unsigned int larg;
+		unsigned int haut;	 
 
 public:
 		string nom;
 		vector<Carte> main;		
 		unsigned int numeroJoueur;
+		char tableJoueur [50][200];// dessin de la table du Joueur en version txt
 
 		
 		/**
@@ -42,35 +43,41 @@ public:
 		* 
 		*/
 		~Joueur();
-
 		
 		/**
 		* @brief 
-		* Insère une carte dans table du Joueur.
+		* Insère une carte dans la tableJoueur.
 		* 
 		*/
 		void insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte & c);
 
 		/**
 		* @brief 
-		* Insère une carte adversaire avec le nom de l'adversairedans table du Joueur.
+		* Insère une carte adversaire avec le nom de l'adversaire dans tableJoueur.
 		* 
 		*/
 		void insererCarteAdversairePositionJ(unsigned int indj, unsigned int num);
 
 		/**
 		* @brief 
-		* Effece les cartes en mettant un espace dans le tableu tableJeu.
+		* Efface les cartes en mettant un espace dans la tableJoueur .
 		* 
 		*/
-		void effacerMain();
+		void effacerMainTxt();
 
 		/**
 		* @brief 
-		* Dessine toutes les cartes de la main dans la table du joueur.
+		* Dessine toutes les cartes de la main dans tableJoueur.
 		* 
 		*/
-		void Joueur::dessinerMain()
+		void dessinerMainTxt()
+
+		/**
+		* @brief 
+		* Actualise les cartes de la main dans tableJoueur.
+		* 
+		*/
+		void modifMainTxt();
 		
 		/**
 		* @brief 
