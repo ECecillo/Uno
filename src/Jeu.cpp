@@ -50,6 +50,17 @@ Jeu::Jeu(const vector<Joueur> &joueur, const vector<bool> variante, const unsign
     {
         actionJoueur('s'); // x et y à 0 car on a pas besoin de coord ici.
     }
+    unsigned int pos = (180-(nbjoueurs-1)*11-(nbjoueurs-2))/2;
+
+    for (unsigned int i = 0; i<nbjoueurs; i++)
+    {
+        for (unsigned int j = 0; j<nbjoueurs-1; j++)
+        {
+            joueurs[i].insererCarteAdversairePositionJ(pos+12*j,joueurs[i-1-j].numeroJoueur);
+            joueurs[i].tableJoueur[4][pos+12*j+4] = (joueurs[i-1-j].main.size()) / 10;
+            joueurs[i].tableJoueur[4][pos+12*j+5] = (joueurs[i-1-j].main.size()) % 10;
+        }
+    }
 }
 
 void Jeu::distribueCarte()
@@ -61,6 +72,7 @@ void Jeu::distribueCarte()
             joueurs[i].main[j] = pioche.top();
             pioche.pop();
         }
+        joueurs[i].modifMainTxt();
     }
 }
 
@@ -72,6 +84,8 @@ bool Jeu::carteValide(const Carte c) const
 void Jeu::piocherCarte()
 {
     joueurs[joueurActif].main.push_back(pioche.top());
+    joueurs[joueurActif].modifMainTxt();
+    joueurs[joueurActif].modifTalonPioche();
 }
 
 void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x = 0, const int y = 0) // Fenêtre
@@ -126,8 +140,9 @@ void Jeu::poserCarte(const Carte c, unsigned int &indiceCarte, string &messageEr
         talon.push(c); // On pousse la carte que le joueur voulait jouer.
         joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
         // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
-
+        joueurs[joueurActif].modifMainTxt();
         // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
+        joueurs[joueurActif].modifTalonPioche();
     }
     else
     {
@@ -217,6 +232,13 @@ void Jeu::relancePiocheJeu()
     }
     // On réinit le talon avec la dernière carte ajouté à la pioche.
     initTalon();
+}
+
+// à insérer dans la boucle pour la version txt
+void Jeu::MaJTableJoueurActifDebutTour()
+{
+    joueurs[joueurActif].modifAdversairesTxt();
+    joueurs[JoueurActif].modifTalonPioche();
 }
 
 void Jeu::testRegression()
