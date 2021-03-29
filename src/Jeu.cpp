@@ -58,6 +58,17 @@ Jeu::Jeu(const vector<Joueur> &joueur, const vector<bool> variante, const unsign
     {
         actionJoueur('s'); // x et y à 0 car on a pas besoin de coord ici.
     }
+    unsigned int pos = (180-(nbjoueurs-1)*11-(nbjoueurs-2))/2;
+
+    for (unsigned int i = 0; i<nbjoueurs; i++)
+    {
+        for (unsigned int j = 0; j<nbjoueurs-1; j++)
+        {
+            joueurs[i].insererCarteAdversairePositionJ(pos+12*j,joueurs[i-1-j].numeroJoueur);
+            joueurs[i].tableJoueur[4][pos+12*j+4] = (joueurs[i-1-j].main.size()) / 10;
+            joueurs[i].tableJoueur[4][pos+12*j+5] = (joueurs[i-1-j].main.size()) % 10;
+        }
+    }
 }
 
 void Jeu::distribueCarte()
@@ -69,6 +80,7 @@ void Jeu::distribueCarte()
             joueurs[i].main[j] = pioche.top();
             pioche.pop();
         }
+        joueurs[i].modifMainTxt();
     }
 }
 
@@ -80,6 +92,8 @@ bool Jeu::carteValide(const Carte c) const
 void Jeu::piocherCarte()
 {
     joueurs[joueurActif].main.push_back(pioche.top());
+    joueurs[joueurActif].modifMainTxt();
+    joueurs[joueurActif].modifTalonPioche();
 }
 
 void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x = 0, const int y = 0) // Fenêtre
@@ -135,8 +149,9 @@ void Jeu::poserCarte(const Carte c, unsigned int &indiceCarte, string &messageEr
         talon.push(c); // On pousse la carte que le joueur voulait jouer.
         joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
         // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
-
+        joueurs[joueurActif].modifMainTxt();
         // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
+        joueurs[joueurActif].modifTalonPioche();
     }
     else
     {
@@ -229,32 +244,75 @@ void Jeu::relancePiocheJeu()
     initTalon();
 }
 
+// à insérer dans la boucle pour la version txt
+void Jeu::MaJTableJoueurActifDebutTour()
+{
+    joueurs[joueurActif].modifAdversairesTxt();
+    joueurs[JoueurActif].modifTalonPioche();
+}
+
 void Jeu::testRegression()
 {
+    new Jeu jeuTest = Jeu;
 
-    // On regarde ce que l'on met dans la pile pour vérifier que l'initialisation se fait correctement.
-    if (pioche.empty())
-    {
-        cout << "La pioche est vide il y a un problème dans l'initialisation des cartes." << endl;
-        exit(EXIT_FAILURE);
-    }
-    else
-    {
-        stack<Carte> temp;
-        while (pioche.empty() == false)
-        {
-            temp.push(pioche.top());
-            pioche.pop();
-        }
-        while (temp.empty() == false)
-        {
-            Carte t = temp.top();
-            cout << "La valeur de la carte est :" << t.getValeur() << ", la couleur de la carte est : " << t.getCouleur() << endl;
-            temp.pop();
+    // test du constructeur
+    assert (jeuTest.nombreJoueurs==0);
+    assert (jeuTest.sensJeu==1);
+    assert (jeuTest.joueurActif==0);
 
-            // To restore contents of
-            // the original stack.
-            pioche.push(t);
-        }
+    // test de piocheVide
+    assert (jeuTest.piocheVide());
+
+    
+    // test de initCarte
+    jeuTest.initCarte();
+    assert (jeuTest.pioche.size()==104);
+
+    // test de initTalon
+    assert (jeuTest.pioche.size()==103);
+    assert (jeuTest.talon.size()==1);
+    
+    /* en attente
+    
+    nombreJoueur=3;
+    Joueur joueur1(1,"joueur 1");
+    Joueur joueur2(2,"joueur 2");
+    Joueur joueur3(3,"joueur 3");
+
+
+    // test de distribueCarte
+    jeuTest.distribuerCarte();
+    (assert (jeuTest.joueur1.main).size() == 7);
+    (assert (jeuTest.joueur2.main).size() == 7);
+    (assert (jeuTest.joueur3.main).size() == 7);
+
+    */
+
+    // test de carteValide
+    Carte t = jeuTest.talon.front();
+    Carte c1(t.getValeur(), 4);
+    Carte c2(8,t.getCouleur());
+    Carte c3(3,1);
+    Carte c4(5,2);
+    Carte c5(4,3);
+    assert (jeuTest.carteValide(c1));
+    assert (jeuTest.carteValide(c2));
+    assert (!jeuTest.carteValide(c3) || !jeuTest.carteValide(c4) || !jeuTest.carteValide(c5));
+
+    // test de poserCarte
+
+    
+
+    // test de termineTour
+    nombreIA=0;
+    jeuTest.termineTour();
+    assert(jeuTest.joueurActif == 1);
+    jeuTest.joueurActif = 2;
+    jeuTest.termineTour();
+    assert(jeuTest.joueurActif == 0);
+
+    // relancePiocheJeu
+    
+
     }
 }

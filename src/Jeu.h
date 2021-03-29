@@ -201,6 +201,13 @@ public:
 
 	void actionJoueur(const char action, const Carte c,const int x, const int y);
 
+	/**
+	 * @brief 
+	 * Actualise tableJoueur au début de son tour.
+	 * @return int 
+	 */	
+	void MaJTableJoueurActifDebutTour();
+
 	void testRegression();
 };
 
