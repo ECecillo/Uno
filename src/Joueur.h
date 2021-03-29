@@ -38,7 +38,7 @@ public:
 		* [in] entier naturel inférieur ou égal au nombre de joueurs
 		* [in] chaîne de caractères
 		*/
-		Joueur (const unsigned int num, const string n);
+		Joueur (const unsigned int num);
 		
 		/**
 		* @brief 
@@ -98,10 +98,9 @@ public:
 		* 
 		* @param
 		* [in] tableau de Joueur
-		* [in] unsigned int sens de jeu, 1 vers la gauche, o vers la droite
 		* [in] unsigned int nombre de joueurs
 		*/
-		void modifAdversairesTxt(const Joueur * jo, unsigned int sens, unsigned int nbjoueurs);
+		void modifAdversairesTxt(const Joueur * jo, unsigned int nbjoueurs);
 		
 		/**
 		* @brief 

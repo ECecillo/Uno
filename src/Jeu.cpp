@@ -34,11 +34,19 @@ Jeu::~Jeu()
     nombreJoueurs = 0;
 }
 
-Jeu::Jeu(const vector<Joueur> &joueur, const vector<bool> variante, const unsigned int nbIA)
+Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA=0)
 {
     initCarte();
-    nombreJoueurs = joueur.size();
+    nombreJoueurs = nbjoueurs;
     nombreIA = nbIA;
+
+    // création du tableau joueurs
+    Joueur * joueurs = new Joueur[nombreJoueurs];
+    for (unsigned int i = 0; i < nombreJoueurs; i++)
+    {
+        Joueur joueur(i+1);
+        joueurs[i] = joueur;
+    }
 
     default_random_engine re(time(0));
     uniform_int_distribution<int> distrib{1, nombreJoueurs + nombreIA};
@@ -58,15 +66,15 @@ Jeu::Jeu(const vector<Joueur> &joueur, const vector<bool> variante, const unsign
     {
         actionJoueur('s'); // x et y à 0 car on a pas besoin de coord ici.
     }
-    unsigned int pos = (180-(nbjoueurs-1)*11-(nbjoueurs-2))/2;
+    unsigned int pos = (180-(nbJoueurs-1)*11-(nbJoueurs-2))/2;
 
-    for (unsigned int i = 0; i<nbjoueurs; i++)
+    for (unsigned int i = 0; i<nbJoueurs; i++)
     {
-        for (unsigned int j = 0; j<nbjoueurs-1; j++)
+        for (unsigned int j = 0; j<nbJoueurs-1; j++)
         {
-            joueurs[i].insererCarteAdversairePositionJ(pos+12*j,joueurs[i-1-j].numeroJoueur);
-            joueurs[i].tableJoueur[4][pos+12*j+4] = (joueurs[i-1-j].main.size()) / 10;
-            joueurs[i].tableJoueur[4][pos+12*j+5] = (joueurs[i-1-j].main.size()) % 10;
+            joueurs[i].insererCarteAdversairePositionJ(pos+12*j,joueurs[(i+1+j)%nbJoueurs].numeroJoueur);
+            joueurs[i].tableJoueur[4][pos+12*j+4] = (joueurs[(i+1+j)%nbJoueurs].main.size()) / 10;
+            joueurs[i].tableJoueur[4][pos+12*j+5] = (joueurs[(i+1+j)%nbJoueurs].main.size()) % 10;
         }
     }
 }
@@ -86,7 +94,20 @@ void Jeu::distribueCarte()
 
 bool Jeu::carteValide(const Carte c) const
 {
-    return c == talon.front(); // On compare la carte que l'on a passé en paramètre à celle qui est actuelement retourné sur le talon.
+    bool chercheCouleur = false;
+    if (c.getValeur() == 13)
+    {
+        unsigned int i=0;
+        while (i<joueurs[joueurActif].main[i].size() && !chercheCouleur) 
+        {
+            if ((c.getCouleur() == joueurs[joueurActif].main[i]).getCouleur()) chercheCouleur = true;
+            i++;
+        }
+    }
+    return  (c.getValeur() == talon.front().getValeur()) ||
+            (c.getCouleur() == talon.front().getCouleur()) ||
+            (c.getValeur() == 14) ||
+            (c.getValeur() == 13 && chercheCouleur == false); // On compare la carte que l'on a passé en paramètre à celle qui est actuellement retourné sur le talon.
 }
 
 void Jeu::piocherCarte()
@@ -142,20 +163,41 @@ void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x =
     }
 }
 
-void Jeu::poserCarte(const Carte c, unsigned int &indiceCarte, string &messageErreur)
+void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
 {
-    if (carteValide(c))
+    if (carteValide(joueurs[joueurActif].main[indiceCarte]))
     {                  // La carte qu'il veut poser est valide
-        talon.push(c); // On pousse la carte que le joueur voulait jouer.
+        talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
         joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
-        // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
+
+                // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
         joueurs[joueurActif].modifMainTxt();
         // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
         joueurs[joueurActif].modifTalonPioche();
+
+        // gestion des cartes spéciales
+        switch ((talon.front()).getValeur())
+        {
+            case 10: sensJeu += (-1)**sensJeu;
+                    break;
+            case 11: joueurActif++;
+                    break;
+            case 12: joueurActif++;
+                    piocherCarte();
+                    piocherCarte();
+                    break;
+            case 13: joueurActif++;
+                    for (unsigned int i = 0; i < 4; i++) piocherCarte();
+                    break;
+            case 14: 
+                    break;
+        }
+
+        
     }
     else
     {
-        messageErreur = "Cette carte ne peut pas être déposé."; 
+        messageErreur = "Cette carte ne peut pas être déposée."; 
         // Voir si on ajoute d'autre message.
     }
 }

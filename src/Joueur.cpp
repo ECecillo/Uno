@@ -65,10 +65,9 @@ Joueur::Joueur ()
 } 
 
 
-Joueur::Joueur (const unsigned int num, const string n) 
+Joueur::Joueur (const unsigned int num) 
 {
     numeroJoueur = num;
-    nom=n;
     larg = largeur;
     haut = hauteur;
     //initialisation de la table du Joueur à partir de la table vierge
@@ -211,32 +210,16 @@ void Joueur::modifTalonPiocheTxt(const queue<Carte> & t, const stack<Carte> & p)
         else tableJoueur[15][73] = '0' + taille;
 }
 
-void Joueur::modifAdversairesTxt(const Joueur * jo, const unsigned int sens, const unsigned int nbjoueurs)
+void Joueur::modifAdversairesTxt(const Joueur * jo, const unsigned int nbjoueurs)
 {
     assert(sens==0 || sens==1);
     unsigned int pos = (180-(nbjoueurs-1)*11-(nbjoueurs-2))/2;
-    if (sens == 1)
+    for (unsigned int i = 0; i<nbjoueurs; i++)
     {
-        for (unsigned int i = 0; i<nbjoueurs; i++)
+        for (unsigned int j = 0; j<nbjoueurs-1; j++)
         {
-            for (unsigned int j = 0; j<nbjoueurs-1; j++)
-            {
-                jo[i].tableJoueur[0][pos+12*j] = jo[i-1-j].numeroJoueur;
-                jo[i].tableJoueur[4][pos+12*j+4] = (jo[i-1-j].main.size()) / 10;
-                jo[i].tableJoueur[4][pos+12*j+5] = (jo[i-1-j].main.size()) % 10;
-            }
-        }
-    }
-    else
-    {
-        for (unsigned int i = 0; i<nbjoueurs; i++)
-        {
-            for (unsigned int j = 0; j<nbjoueurs-1; j++)
-            {
-                jo[i].tableJoueur[0][pos+12*j] = jo[i-1-4+j].numeroJoueur;
-                jo[i].tableJoueur[4][pos+12*j+4] = (jo[i-1-4+j].main.size()) / 10;
-                jo[i].tableJoueur[4][pos+12*j+5] = (jo[i-1-4+j].main.size()) % 10;
-            }
+            jo[i].tableJoueur[4][pos+12*j+4] = (jo[(i+1+j)%nbjoueurs].main.size()) / 10;
+            jo[i].tableJoueur[4][pos+12*j+5] = (jo[(i+1+j)%nbjoueurs].main.size()) % 10;
         }
     }
     
