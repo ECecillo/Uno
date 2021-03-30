@@ -4,12 +4,6 @@
 
 using namespace std;
 
-<<<<<<< HEAD
-Carte::Carte()
-{
-    valeur = 0;
-    couleur = 0;
-=======
 
 const char carteVierge[8][12] = {
  "###########",
@@ -32,7 +26,6 @@ Carte::Carte ()
 	for(int x=0;x<dimx;++x)
 		for(int y=0;y<dimy;++y)
 			carte[x][y] = carteVierge[x][dimy-1-y];
->>>>>>> 2382532ccd651d598fbf02e47544d997bee83e56
 }
 
 Carte::Carte(const unsigned int v, const unsigned int c)
@@ -117,20 +110,12 @@ unsigned int Carte::getCouleur() const
     return couleur;
 }
 
-<<<<<<< HEAD
-bool operator < (const Carte& c, const Carte& c2)
-=======
 bool Carte::operator < (const Carte& c2)
->>>>>>> Carte
 {
     return (couleur < c2.getCouleur()) || (couleur == c2.getCouleur() && valeur < c2.getValeur());
 }
 
-<<<<<<< HEAD
-bool operator == (const Carte& c, const Carte& c2)
-=======
 bool Carte::operator == (const Carte& c)
->>>>>>> Carte
 {
     return (couleur == c.getCouleur()) && (valeur == c.getValeur());
 }
