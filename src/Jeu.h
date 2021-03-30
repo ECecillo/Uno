@@ -66,7 +66,7 @@ public:
 	 * @brief 
 	 * Numéro du joueur qui est en train de jouer.
 	 */
-	int joueurActif;
+	unsigned int joueurActif;
 
 	/**
 	 * @brief 
@@ -200,7 +200,7 @@ public:
 
 	void termineTour();
 
-	void actionJoueur(const char action, const Carte c,const int x, const int y);
+	void actionJoueur(const char actionconst int x, const int y);
 
 	/**
 	 * @brief 

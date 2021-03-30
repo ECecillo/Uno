@@ -63,14 +63,6 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
     initTalon();      // On initialise le Talon.
     finTour = false;
 
-    if (finTour)
-    {
-        termineTour();
-    }
-    if (testUno())
-    {
-        actionJoueur('U'); // x et y à 0 car on a pas besoin de coord ici.
-    }
     unsigned int pos = (180 - (nombreJoueurs - 1) * 11 - (nombreJoueurs - 2)) / 2;
 
     for (unsigned int i = 0; i < nombreJoueurs; i++)
@@ -86,9 +78,9 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
 
 void Jeu::distribueCarte()
 {
-    for (int i = 0; i < nombreJoueurs; i++)
+    for (unsigned int i = 0; i < nombreJoueurs; i++)
     {
-        for (int j = 0; j < 7; j++)
+        for (unsigned int j = 0; j < 7; j++)
         {
             joueurs[i].main[j] = pioche.top();
             pioche.pop();
@@ -123,7 +115,7 @@ void Jeu::piocherCarte()
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 }
 
-void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x = 0, const int y = 0) // Fenêtre
+void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // Fenêtre
 {
     switch (action)
     {
@@ -216,17 +208,18 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
     }
 }
 
-bool Jeu::testUno()
+/* bool Jeu::testUno()
 {
     //
     showUno = true;
-}
+    return true;
+} */
 
 void Jeu::termineTour()
 {
     switch (sensJeu)
     {
-    case 1:
+    case 1: // On joue à gauche.
         if (joueurActif == nombreJoueurs + nombreIA)
         {
             joueurActif = 0;
@@ -236,8 +229,15 @@ void Jeu::termineTour()
             joueurActif++;
         }
         break;
-    case 0:
-        /* code */
+    case 0: // On joue à droite
+        if (joueurActif == 0)
+        {
+            joueurActif = nombreJoueurs + nombreIA;
+        }
+        else
+        {
+            joueurActif--;
+        }
         break;
 
     default:
@@ -270,8 +270,8 @@ void Jeu::initCarte()
     {
         for (j = 13; j < 15; j++) // Numéro
         {
-            // 13 : changement de couleur,
-            // 14 : carte +4.
+            // 14 : changement de couleur,
+            // 13 : carte +4.
             jeuCarte.push_back(Carte(j, i));
         }
     }
