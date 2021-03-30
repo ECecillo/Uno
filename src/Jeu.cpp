@@ -122,6 +122,14 @@ void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x =
 {
     switch (action)
     {
+    case 'r': if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+            (talon.front()).setCouleur(1);
+    case 'v': if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+            (talon.front()).setCouleur(2);
+    case 'b': if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+            (talon.front()).setCouleur(3);
+    case 'j': if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+            (talon.front()).setCouleur(4);
     case 'q':
         // On déplace le curseur * à gauche.
 
@@ -207,8 +215,8 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
 
 bool Jeu::testUno()
 {
-    //
-    showUno = true;
+    // si le joueur a 2 cartes il pourra dire Uno après avoir posé 1 carte
+    return (joueurs[joueurActif].main).size() == 2;
 }
 
 void Jeu::termineTour()
