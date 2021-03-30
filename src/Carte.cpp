@@ -4,10 +4,35 @@
 
 using namespace std;
 
+<<<<<<< HEAD
 Carte::Carte()
 {
     valeur = 0;
     couleur = 0;
+=======
+
+const char carteVierge[8][12] = {
+ "###########",
+ "#         #",
+ "#         #",
+ "#         #",
+ "#         #",
+ "#         #",
+ "#         #",
+ "###########"
+};
+
+
+Carte::Carte () 
+{
+    valeur=0;
+    couleur=0;
+    dimx = 8;
+	dimy = 11;
+	for(int x=0;x<dimx;++x)
+		for(int y=0;y<dimy;++y)
+			carte[x][y] = carteVierge[x][dimy-1-y];
+>>>>>>> 2382532ccd651d598fbf02e47544d997bee83e56
 }
 
 Carte::Carte(const unsigned int v, const unsigned int c)
@@ -16,6 +41,68 @@ Carte::Carte(const unsigned int v, const unsigned int c)
     assert(c >= 1 && c <= 4);
     valeur = v;
     couleur = c;
+    dimx = 8;
+	dimy = 11;
+	for(int x=0;x<dimx;++x)
+		for(int y=0;y<dimy;++y)
+			carte[x][y] = carteVierge[x][dimy-1-y];
+    if (v>=0 && v<=9) carte[3][5] = '0'+v;
+    else
+        switch (v) {
+			case 10:
+				carte[3][4] = 'i';
+                carte[3][5] = 'n';
+                carte[3][6] = 'v';
+				break;
+			case 11:
+				carte[3][4] = 'p';
+                carte[3][5] = 'a';
+                carte[3][6] = 's';
+				break;
+			case 12:
+                carte[3][5] = '+';
+                carte[3][6] = '2';
+				break;
+			case 13:
+				carte[3][5] = '+';
+                carte[3][6] = '4';
+				break;
+            case 14:
+				carte[3][3] = 'j';
+                carte[3][4] = 'o';
+                carte[3][5] = 'k';
+                carte[3][6] = 'e';
+                carte[3][7] = 'r';
+				break;
+        }
+    switch (c) {
+        case 1:
+            carte[4][3] = 'r';
+            carte[4][4] = 'o';
+            carte[4][5] = 'u';
+            carte[4][6] = 'g';
+            carte[4][7] = 'e';
+            break;
+        case 2:
+            carte[4][4] = 'v';
+            carte[4][5] = 'e';
+            carte[4][6] = 'r';
+            carte[4][7] = 't';
+            break;
+        case 3:
+            carte[4][4] = 'b';
+            carte[4][5] = 'l';
+            carte[4][6] = 'e';
+            carte[4][7] = 'u';
+            break;
+        case 4:
+            carte[4][3] = 'j';
+            carte[4][4] = 'a';
+            carte[4][5] = 'u';
+            carte[4][6] = 'n';
+            carte[4][7] = 'e';
+            break;
+    }
 }
 
 Carte::~Carte() {}
@@ -30,12 +117,20 @@ unsigned int Carte::getCouleur() const
     return couleur;
 }
 
+<<<<<<< HEAD
 bool operator < (const Carte& c, const Carte& c2)
+=======
+bool Carte::operator < (const Carte& c2)
+>>>>>>> Carte
 {
-    return (c.couleur < c2.couleur) || (c.couleur == c2.couleur && c.valeur < c2.valeur);
+    return (couleur < c2.getCouleur()) || (couleur == c2.getCouleur() && valeur < c2.getValeur());
 }
 
+<<<<<<< HEAD
 bool operator == (const Carte& c, const Carte& c2)
+=======
+bool Carte::operator == (const Carte& c)
+>>>>>>> Carte
 {
-    return (c.couleur == c2.couleur) && (c.valeur == c2.valeur);
+    return (couleur == c.getCouleur()) && (valeur == c.getValeur());
 }
