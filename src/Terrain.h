@@ -2,17 +2,10 @@
 #define TERRAIN_H
 
 //! \brief une fen�tre texte est un tableau 2D de caract�res
-class Terrain {
+class Terrain
+{
 
 private:
-
-/**
- 	* @brief 
- 	*  Tableau dynamique de chaine de caractères
-	*  (Jouer,Reprendre,Quitter,Logs,Règles) 
- 	*/
-	vector<int> NomsMenu;
-
 	/**
 	 * @brief 
 	 * Largeur de la fenêtre.
@@ -29,17 +22,16 @@ private:
 	 * stocke le contenu de la fenêtre dans un tableau 1D,
 	 * mais on y accede en 2D.
 	 */
-    char* ter;
+	char *ter;
 
 public:
-
 	/**
 	 * @brief Construit un nouvellle Objet Terrain
 	 * 
 	 * @param dx 
 	 * @param dy 
 	 */
-	Terrain (int dx, int dy);
+	Terrain(int dx, int dy);
 	/**
 	 * @brief Détruit l'objet terrain.
 	 * 
@@ -50,7 +42,7 @@ public:
 	 * 
 	 * @param c 
 	 */
-	void clear (char c=' ');
+	void clear(char c = ' ');
 	/**
 	 * @brief 
 	 * 
@@ -58,7 +50,7 @@ public:
 	 * @param y 
 	 * @param c 
 	 */
-	void print (int x, int y, char c);
+	void print(int x, int y, char c);
 	/**
 	 * @brief 
 	 * 
@@ -66,14 +58,14 @@ public:
 	 * @param y 
 	 * @param c 
 	 */
-	void print (int x, int y, char* c);
+	void print(int x, int y, char *c);
 	/**
 	 * @brief 
 	 * 
 	 * @param x 
 	 * @param y 
 	 */
-	void draw (int x=0, int y=0);
+	void draw(int x = 0, int y = 0);
 	/**
 	 * @brief 
 	 * 
@@ -85,10 +77,8 @@ public:
 	 * @return char 
 	 */
 	char getCh();
-
 };
 
-void termClear ();
+void termClear();
 
 #endif
-
