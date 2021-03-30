@@ -23,7 +23,7 @@ ifeq ($(OS),Windows_NT)
 
 else
 	INCLUDE_DIR_SDL = -I/usr/include/SDL2
-	LIBS_SDL = -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer
+	LIBS_SDL = -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer -lncurses
 endif
 
 CC					= g++

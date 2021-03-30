@@ -15,6 +15,8 @@
 #include <unistd.h>
 #include <termios.h>
 #include <unistd.h>
+#include <ncurses.h>
+
 #endif
 
 void termMove(int x, int y) // deplace le curseur du terminal
@@ -50,6 +52,8 @@ void termInit()      // configure la saisie : ne pas afficher les caracteres tap
 #else
     struct termios ttystate;
     bool state = true;
+    MEVENT event;
+    int c;
 
     //get the terminal state
     tcgetattr(STDIN_FILENO, &ttystate);
@@ -71,6 +75,8 @@ void termInit()      // configure la saisie : ne pas afficher les caracteres tap
     tcgetattr(STDIN_FILENO, &t);
     t.c_lflag |= ~ECHO;
     tcsetattr(STDIN_FILENO, TCSANOW, &t);
+
+    mousemask(ALL_MOUSE_EVENTS, NULL); // Récupère tous les événements de la souris dans la fenêtre.
 #endif
 }
 
@@ -135,6 +141,7 @@ void Terrain::pause() {
 
 char Terrain::getCh() { // lire un caractere si une touche a ete pressee
     char touche=0;
+    //c = wgetch();
 #ifdef _WIN32
     if (kbhit())
     {
