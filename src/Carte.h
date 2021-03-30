@@ -69,6 +69,15 @@ public:
 
 		/**
 		* @brief 
+		* Mutateur: modifie la couleur de la carte.
+		* 
+		* @param
+		* [in] entier naturel entre 1 et 4, pour la couleur
+		*/
+		void setCouleur(const unsigned int c);
+
+		/**
+		* @brief 
 		* Opérateur <.
 		* 
 		* @return
