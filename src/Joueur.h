@@ -130,7 +130,7 @@ public:
 		unsigned int getHaut () const;
 
 
-		char Joueur::getXY (const int x, const int y) const;
+		char getXY (const int x, const int y) const;
 				
 };
 

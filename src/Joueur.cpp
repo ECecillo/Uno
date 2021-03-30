@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cassert>
 #include <vector>
+#include <Carte.h>
 
 using namespace std;
 

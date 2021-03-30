@@ -164,7 +164,7 @@ char Terrain::getCh() { // lire un caractere si une touche a ete pressee
                     if ((pos.X >= (5 / 16 * dimx) && pos.Y >= (3 / 8 * dimy)) &&
                         (pos.X <= (7 / 16 * dimx) && pos.Y <= (5 / 8 * dimy)))
                     { // On clique sur la pioche.
-                        //piocherCarte();
+                        piocherCarte();
                     }
                     if ((pos.X >= (13 / 16 * dimx) && pos.Y >= (dimy * 7 / 16)) &&
                         (pos.X <= 15 / 16 * dimx) && (pos.Y <= (9 / 16 * dimy)))
