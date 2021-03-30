@@ -14,8 +14,19 @@ private:
 
 		unsigned int valeur;	// entre 0 et 14 (10 inverse, 11 passe, 12 +2, 13 +4, 14 jocker)
 		unsigned int couleur;	// entre 1 et 4 (1 rouge, 2 vert, 3 bleu, 4 jaune)
+<<<<<<< HEAD
+=======
+		int dimx;
+		int dimy;
+		
+	 
+>>>>>>> 2382532ccd651d598fbf02e47544d997bee83e56
 
 public:
+
+		char carte [8][11];// dessin de la Carte en version txt
+		
+
 		/**
 		* @brief 
 		* Constructeur par défaut.
@@ -64,10 +75,9 @@ public:
 		* Opérateur <.
 		* 
 		* @return
-		* Vrai si la couleur de la première carte est inférieure à celle de la deuxième carte ou si les couleurs sont identiques et la valeur de la première carte est inférieure à celle de la deuxième carte
+		* Vrai si la couleur et la valeur sont inférieures à celles de la carte passée en paramètre
 		*/
-		friend bool operator < (const Carte& c, const Carte& c2);
-
+		bool operator < (const Carte& c);
 
 		/**
 		* @brief 
@@ -76,7 +86,7 @@ public:
 		* @return
 		* Vrai si les couleurs et les valeurs des 2 cartes sont identiques
 		*/
-		friend bool operator == (const Carte& c, const Carte& c2);
+		bool operator == (const Carte& c);
 
 
 
