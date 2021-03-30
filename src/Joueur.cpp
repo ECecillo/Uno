@@ -74,6 +74,7 @@ Joueur::Joueur(const unsigned int num)
 
 Joueur::~Joueur() {}
 
+
 // insère une carte dans tableJoueur pour version txt
 void Joueur::insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte &c)
 {
@@ -237,3 +238,11 @@ unsigned int Joueur::getLarg() const { return larg; }
 
 // récupère la hauteur pour la version txt
 unsigned int Joueur::getHaut() const { return haut; }
+
+char Joueur::getXY (const int x, const int y) const {
+	assert(x>=0);
+	assert(y>=0);
+	assert(x<largeur);
+	assert(y<hauteur);
+	return tableVierge[x][y];
+}

@@ -34,6 +34,11 @@ Jeu::~Jeu()
     nombreJoueurs = 0;
 }
 
+const Joueur &Jeu::getConstEnv() const
+{
+    return *joueurs;
+}
+
 Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
 {
     initCarte();
@@ -64,7 +69,7 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
     }
     if (testUno())
     {
-        actionJoueur('s'); // x et y à 0 car on a pas besoin de coord ici.
+        actionJoueur('U'); // x et y à 0 car on a pas besoin de coord ici.
     }
     unsigned int pos = (180 - (nombreJoueurs - 1) * 11 - (nombreJoueurs - 2)) / 2;
 
@@ -122,7 +127,7 @@ void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x =
 {
     switch (action)
     {
-    case 'q':
+    case 'a':
         // On déplace le curseur * à gauche.
 
         break;
@@ -146,9 +151,15 @@ void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x =
         
         }
     */
-    case 's': // On appuie sur espace
-        // On doit regarder quelle joueur à appuyer sur espace en premier.
+    case 'u':
+        // uno.
+
         break;
+    case 'c':
+        // Contre Uno.
+    case 'p':
+        // On Pioche.
+
     case 'e':
     {
         // On appuie sur la touche entrée.
@@ -173,13 +184,13 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
         // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
         joueurs[joueurActif].modifMainTxt();
         // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
-        joueurs[joueurActif].modifTalonPiocheTxt(talon,pioche);
+        joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 
         // gestion des cartes spéciales
         switch ((talon.front()).getValeur())
         {
         case 10:
-            sensJeu += (-1) *sensJeu;
+            sensJeu += (-1) * sensJeu;
             break;
         case 11:
             joueurActif++;
@@ -213,13 +224,24 @@ bool Jeu::testUno()
 
 void Jeu::termineTour()
 {
-    if (joueurActif == nombreJoueurs + nombreIA)
+    switch (sensJeu)
     {
-        joueurActif = 0;
-    }
-    else
-    {
-        joueurActif++;
+    case 1:
+        if (joueurActif == nombreJoueurs + nombreIA)
+        {
+            joueurActif = 0;
+        }
+        else
+        {
+            joueurActif++;
+        }
+        break;
+    case 0:
+        /* code */
+        break;
+
+    default:
+        break;
     }
 }
 
@@ -292,8 +314,8 @@ void Jeu::relancePiocheJeu()
 // à insérer dans la boucle pour la version txt
 void Jeu::MaJTableJoueurActifDebutTour()
 {
-    joueurs[joueurActif].modifAdversairesTxt(joueurs,nombreJoueurs);
-    joueurs[joueurActif].modifTalonPiocheTxt(talon,pioche);
+    joueurs[joueurActif].modifAdversairesTxt(joueurs, nombreJoueurs);
+    joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 }
 
 void Jeu::testRegression()

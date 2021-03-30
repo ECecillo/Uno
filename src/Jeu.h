@@ -123,6 +123,7 @@ public:
 	 */
 	void distribueCarte();
 
+	const Joueur& getConstEnv() const;
 
 	/**
 	 * @brief 
@@ -203,10 +204,10 @@ public:
 
 	/**
 	 * @brief 
-	 * Actualise tableJoueur au début de son tour.
-	 * @return int 
+	 * Actualise tableJoueur au début de son tour. 
 	 */	
 	void MaJTableJoueurActifDebutTour();
+
 
 	void testRegression();
 };

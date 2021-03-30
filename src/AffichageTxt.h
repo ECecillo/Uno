@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <Joueur.h>
 
 using namespace std;
 class AffichageSDL
