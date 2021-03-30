@@ -1,15 +1,15 @@
 #ifndef JOUEUR_H
 #define JOUEUR_H
 
-#include <string>
+
+#include <string.h>
 #include <vector>
-#include "Carte.h"
+#include <Carte.h>
+#include <Jeu.h>
+#include <iostream>
 
 using namespace std;
 
-#include <string.h>
-#include <Carte.h>
-#include <iostream>
 class Joueur
 {
 private:
@@ -73,7 +73,7 @@ public:
 		* Dessine toutes les cartes de la main dans tableJoueur pour la version txt.
 		* 
 		*/
-		void dessinerMainTxt()
+		void dessinerMainTxt();
 
 		/**
 		* @brief 
@@ -100,7 +100,7 @@ public:
 		* [in] tableau de Joueur
 		* [in] unsigned int nombre de joueurs
 		*/
-		void modifAdversairesTxt(const Joueur * jo, unsigned int nbjoueurs);
+		void modifAdversairesTxt(Joueur * jo, unsigned int nbjoueurs);
 		
 		/**
 		* @brief 

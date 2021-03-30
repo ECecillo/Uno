@@ -34,17 +34,17 @@ Jeu::~Jeu()
     nombreJoueurs = 0;
 }
 
-Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA=0)
+Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
 {
     initCarte();
     nombreJoueurs = nbjoueurs;
     nombreIA = nbIA;
 
     // création du tableau joueurs
-    Joueur * joueurs = new Joueur[nombreJoueurs];
+    Joueur *joueurs = new Joueur[nombreJoueurs];
     for (unsigned int i = 0; i < nombreJoueurs; i++)
     {
-        Joueur joueur(i+1);
+        Joueur joueur(i + 1);
         joueurs[i] = joueur;
     }
 
@@ -57,24 +57,24 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA=0)
     distribueCarte(); // On donne les cartes au joueurs
     initTalon();      // On initialise le Talon.
     finTour = false;
-    
-    
-    if (finTour) {
+
+    if (finTour)
+    {
         termineTour();
     }
     if (testUno())
     {
         actionJoueur('s'); // x et y à 0 car on a pas besoin de coord ici.
     }
-    unsigned int pos = (180-(nbJoueurs-1)*11-(nbJoueurs-2))/2;
+    unsigned int pos = (180 - (nombreJoueurs - 1) * 11 - (nombreJoueurs - 2)) / 2;
 
-    for (unsigned int i = 0; i<nbJoueurs; i++)
+    for (unsigned int i = 0; i < nombreJoueurs; i++)
     {
-        for (unsigned int j = 0; j<nbJoueurs-1; j++)
+        for (unsigned int j = 0; j < nombreJoueurs - 1; j++)
         {
-            joueurs[i].insererCarteAdversairePositionJ(pos+12*j,joueurs[(i+1+j)%nbJoueurs].numeroJoueur);
-            joueurs[i].tableJoueur[4][pos+12*j+4] = (joueurs[(i+1+j)%nbJoueurs].main.size()) / 10;
-            joueurs[i].tableJoueur[4][pos+12*j+5] = (joueurs[(i+1+j)%nbJoueurs].main.size()) % 10;
+            joueurs[i].insererCarteAdversairePositionJ(pos + 12 * j, joueurs[(i + 1 + j) % nombreJoueurs].numeroJoueur);
+            joueurs[i].tableJoueur[4][pos + 12 * j + 4] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) / 10;
+            joueurs[i].tableJoueur[4][pos + 12 * j + 5] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) % 10;
         }
     }
 }
@@ -97,24 +97,25 @@ bool Jeu::carteValide(const Carte c) const
     bool chercheCouleur = false;
     if (c.getValeur() == 13)
     {
-        unsigned int i=0;
-        while (i<joueurs[joueurActif].main[i].size() && !chercheCouleur) 
+        unsigned int i = 0;
+        while (i < joueurs[joueurActif].main.size() && !chercheCouleur)
         {
-            if ((c.getCouleur() == joueurs[joueurActif].main[i]).getCouleur()) chercheCouleur = true;
+            if ((c.getCouleur() == joueurs[joueurActif].main[i].getCouleur()))
+                chercheCouleur = true;
             i++;
         }
     }
-    return  (c.getValeur() == talon.front().getValeur()) ||
-            (c.getCouleur() == talon.front().getCouleur()) ||
-            (c.getValeur() == 14) ||
-            (c.getValeur() == 13 && chercheCouleur == false); // On compare la carte que l'on a passé en paramètre à celle qui est actuellement retourné sur le talon.
+    return (c.getValeur() == talon.front().getValeur()) ||
+           (c.getCouleur() == talon.front().getCouleur()) ||
+           (c.getValeur() == 14) ||
+           (c.getValeur() == 13 && chercheCouleur == false); // On compare la carte que l'on a passé en paramètre à celle qui est actuellement retourné sur le talon.
 }
 
 void Jeu::piocherCarte()
 {
     joueurs[joueurActif].main.push_back(pioche.top());
     joueurs[joueurActif].modifMainTxt();
-    joueurs[joueurActif].modifTalonPioche();
+    joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 }
 
 void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x = 0, const int y = 0) // Fenêtre
@@ -127,8 +128,7 @@ void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x =
         break;
     case 'd':
         // On déplace le curseur * à droite.
-        
-        
+
         break;
     /* case 'c':
         if ((x >= (5/16*dimx) && y >= (3/8*dimy))&&
@@ -154,7 +154,7 @@ void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x =
         // On appuie sur la touche entrée.
         unsigned int indiceCarte; // Indice de de la carte qui sera joué.
         string er;                //Message d'erreur à afficher.
-        poserCarte(c, indiceCarte, er);
+        poserCarte(indiceCarte, er);
 
         break;
     }
@@ -166,38 +166,41 @@ void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x =
 void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
 {
     if (carteValide(joueurs[joueurActif].main[indiceCarte]))
-    {                  // La carte qu'il veut poser est valide
+    {                                                       // La carte qu'il veut poser est valide
         talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
         joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
 
-                // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
+        // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
         joueurs[joueurActif].modifMainTxt();
         // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
-        joueurs[joueurActif].modifTalonPioche();
+        joueurs[joueurActif].modifTalonPiocheTxt(talon,pioche);
 
         // gestion des cartes spéciales
         switch ((talon.front()).getValeur())
         {
-            case 10: sensJeu += (-1)**sensJeu;
-                    break;
-            case 11: joueurActif++;
-                    break;
-            case 12: joueurActif++;
-                    piocherCarte();
-                    piocherCarte();
-                    break;
-            case 13: joueurActif++;
-                    for (unsigned int i = 0; i < 4; i++) piocherCarte();
-                    break;
-            case 14: 
-                    break;
+        case 10:
+            sensJeu += (-1) *sensJeu;
+            break;
+        case 11:
+            joueurActif++;
+            break;
+        case 12:
+            joueurActif++;
+            piocherCarte();
+            piocherCarte();
+            break;
+        case 13:
+            joueurActif++;
+            for (unsigned int i = 0; i < 4; i++)
+                piocherCarte();
+            break;
+        case 14:
+            break;
         }
-
-        
     }
     else
     {
-        messageErreur = "Cette carte ne peut pas être déposée."; 
+        messageErreur = "Cette carte ne peut pas être déposée.";
         // Voir si on ajoute d'autre message.
     }
 }
@@ -289,31 +292,28 @@ void Jeu::relancePiocheJeu()
 // à insérer dans la boucle pour la version txt
 void Jeu::MaJTableJoueurActifDebutTour()
 {
-    joueurs[joueurActif].modifAdversairesTxt();
-    joueurs[JoueurActif].modifTalonPioche();
+    joueurs[joueurActif].modifAdversairesTxt(joueurs,nombreJoueurs);
+    joueurs[joueurActif].modifTalonPiocheTxt(talon,pioche);
 }
 
 void Jeu::testRegression()
 {
-    new Jeu jeuTest = Jeu;
-
     // test du constructeur
-    assert (jeuTest.nombreJoueurs==0);
-    assert (jeuTest.sensJeu==1);
-    assert (jeuTest.joueurActif==0);
+    assert(nombreJoueurs == 0);
+    assert(sensJeu == 1);
+    assert(joueurActif == 0);
 
     // test de piocheVide
-    assert (jeuTest.piocheVide());
+    assert(piocheVide());
 
-    
     // test de initCarte
-    jeuTest.initCarte();
-    assert (jeuTest.pioche.size()==104);
+    initCarte();
+    assert(pioche.size() == 104);
 
     // test de initTalon
-    assert (jeuTest.pioche.size()==103);
-    assert (jeuTest.talon.size()==1);
-    
+    assert(pioche.size() == 103);
+    assert(talon.size() == 1);
+
     /* en attente
     
     nombreJoueur=3;
@@ -331,30 +331,25 @@ void Jeu::testRegression()
     */
 
     // test de carteValide
-    Carte t = jeuTest.talon.front();
+    Carte t = talon.front();
     Carte c1(t.getValeur(), 4);
-    Carte c2(8,t.getCouleur());
-    Carte c3(3,1);
-    Carte c4(5,2);
-    Carte c5(4,3);
-    assert (jeuTest.carteValide(c1));
-    assert (jeuTest.carteValide(c2));
-    assert (!jeuTest.carteValide(c3) || !jeuTest.carteValide(c4) || !jeuTest.carteValide(c5));
+    Carte c2(8, t.getCouleur());
+    Carte c3(3, 1);
+    Carte c4(5, 2);
+    Carte c5(4, 3);
+    assert(carteValide(c1));
+    assert(carteValide(c2));
+    assert(!carteValide(c3) || !carteValide(c4) || !carteValide(c5));
 
     // test de poserCarte
 
-    
-
     // test de termineTour
-    nombreIA=0;
-    jeuTest.termineTour();
-    assert(jeuTest.joueurActif == 1);
-    jeuTest.joueurActif = 2;
-    jeuTest.termineTour();
-    assert(jeuTest.joueurActif == 0);
+    nombreIA = 0;
+    termineTour();
+    assert(joueurActif == 1);
+    joueurActif = 2;
+    termineTour();
+    assert(joueurActif == 0);
 
     // relancePiocheJeu
-    
-
-    }
 }

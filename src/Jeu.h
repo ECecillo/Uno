@@ -99,7 +99,7 @@ public:
 	 * @param joueur 
 	 * @param variante 
 	 */
-	Jeu(const vector<Joueur> &joueur, const vector<bool> variante, const unsigned int nbIA);
+	Jeu(const unsigned int nbjoueurs, const unsigned int nbIA); // const vector<Joueur> &joueur, const vector<bool> variante,
 
 	~Jeu();
 
@@ -188,7 +188,7 @@ public:
 	 * @param indiceCarte : l'indice de la carte que le joueur veut poser.
 	 * @param messageErreur : Message d'erreur à afficher avec l'interface Graphique.
 	 */
-	void poserCarte(const Carte c,unsigned int& indiceCarte, string &messageErreur);
+	void poserCarte(unsigned int& indiceCarte, string &messageErreur);
 
 	/**
 	 * @brief 
