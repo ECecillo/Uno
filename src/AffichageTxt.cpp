@@ -15,8 +15,8 @@ void txtAff(Terrain &win, const Jeu &jeu)
     win.clear();
 
     // Affichage de la pioche, talon, passer ...
-    for (int x = 0; x < ter.getLarg(); ++x)
-        for (int y = 0; y < ter.getHaut(); ++y)
+    for (unsigned int x = 0; x < ter.getLarg(); ++x)
+        for (unsigned int y = 0; y < ter.getHaut(); ++y)
             win.print(x, y, ter.getXY(x, y));
 
     win.draw();

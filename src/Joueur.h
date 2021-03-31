@@ -5,7 +5,9 @@
 #include <string.h>
 #include <vector>
 #include <Carte.h>
-#include <Jeu.h>
+//#include <Jeu.h>
+#include <queue>
+#include <stack>
 #include <iostream>
 
 using namespace std;

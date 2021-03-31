@@ -33,11 +33,6 @@ public:
 	 */
 	Terrain(int dx, int dy);
 	/**
-	 * @brief Détruit l'objet terrain.
-	 * 
-	 */
-	~Terrain();
-	/**
 	 * @brief 
 	 * 
 	 * @param c 
