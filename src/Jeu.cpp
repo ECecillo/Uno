@@ -9,6 +9,7 @@
 #include <time.h>
 #include <random>
 #include <chrono>
+#include <Carte.h>
 
 using namespace std;
 
@@ -121,10 +122,26 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
     {
     case 'a':
         // On déplace le curseur * à gauche.
-
+        
+        if (joueurs[joueurActif].indiceEtoile == 0) // Si on est déjà à l'indice 0 on bouge pas.
+        {
+            break;
+        }
+        else
+        {
+            joueurs[joueurActif].indiceEtoile--;
+        }
         break;
     case 'd':
         // On déplace le curseur * à droite.
+        if (joueurs[joueurActif].indiceEtoile == joueurs[joueurActif].main.size()) // Si on est déjà à l'indice 0 on bouge pas.
+        {
+            break;
+        }
+        else
+        {
+            joueurs[joueurActif].indiceEtoile++;
+        }
 
         break;
     /* case 'c':
@@ -145,18 +162,20 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
     */
     case 'u':
         // uno.
-
+        
         break;
     case 'c':
         // Contre Uno.
     case 'p':
         // On Pioche.
-
+        piocherCarte();
     case 'e':
     {
-        // On appuie sur la touche entrée.
-        unsigned int indiceCarte; // Indice de de la carte qui sera joué.
-        string er;                //Message d'erreur à afficher.
+        // On appuie sur la touche entrée = poser carte.
+        // Fonction qui renvoie l'indice où est l'étoile.
+
+        unsigned int indiceCarte = joueurs[joueurActif].main[joueurActif].positionEtoile; // Indice de de la carte qui sera joué.
+        string er;                                                                        //Message d'erreur à afficher.
         poserCarte(indiceCarte, er);
 
         break;
@@ -314,6 +333,8 @@ void Jeu::relancePiocheJeu()
 // à insérer dans la boucle pour la version txt
 void Jeu::MaJTableJoueurActifDebutTour()
 {
+    assert(sensJeu == 0 || sensJeu == 1);
+    joueurs[joueurActif].modifMainTxt();
     joueurs[joueurActif].modifAdversairesTxt(joueurs, nombreJoueurs);
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 }

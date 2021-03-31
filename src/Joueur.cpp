@@ -75,7 +75,6 @@ Joueur::Joueur(const unsigned int num)
 
 Joueur::~Joueur() {}
 
-
 // insère une carte dans tableJoueur pour version txt
 void Joueur::insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte &c)
 {
@@ -98,7 +97,7 @@ void Joueur::insererCarteAdversairePositionJ(unsigned int indj, unsigned int num
     for (unsigned int i = 1; i < 9; i++)
         for (unsigned int j = indj; j < indj + 11; j++)
             tableJoueur[i][j] = carteVierge[i - 1][j - indj];
-    
+
     tableJoueur[5][indj + 2] = 'c';
     tableJoueur[5][indj + 3] = 'a';
     tableJoueur[5][indj + 4] = 'r';
@@ -119,7 +118,14 @@ void Joueur::effacerMainTxt()
 void Joueur::dessinerMainTxt()
 {
     for (unsigned int i = 0; i < main.size(); i++)
-        insererCartePositionIJ(22 + 9 * (main.size() / 15), 12 * (i % 15), main[i]);
+        if (indiceEtoile == i) // On affiche le curseur dans la carte à l'indice i.
+        {
+            main[i].carte[1][5] = '*';
+        }
+        else
+        {
+            insererCartePositionIJ(22 + 9 * (main.size() / 15), 12 * (i % 15), main[i]);
+        }
 }
 
 // pour la version txt
@@ -142,58 +148,58 @@ void Joueur::modifTalonPiocheTxt(const queue<Carte> &t, const stack<Carte> &p)
         switch (v)
         {
         case 10:
-            carte[15][104] = 'i';
-            carte[15][105] = 'n';
-            carte[15][106] = 'v';
+            main[numeroJoueur].carte[15][104] = 'i';
+            main[numeroJoueur].carte[15][105] = 'n';
+            main[numeroJoueur].carte[15][106] = 'v';
             break;
         case 11:
-            carte[15][104] = 'p';
-            carte[15][105] = 'a';
-            carte[15][106] = 's';
+            main[numeroJoueur].carte[15][104] = 'p';
+            main[numeroJoueur].carte[15][105] = 'a';
+            main[numeroJoueur].carte[15][106] = 's';
             break;
         case 12:
-            carte[15][105] = '+';
-            carte[15][106] = '2';
+            main[numeroJoueur].carte[15][105] = '+';
+            main[numeroJoueur].carte[15][106] = '2';
             break;
         case 13:
-            carte[15][105] = '+';
-            carte[15][106] = '4';
+            main[numeroJoueur].carte[15][105] = '+';
+            main[numeroJoueur].carte[15][106] = '4';
             break;
         case 14:
-            carte[15][103] = 'j';
-            carte[15][104] = 'o';
-            carte[15][105] = 'k';
-            carte[15][106] = 'e';
-            carte[15][107] = 'r';
+            main[numeroJoueur].carte[15][103] = 'j';
+            main[numeroJoueur].carte[15][104] = 'o';
+            main[numeroJoueur].carte[15][105] = 'k';
+            main[numeroJoueur].carte[15][106] = 'e';
+            main[numeroJoueur].carte[15][107] = 'r';
             break;
         }
     switch (c)
     {
     case 1:
-        carte[16][103] = 'r';
-        carte[16][104] = 'o';
-        carte[16][105] = 'u';
-        carte[16][106] = 'g';
-        carte[16][107] = 'e';
+        main[numeroJoueur].carte[16][103] = 'r';
+        main[numeroJoueur].carte[16][104] = 'o';
+        main[numeroJoueur].carte[16][105] = 'u';
+        main[numeroJoueur].carte[16][106] = 'g';
+        main[numeroJoueur].carte[16][107] = 'e';
         break;
     case 2:
-        carte[16][104] = 'v';
-        carte[16][105] = 'e';
-        carte[16][106] = 'r';
-        carte[16][107] = 't';
+        main[numeroJoueur].carte[16][104] = 'v';
+        main[numeroJoueur].carte[16][105] = 'e';
+        main[numeroJoueur].carte[16][106] = 'r';
+        main[numeroJoueur].carte[16][107] = 't';
         break;
     case 3:
-        carte[16][104] = 'b';
-        carte[16][105] = 'l';
-        carte[16][106] = 'e';
-        carte[16][107] = 'u';
+        main[numeroJoueur].carte[16][104] = 'b';
+        main[numeroJoueur].carte[16][105] = 'l';
+        main[numeroJoueur].carte[16][106] = 'e';
+        main[numeroJoueur].carte[16][107] = 'u';
         break;
     case 4:
-        carte[16][103] = 'j';
-        carte[16][104] = 'a';
-        carte[16][105] = 'u';
-        carte[16][106] = 'n';
-        carte[16][107] = 'e';
+        main[numeroJoueur].carte[16][103] = 'j';
+        main[numeroJoueur].carte[16][104] = 'a';
+        main[numeroJoueur].carte[16][105] = 'u';
+        main[numeroJoueur].carte[16][106] = 'n';
+        main[numeroJoueur].carte[16][107] = 'e';
         break;
     }
 
@@ -216,7 +222,6 @@ void Joueur::modifTalonPiocheTxt(const queue<Carte> &t, const stack<Carte> &p)
 
 void Joueur::modifAdversairesTxt(Joueur *jo, const unsigned int nbjoueurs)
 {
-    assert(sensJeu == 0 || sensJeu == 1);
     unsigned int pos = (180 - (nbjoueurs - 1) * 11 - (nbjoueurs - 2)) / 2;
     for (unsigned int i = 0; i < nbjoueurs; i++)
     {
@@ -240,10 +245,11 @@ unsigned int Joueur::getLarg() const { return larg; }
 // récupère la hauteur pour la version txt
 unsigned int Joueur::getHaut() const { return haut; }
 
-char Joueur::getXY (const int x, const int y) const {
-	assert(x>=0);
-	assert(y>=0);
-	assert(x<largeur);
-	assert(y<hauteur);
-	return tableVierge[x][y];
+char Joueur::getXY(const int x, const int y) const
+{
+    assert(x >= 0);
+    assert(y >= 0);
+    assert(x < largeur);
+    assert(y < hauteur);
+    return tableVierge[x][y];
 }
