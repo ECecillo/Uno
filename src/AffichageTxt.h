@@ -1,29 +1,13 @@
+#ifndef AFFICHAGE_SDL
+#define AFFICHAGE_SDL
+
+#include <vector>
+#include <string>
+#include <Jeu.h>
+
+using namespace std;
 
 
-class AffichageSDL
-{
-private:
-		
-	NomsMenu tableau de liens vers chaine de caractères //map (Jouer,Reprendre,Quitter,Logs,Règles)	
-
-	 
-
-public:
-		
-		affichageTxt(); // redéfinition
-
-
-		~affichageTxt();
-
-
-		void Draw();
-
-
-		void boucleJeu();
-
-
-		
-				
-};
+void txtBoucle(Jeu &jeu);
 
 #endif
