@@ -109,6 +109,8 @@ void Carte::setCouleur(const unsigned int c)
     assert (c<5);
     couleur = c;
 }
+
+bool Carte::operator<(const Carte &c2)
 {
     return (couleur < c2.getCouleur()) || (couleur == c2.getCouleur() && valeur < c2.getValeur());
 }
