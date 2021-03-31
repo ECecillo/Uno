@@ -52,8 +52,6 @@ void termInit()      // configure la saisie : ne pas afficher les caracteres tap
 #else
     struct termios ttystate;
     bool state = true;
-    MEVENT event;
-    int c;
 
     //get the terminal state
     tcgetattr(STDIN_FILENO, &ttystate);
@@ -76,7 +74,6 @@ void termInit()      // configure la saisie : ne pas afficher les caracteres tap
     t.c_lflag |= ~ECHO;
     tcsetattr(STDIN_FILENO, TCSANOW, &t);
 
-    mousemask(ALL_MOUSE_EVENTS, NULL); // Récupère tous les événements de la souris dans la fenêtre.
 #endif
 }
 
@@ -152,7 +149,7 @@ char Terrain::getCh() { // lire un caractere si une touche a ete pressee
         SetConsoleMode(consoleI, mode & ~ENABLE_LINE_INPUT & ~ENABLE_ECHO_INPUT);
         ReadConsole(consoleI, &touche, 1, &n, NULL);
     
-        for (i = 0; i < n; i++)
+        /* for (i = 0; i < n; i++)
         {
             switch (touche[i].EventType)
             {
@@ -171,19 +168,19 @@ char Terrain::getCh() { // lire un caractere si une touche a ete pressee
                     { // On clique sur passer.
 
                     }
-                   /*  if ((pos.X >= (1 / 32 * dimx) && pos.Y >= (dimy * 1 / 32)) &&
+                    if ((pos.X >= (1 / 32 * dimx) && pos.Y >= (dimy * 1 / 32)) &&
                         (pos.X <= (1 / 4 * dimx) && (pos.Y <= (1 / 6 * dimy))))
                     { // On clique sur Paramètres.
 
                     }
-                    */
+                   
                 }
                 break;
             default:
                 ErrorExit("Unknown event type");
                 break;
             }
-        }
+        } */
     }
 #else
     if (kbhit())

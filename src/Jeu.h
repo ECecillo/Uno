@@ -39,13 +39,13 @@ public:
 	 * @brief 
 	 * Nombre de Joueurs dans la partie.
 	 */
-	int nombreJoueurs;
+	unsigned int nombreJoueurs;
 
 	/**
 	 * @brief 
 	 * Nombre d'ordinateur dans la partie.
 	 */
-	int nombreIA;
+	unsigned int nombreIA;
 
 	/**
 	 * @brief 
