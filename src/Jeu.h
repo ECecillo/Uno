@@ -200,7 +200,7 @@ public:
 
 	void termineTour();
 
-	void actionJoueur(const char actionconst int x, const int y);
+	void actionJoueur(const char action, const int x, const int y);
 
 	/**
 	 * @brief 

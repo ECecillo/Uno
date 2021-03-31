@@ -2,6 +2,16 @@
 #define CARTE_H
 
 
+const char carteVierge[8][12] = {
+ "###########",
+ "#         #",
+ "#         #",
+ "#         #",
+ "#         #",
+ "#         #",
+ "#         #",
+ "###########"
+};
 
 /**
 * @brief
@@ -20,9 +30,13 @@ private:
 	 
 
 public:
-
 		char carte [8][11];// dessin de la Carte en version txt
-		
+
+		/**
+		 * @brief 
+		 * Position du curseur pour indiquer dans quelle carte on est.
+		 */
+		unsigned int positionEtoile;		
 
 		/**
 		* @brief 
@@ -33,13 +47,12 @@ public:
 
 
 		/**
-		* @brief 
-		* Constructeur avec valeur et couleur.
-		* 
-		* @param 
-		* [in] valeur entier naturel entre 0 et 14 
-		* [in] couleur entier naturel entre 1 et 4
-		*/
+		 * @brief Constructeur d'une carte à partir du patern carteVierge.
+		 * 
+		 * @param v : valeur de la carte.
+		 * @param c : couleur de la carte.
+		 * @param indiceEtoile : indice de l'étoile qui sert de curseur.
+		 */
 		Carte(const unsigned int v,const unsigned int c);
 
 		/**
@@ -85,7 +98,7 @@ public:
 		*/
 		bool operator == (const Carte& c);
 
-
+		void insereEtoile();
 
 		
 				
