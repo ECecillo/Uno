@@ -34,6 +34,11 @@ Jeu::~Jeu()
     nombreJoueurs = 0;
 }
 
+const Joueur &Jeu::getConstEnv() const
+{
+    return *joueurs;
+}
+
 Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
 {
     initCarte();
@@ -58,14 +63,6 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
     initTalon();      // On initialise le Talon.
     finTour = false;
 
-    if (finTour)
-    {
-        termineTour();
-    }
-    if (testUno())
-    {
-        actionJoueur('s'); // x et y à 0 car on a pas besoin de coord ici.
-    }
     unsigned int pos = (180 - (nombreJoueurs - 1) * 11 - (nombreJoueurs - 2)) / 2;
 
     for (unsigned int i = 0; i < nombreJoueurs; i++)
@@ -81,9 +78,9 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
 
 void Jeu::distribueCarte()
 {
-    for (int i = 0; i < nombreJoueurs; i++)
+    for (unsigned int i = 0; i < nombreJoueurs; i++)
     {
-        for (int j = 0; j < 7; j++)
+        for (unsigned int j = 0; j < 7; j++)
         {
             joueurs[i].main[j] = pioche.top();
             pioche.pop();
@@ -118,24 +115,42 @@ void Jeu::piocherCarte()
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 }
 
-void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x = 0, const int y = 0) // Fenêtre
+void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // Fenêtre
 {
     switch (action)
     {
-    case 'r': if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+    case 'r':
+        if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
             (talon.front()).setCouleur(1);
-    case 'v': if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+    case 'v':
+        if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
             (talon.front()).setCouleur(2);
-    case 'b': if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+    case 'b':
+        if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
             (talon.front()).setCouleur(3);
-    case 'j': if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+    case 'j':
+        if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
             (talon.front()).setCouleur(4);
-    case 'q':
-        // On déplace le curseur * à gauche.
-
+    case 'a':
+        if (joueurs[joueurActif].indiceEtoile == 0) // Si on est déjà à l'indice 0 on bouge pas.
+        {
+            break;
+        }
+        else
+        {
+            joueurs[joueurActif].indiceEtoile--;
+        }
         break;
     case 'd':
         // On déplace le curseur * à droite.
+        if (joueurs[joueurActif].indiceEtoile == joueurs[joueurActif].main.size()) // Si on est déjà à l'indice 0 on bouge pas.
+        {
+            break;
+        }
+        else
+        {
+            joueurs[joueurActif].indiceEtoile++;
+        }
 
         break;
     /* case 'c':
@@ -154,14 +169,22 @@ void Jeu::actionJoueur(const char action, const Carte c = Carte(), const int x =
         
         }
     */
-    case 's': // On appuie sur espace
-        // On doit regarder quelle joueur à appuyer sur espace en premier.
+    case 'u':
+        // uno.
+
         break;
+    case 'c':
+        // Contre Uno.
+    case 'p':
+        // On Pioche.
+        piocherCarte();
     case 'e':
     {
-        // On appuie sur la touche entrée.
-        unsigned int indiceCarte; // Indice de de la carte qui sera joué.
-        string er;                //Message d'erreur à afficher.
+        // On appuie sur la touche entrée = poser carte.
+        // Fonction qui renvoie l'indice où est l'étoile.
+
+        unsigned int indiceCarte = joueurs[joueurActif].main[joueurActif].positionEtoile; // Indice de de la carte qui sera joué.
+        string er;                                                                        //Message d'erreur à afficher.
         poserCarte(indiceCarte, er);
 
         break;
@@ -181,13 +204,13 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
         // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
         joueurs[joueurActif].modifMainTxt();
         // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
-        joueurs[joueurActif].modifTalonPiocheTxt(talon,pioche);
+        joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 
         // gestion des cartes spéciales
         switch ((talon.front()).getValeur())
         {
         case 10:
-            sensJeu += (-1) *sensJeu;
+            sensJeu += (-1) * sensJeu;
             break;
         case 11:
             joueurActif++;
@@ -213,21 +236,40 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
     }
 }
 
-bool Jeu::testUno()
+/* bool Jeu::testUno()
 {
     // si le joueur a 2 cartes il pourra dire Uno après avoir posé 1 carte
     return (joueurs[joueurActif].main).size() == 2;
 }
+*/
 
 void Jeu::termineTour()
 {
-    if (joueurActif == nombreJoueurs + nombreIA)
+    switch (sensJeu)
     {
-        joueurActif = 0;
-    }
-    else
-    {
-        joueurActif++;
+    case 1: // On joue à gauche.
+        if (joueurActif == nombreJoueurs + nombreIA)
+        {
+            joueurActif = 0;
+        }
+        else
+        {
+            joueurActif++;
+        }
+        break;
+    case 0: // On joue à droite
+        if (joueurActif == 0)
+        {
+            joueurActif = nombreJoueurs + nombreIA;
+        }
+        else
+        {
+            joueurActif--;
+        }
+        break;
+
+    default:
+        break;
     }
 }
 
@@ -256,8 +298,8 @@ void Jeu::initCarte()
     {
         for (j = 13; j < 15; j++) // Numéro
         {
-            // 13 : changement de couleur,
-            // 14 : carte +4.
+            // 14 : changement de couleur,
+            // 13 : carte +4.
             jeuCarte.push_back(Carte(j, i));
         }
     }
@@ -300,8 +342,10 @@ void Jeu::relancePiocheJeu()
 // à insérer dans la boucle pour la version txt
 void Jeu::MaJTableJoueurActifDebutTour()
 {
-    joueurs[joueurActif].modifAdversairesTxt(joueurs,nombreJoueurs);
-    joueurs[joueurActif].modifTalonPiocheTxt(talon,pioche);
+    assert(sensJeu == 0 || sensJeu == 1);
+    joueurs[joueurActif].modifMainTxt();
+    joueurs[joueurActif].modifAdversairesTxt(joueurs, nombreJoueurs);
+    joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 }
 
 void Jeu::testRegression()

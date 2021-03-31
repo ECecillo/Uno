@@ -3,9 +3,12 @@
 
 #include <stack> // Pour les piles.
 #include <queue>
+
+
 #include <Joueur.h>
 #include <Terrain.h>
 #include <Carte.h>
+
 
 using namespace std;
 
@@ -36,13 +39,13 @@ public:
 	 * @brief 
 	 * Nombre de Joueurs dans la partie.
 	 */
-	unsigned int nombreJoueurs;
+	int nombreJoueurs;
 
 	/**
 	 * @brief 
 	 * Nombre d'ordinateur dans la partie.
 	 */
-	unsigned int nombreIA;
+	int nombreIA;
 
 	/**
 	 * @brief 
@@ -66,7 +69,7 @@ public:
 	 * @brief 
 	 * Numéro du joueur qui est en train de jouer.
 	 */
-	int joueurActif;
+	unsigned int joueurActif;
 
 	/**
 	 * @brief 
@@ -123,6 +126,7 @@ public:
 	 */
 	void distribueCarte();
 
+	const Joueur& getConstEnv() const;
 
 	/**
 	 * @brief 
@@ -199,14 +203,14 @@ public:
 
 	void termineTour();
 
-	void actionJoueur(const char action, const Carte c,const int x, const int y);
+	void actionJoueur(const char action, const int x, const int y);
 
 	/**
 	 * @brief 
-	 * Actualise tableJoueur au début de son tour.
-	 * @return int 
+	 * Actualise tableJoueur au début de son tour. 
 	 */	
 	void MaJTableJoueurActifDebutTour();
+
 
 	void testRegression();
 };

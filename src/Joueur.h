@@ -21,6 +21,7 @@ public:
 		vector<Carte> main;		
 		unsigned int numeroJoueur;
 		char tableJoueur [50][200];// dessin de la table du Joueur en version txt
+		unsigned int indiceEtoile;
 
 		
 		/**
@@ -130,7 +131,7 @@ public:
 		unsigned int getHaut () const;
 
 
-		
+		char getXY (const int x, const int y) const;
 				
 };
 
