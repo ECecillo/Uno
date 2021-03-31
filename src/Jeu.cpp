@@ -9,7 +9,6 @@
 #include <time.h>
 #include <random>
 #include <chrono>
-#include <Carte.h>
 
 using namespace std;
 
