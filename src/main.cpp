@@ -1,12 +1,13 @@
-#include <Jeu.h>
+#include "AffichageTxt.h"
+#include "Terrain.h"
 #include <iostream>
 
 using namespace std;
 
-int main () {
-    Jeu j;
-    j.initCarte();
-    j.testRegression();
-
-    return 0;
+int main ( int argc, char** argv ) {
+    termClear();
+	Jeu jeu(2,0);
+	txtBoucle(jeu);
+    termClear();
+	return 0;
 }

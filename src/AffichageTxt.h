@@ -3,21 +3,11 @@
 
 #include <vector>
 #include <string>
-#include <Joueur.h>
+#include <Jeu.h>
 
 using namespace std;
-class AffichageSDL
-{
-private:
-	/**
- 	* @brief 
- 	*  Tableau dynamique de chaine de caractères
-	*  (Jouer,Reprendre,Quitter,Logs,Règles) 
- 	*/
-	vector<string> NomsMenu;
 
-public:
-	void boucleJeu();
-};
+
+void txtBoucle(Jeu &jeu);
 
 #endif

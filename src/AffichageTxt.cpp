@@ -44,11 +44,23 @@ void txtBoucle(Jeu &jeu)
         while (jeu.finTour == false) // Tant que l'on a pas terminé le tour.
         {
             jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
-            c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
-
-            jeu.actionJoueur(c, 0, 0); // Selon la touche entrée dans le terminale on active une action. (cf Jeu.cpp)
-            jeu.termineTour();         // On change le num joueurActif pour actualiser au prochain tour le jeu.
-            jeu.finTour = true;        // On arrête le while.
+            c = win.getCh();                    // On récupère le caractère de la touche appuyé et on le met dans c.
+            if (c == 'a')
+            {
+                jeu.actionJoueur('a', 0, 0);
+                continue;
+            }
+            else if (c == 'd')
+            {
+                jeu.actionJoueur('q', 0, 0);
+                continue;
+            }
+            else
+            {
+                jeu.actionJoueur(c, 0, 0); // Selon la touche entrée dans le terminale on active une action. (cf Jeu.cpp)
+                jeu.termineTour();         // On change le num joueurActif pour actualiser au prochain tour le jeu.
+                jeu.finTour = true;        // On arrête le while.
+            }
         }
 
         c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.

@@ -3,9 +3,12 @@
 
 #include <stack> // Pour les piles.
 #include <queue>
+
+
 #include <Joueur.h>
 #include <Terrain.h>
 #include <Carte.h>
+
 
 using namespace std;
 
@@ -36,13 +39,13 @@ public:
 	 * @brief 
 	 * Nombre de Joueurs dans la partie.
 	 */
-	unsigned int nombreJoueurs;
+	int nombreJoueurs;
 
 	/**
 	 * @brief 
 	 * Nombre d'ordinateur dans la partie.
 	 */
-	unsigned int nombreIA;
+	int nombreIA;
 
 	/**
 	 * @brief 
