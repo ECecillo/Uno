@@ -89,6 +89,8 @@ public:
 		*/
 		void setCouleur(const unsigned int c);
 
+		void setValeur(const unsigned int val);
+
 		/**
 		* @brief 
 		* Opérateur <.
