@@ -1,11 +1,13 @@
 #include <iostream>
 #include <vector>
 #include <stack> // Pour les piles.
+#include <set> // utile dans initCarte
 #include <cassert>
 #include <algorithm>
 #include <string.h>
 #include <Jeu.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <time.h>
 #include <random>
 #include <chrono>
@@ -27,10 +29,9 @@ Jeu::Jeu()
 
 Jeu::~Jeu()
 {
-
     delete[] joueurs;
     joueurs = NULL;
-
+    sensJeu = 1;
     nombreJoueurs = 0;
 }
 
@@ -96,12 +97,13 @@ void Jeu::distribueCarte()
 bool Jeu::carteValide(const Carte c) const
 {
     bool chercheCouleur = false;
-    if (c.getValeur() == 13)
+    //si carte +4, on regarde dans la main du joueur s'il y a une carte de la même couleur que celle du talon
+    if (c.getValeur() == 13) 
     {
         unsigned int i = 0;
         while (i < joueurs[joueurActif].main.size() && !chercheCouleur)
         {
-            if ((c.getCouleur() == joueurs[joueurActif].main[i].getCouleur()))
+            if (talon.front().getCouleur() == joueurs[joueurActif].main[i].getCouleur())
                 chercheCouleur = true;
             i++;
         }
@@ -240,7 +242,7 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
     }
 }
 
-/* bool Jeu::testUno()
+/* bool testUno()
 {
     // si le joueur a 2 cartes il pourra dire Uno après avoir posé 1 carte
     return (joueurs[joueurActif].main).size() == 2;
@@ -309,7 +311,7 @@ void Jeu::initCarte()
             jeuCarte.push_back(Carte(j, i));
         }
     }
-
+    /*
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::shuffle(jeuCarte.begin(), jeuCarte.end(), std::default_random_engine(seed));
 
@@ -318,7 +320,21 @@ void Jeu::initCarte()
     {
         pioche.push(jeuCarte[l]);
         l++;
-    } while (l <= jeuCarte.size());
+    } while (l < jeuCarte.size());*/
+    srand((unsigned int) time(NULL));
+    int Ind;
+    set<int>::iterator it;
+    set<int> indicesJeuCarte;
+    while (pioche.size() != 104) 
+    {
+        Ind = rand() % 104;
+        it = indicesJeuCarte.find(Ind);
+        if (it == indicesJeuCarte.end())
+        {
+            indicesJeuCarte.insert(Ind);
+            pioche.push(jeuCarte[Ind]);
+        }
+    }
 }
 
 void Jeu::initTalon()
@@ -357,10 +373,9 @@ void Jeu::MaJTableJoueurActifDebutTour()
 void Jeu::testRegression()
 {
     // test du constructeur
-    //assert(nombreJoueurs == 1);
-    //assert(sensJeu == 1);
-    //assert(joueurActif == 0);
-
+    assert(nombreJoueurs == 0);
+    assert(sensJeu == 1);
+    
     // test de piocheVide
     //assert(piocheVide());
 
@@ -382,7 +397,7 @@ void Jeu::testRegression()
 
     // Test de la pioche
     //printing content of queue
-    /* stack<Carte> temp;
+    stack<Carte> temp;
     while (pioche.empty() == false)
     {
         temp.push(pioche.top());
@@ -402,7 +417,7 @@ void Jeu::testRegression()
 		talon.pop();
 	}
 	cout<<endl; 
-    */
+   
 
     // test de carteValide
     Carte t = talon.front();
