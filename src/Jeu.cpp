@@ -305,7 +305,7 @@ void Jeu::initCarte()
             jeuCarte.push_back(Carte(j, i));
         }
     }
-    /*
+    
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::shuffle(jeuCarte.begin(), jeuCarte.end(), std::default_random_engine(seed));
 
@@ -314,21 +314,7 @@ void Jeu::initCarte()
     {
         pioche.push(jeuCarte[l]);
         l++;
-    } while (l < jeuCarte.size());*/
-    srand((unsigned int) time(NULL));
-    int Ind;
-    set<int>::iterator it;
-    set<int> indicesJeuCarte;
-    while (pioche.size() != 104) 
-    {
-        Ind = rand() % 104;
-        it = indicesJeuCarte.find(Ind);
-        if (it == indicesJeuCarte.end())
-        {
-            indicesJeuCarte.insert(Ind);
-            pioche.push(jeuCarte[Ind]);
-        }
-    }
+    } while (l < jeuCarte.size());
 }
 
 void Jeu::initTalon()
