@@ -109,6 +109,11 @@ void Carte::setCouleur(const unsigned int c)
     assert (c<5);
     couleur = c;
 }
+void Carte::setValeur(const unsigned int val)
+{
+    assert (val<15);
+    valeur = val;
+}
 
 bool Carte::operator<(const Carte &c2)
 {

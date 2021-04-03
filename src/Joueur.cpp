@@ -67,6 +67,8 @@ Joueur::Joueur(const unsigned int num)
     numeroJoueur = num;
     larg = largeur;
     haut = hauteur;
+    nom = "Joueur ";
+    nom += to_string(num);
     //initialisation de la table du Joueur à partir de la table vierge
     for (unsigned int x = 0; x < haut; x++)
         for (unsigned int y = 0; y < larg; y++)

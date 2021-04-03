@@ -1,9 +1,9 @@
 #include <iostream>
+#include <vector>
 #include <stack> // Pour les piles.
 #include <cassert>
 #include <algorithm>
 #include <string.h>
-#include <vector>
 #include <Jeu.h>
 #include <unistd.h>
 #include <time.h>
@@ -58,9 +58,10 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
 
     joueurActif = distrib(re); // On génère un numéro de joueur aléatoire pour le début de la partie.
 
-    sensJeu = 1;      // On tournera à gauche.
-    distribueCarte(); // On donne les cartes au joueurs
-    initTalon();      // On initialise le Talon.
+    sensJeu = 1; // On tournera à gauche.
+    //distribueCarte(); // On donne les cartes au joueurs
+
+    initTalon(); // On initialise le Talon.
     finTour = false;
 
     unsigned int pos = (180 - (nombreJoueurs - 1) * 11 - (nombreJoueurs - 2)) / 2;
@@ -80,12 +81,15 @@ void Jeu::distribueCarte()
 {
     for (unsigned int i = 0; i < nombreJoueurs; i++)
     {
+
         for (unsigned int j = 0; j < 7; j++)
         {
-            joueurs[i].main[j] = pioche.top();
+            cout << "CA VA PETER " << endl;
+            joueurs[i].main.push_back(pioche.top());
             pioche.pop();
+            cout << "BOUM " << endl;
         }
-        joueurs[i].modifMainTxt();
+        //joueurs[i].modifMainTxt();
     }
 }
 
@@ -286,10 +290,12 @@ void Jeu::initCarte()
             if (j > 12)
             {
                 jeuCarte.push_back(Carte(j - 12, i));
+                //cout << j << endl;
             }
             else
             {
                 jeuCarte.push_back(Carte(j, i));
+                //cout << j << endl;
             }
         }
     }
@@ -312,7 +318,7 @@ void Jeu::initCarte()
     {
         pioche.push(jeuCarte[l]);
         l++;
-    } while (l < jeuCarte.size());
+    } while (l <= jeuCarte.size());
 }
 
 void Jeu::initTalon()
@@ -351,35 +357,51 @@ void Jeu::MaJTableJoueurActifDebutTour()
 void Jeu::testRegression()
 {
     // test du constructeur
-    assert(nombreJoueurs == 0);
-    assert(sensJeu == 1);
-    assert(joueurActif == 0);
+    //assert(nombreJoueurs == 1);
+    //assert(sensJeu == 1);
+    //assert(joueurActif == 0);
 
     // test de piocheVide
-    assert(piocheVide());
+    //assert(piocheVide());
 
     // test de initCarte
-    initCarte();
-    assert(pioche.size() == 104);
+    //initCarte();
+    //assert(pioche.size() == 104);
 
     // test de initTalon
-    assert(pioche.size() == 103);
-    assert(talon.size() == 1);
+    //assert(pioche.size() == 103);
+    //assert(talon.size() == 1);
 
-    /* en attente
-    
-    nombreJoueur=3;
-    Joueur joueur1(1,"joueur 1");
-    Joueur joueur2(2,"joueur 2");
-    Joueur joueur3(3,"joueur 3");
+    //test de distribueCarte
+    Joueur joueur(3);
+    cout << "On a  : " << nombreJoueurs << endl;
 
+    //distribueCarte();
+    cout << "Numéro du joueur est :" << joueur.nom << endl;
+    cout << "Numéro du joueur 1 est : " << joueurs[0].nom << endl;
 
-    // test de distribueCarte
-    jeuTest.distribuerCarte();
-    (assert (jeuTest.joueur1.main).size() == 7);
-    (assert (jeuTest.joueur2.main).size() == 7);
-    (assert (jeuTest.joueur3.main).size() == 7);
-
+    // Test de la pioche
+    //printing content of queue
+    /* stack<Carte> temp;
+    while (pioche.empty() == false)
+    {
+        temp.push(pioche.top());
+        pioche.pop();
+    }  
+ 
+    while (temp.empty() == false)
+    {
+        Carte t = temp.top();
+        cout << "La valeur de la carte est "<<t.getValeur() << " et la couleur est " << t.getCouleur() << endl;
+        temp.pop();
+    }
+    cout << "===================================================== " << endl;
+    // Test du talon 
+    while (!talon.empty()){
+		cout<<" La valeur de la carte dans le talon est  " << talon.front().getValeur() << " et la couleur de la carte est " << talon.front().getCouleur();
+		talon.pop();
+	}
+	cout<<endl; 
     */
 
     // test de carteValide
