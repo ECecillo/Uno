@@ -32,6 +32,7 @@ Jeu::~Jeu()
     delete[] joueurs;
     joueurs = NULL;
     sensJeu = 1;
+    joueurActif = 0;
     nombreJoueurs = 0;
 }
 
@@ -45,20 +46,16 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
     initCarte();
     nombreJoueurs = nbjoueurs;
     nombreIA = nbIA;
-
     // création du tableau joueurs
-    Joueur *joueurs = new Joueur[nombreJoueurs];
+    joueurs = new Joueur[nombreJoueurs];
     for (unsigned int i = 0; i < nombreJoueurs; i++)
     {
         Joueur joueur(i + 1);
         joueurs[i] = joueur;
     }
-
     default_random_engine re(time(0));
     uniform_int_distribution<int> distrib{1, nombreJoueurs + nombreIA};
-
     joueurActif = distrib(re); // On génère un numéro de joueur aléatoire pour le début de la partie.
-
     sensJeu = 1;      // On tournera à gauche.
     distribueCarte(); // On donne les cartes au joueurs
     initTalon();      // On initialise le Talon.
@@ -83,7 +80,7 @@ void Jeu::distribueCarte()
     {
         for (unsigned int j = 0; j < 7; j++)
         {
-            joueurs[i].main[j] = pioche.top();
+            joueurs[i].main.push_back(pioche.top());
             pioche.pop();
         }
         joueurs[i].modifMainTxt();
@@ -315,6 +312,20 @@ void Jeu::initCarte()
         pioche.push(jeuCarte[l]);
         l++;
     } while (l < jeuCarte.size());
+    /*srand((unsigned int) time(NULL));
+    int Ind;
+    set<int>::iterator it;
+    set<int> indicesJeuCarte;
+    while (pioche.size() != 104) 
+    {
+        Ind = rand() % 104;
+        it = indicesJeuCarte.find(Ind);
+        if (it == indicesJeuCarte.end())
+        {
+            indicesJeuCarte.insert(Ind);
+            pioche.push(jeuCarte[Ind]);
+        }
+    }*/
 }
 
 void Jeu::initTalon()
@@ -353,7 +364,10 @@ void Jeu::MaJTableJoueurActifDebutTour()
 void Jeu::testRegression()
 {
     // test du constructeur
-    assert(nombreJoueurs == 0);
+    for (int i=0; i<nombreJoueurs; i++)
+        assert(joueurs[i].main.size()==7);
+    assert(pioche.size() == 107);
+    assert(talon.size() == 1);
     assert(sensJeu == 1);
     
     // test de piocheVide
@@ -361,14 +375,10 @@ void Jeu::testRegression()
 
     // test de initCarte
     initCarte();
-    assert(pioche.size() == 104);
-
-    // test de initTalon
-    assert(pioche.size() == 103);
-    assert(talon.size() == 1);
-
-    /* en attente
+    assert(pioche.size() == 108);
     
+
+    /*
     nombreJoueur=3;
     Joueur joueur1(1,"joueur 1");
     Joueur joueur2(2,"joueur 2");
@@ -376,10 +386,10 @@ void Jeu::testRegression()
 
 
     // test de distribueCarte
-    jeuTest.distribuerCarte();
-    (assert (jeuTest.joueur1.main).size() == 7);
-    (assert (jeuTest.joueur2.main).size() == 7);
-    (assert (jeuTest.joueur3.main).size() == 7);
+    distribuerCarte();
+    (assert (joueur1.main).size() == 7);
+    (assert (joueur2.main).size() == 7);
+    (assert (joueur3.main).size() == 7);
 
     */
 
