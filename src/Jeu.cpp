@@ -366,32 +366,9 @@ void Jeu::testRegression()
     // test du constructeur
     for (int i=0; i<nombreJoueurs; i++)
         assert(joueurs[i].main.size()==7);
-    assert(pioche.size() == 107);
     assert(talon.size() == 1);
     assert(sensJeu == 1);
-    
-    // test de piocheVide
-    assert(piocheVide());
-
-    // test de initCarte
-    initCarte();
-    assert(pioche.size() == 108);
-    
-
-    /*
-    nombreJoueur=3;
-    Joueur joueur1(1,"joueur 1");
-    Joueur joueur2(2,"joueur 2");
-    Joueur joueur3(3,"joueur 3");
-
-
-    // test de distribueCarte
-    distribuerCarte();
-    (assert (joueur1.main).size() == 7);
-    (assert (joueur2.main).size() == 7);
-    (assert (joueur3.main).size() == 7);
-
-    */
+        
 
     // test de carteValide
     Carte t = talon.front();
@@ -407,7 +384,7 @@ void Jeu::testRegression()
     // test de poserCarte
 
     // test de termineTour
-    nombreIA = 0;
+    joueurActif = 0;
     termineTour();
     assert(joueurActif == 1);
     joueurActif = 2;
