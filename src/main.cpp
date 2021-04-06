@@ -8,7 +8,7 @@ int main ( int argc, char** argv ) {
     termClear();
 	Jeu jeu(2,0);
 	jeu.testRegression();
-    //txtBoucle(jeu);
+    txtBoucle(jeu);
     //termClear();
 	return 0;
 }
