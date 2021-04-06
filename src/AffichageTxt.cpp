@@ -43,6 +43,7 @@ void txtBoucle(Jeu &jeu)
 
         while (jeu.finTour == false) // Tant que l'on a pas terminé le tour.
         {
+            
             jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
             cout << "On passe " << endl;
             c = win.getCh();                    // On récupère le caractère de la touche appuyé et on le met dans c.
