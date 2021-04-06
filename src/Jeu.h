@@ -126,8 +126,6 @@ public:
 	 */
 	void distribueCarte();
 
-	const Joueur& getConstEnv() const;
-
 	/**
 	 * @brief 
 	 * 
