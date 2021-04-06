@@ -379,11 +379,11 @@ void Jeu::testRegression()
     
 
 
-    distribueCarte();
+    //distribueCarte();
     cout << "Numéro du joueur 1 est : " << joueurs[0].nom << endl;
    
 
-   
+/*    
    stack<Carte> temp;
     while (pioche.empty() == false)
     {
@@ -399,8 +399,8 @@ void Jeu::testRegression()
     }
     cout << "===================================================== " << endl;
 	cout<<endl; 
-
-    // test de carteValide
+*/
+    //  test de carteValide
     Carte t = talon.front();
     Carte c1(t.getValeur(), 4);
 
@@ -423,4 +423,15 @@ void Jeu::testRegression()
     assert(joueurActif == 0);
 
     // relancePiocheJeu
+
+
+
+
+    // Test Affichage Joueur.cpp
+    cout << joueurs->getHaut() << joueurs->getLarg() << endl;
+    /* for(unsigned int i = 0; i < joueurs->getHaut(); i++)
+        for(unsigned int j = 0; j < joueurs->getLarg(); j++)
+            cout << joueurs[joueurActif].tableJoueur[i][j] << endl;
+ */
+
 }
