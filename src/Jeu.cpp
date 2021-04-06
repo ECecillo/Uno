@@ -36,10 +36,6 @@ Jeu::~Jeu()
     nombreJoueurs = 0;
 }
 
-const Joueur &Jeu::getConstEnv() const
-{
-    return joueurs->getLarg();
-}
 
 Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
 {
@@ -417,7 +413,7 @@ void Jeu::testRegression()
     assert(!carteValide(c3) || !carteValide(c4) || !carteValide(c5));
 
     // test de poserCarte
-    
+
     // test de termineTour
     joueurActif = 0;
     termineTour();
