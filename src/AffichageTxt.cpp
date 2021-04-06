@@ -26,8 +26,8 @@ void txtBoucle(Jeu &jeu)
 {
     // Creation d'une nouvelle fenetre en mode texte
     // => fenetre de dimension et position (WIDTH,HEIGHT,STARTX,STARTY)
-    Terrain win(jeu.getConstEnv().getLarg(), jeu.getConstEnv().getHaut());
-
+    Terrain win(jeu.joueurs[jeu.joueurActif].getLarg(), jeu.joueurs[jeu.joueurActif].getHaut());
+    
     bool ok = true;
     int c;
 
