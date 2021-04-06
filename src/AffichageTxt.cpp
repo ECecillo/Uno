@@ -15,22 +15,24 @@ void txtAff(Terrain &win, const Jeu &jeu)
     win.clear();
 
     // Affichage de la pioche, talon, passer ...
-    for (unsigned int x = 0; x < ter.getLarg(); ++x)
-        for (unsigned int y = 0; y < ter.getHaut(); ++y)
+    for (unsigned int x = 0; x < ter.getHaut(); ++x)
+        for (unsigned int y = 0; y < ter.getLarg(); ++y)
             win.print(x, y, ter.getXY(x, y));
 
-    win.draw();
+    //  win.draw();
 }
 
 void txtBoucle(Jeu &jeu)
 {
     // Creation d'une nouvelle fenetre en mode texte
     // => fenetre de dimension et position (WIDTH,HEIGHT,STARTX,STARTY)
-    Terrain win(jeu.joueurs[jeu.joueurActif].getLarg(), jeu.joueurs[jeu.joueurActif].getHaut());
+    Terrain win(jeu.joueurs[jeu.joueurActif].getHaut(), jeu.joueurs[jeu.joueurActif].getLarg());
     
     bool ok = true;
     int c;
+    txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
 
+    /* 
     do
     {
         txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
@@ -73,4 +75,5 @@ void txtBoucle(Jeu &jeu)
         }
 
     } while (ok || jeu.finPartie == false);
+ */
 }

@@ -19,6 +19,9 @@
 
 #endif
 
+#include <iostream>
+using namespace std;
+
 void termMove(int x, int y) // deplace le curseur du terminal
 {
 #ifdef _WIN32
