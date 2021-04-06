@@ -71,8 +71,14 @@ Joueur::Joueur(const unsigned int num)
     nom += to_string(num);
     //initialisation de la table du Joueur à partir de la table vierge
     for (unsigned int x = 0; x < haut; x++)
+    {
         for (unsigned int y = 0; y < larg; y++)
-            tableJoueur[x][y] = tableVierge[x][y];
+            {
+                tableJoueur[x][y] = tableVierge[x][y];
+                cout << tableJoueur[x][y];
+            }
+        cout << endl;
+    }
 }
 
 Joueur::~Joueur() {}
