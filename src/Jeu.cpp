@@ -64,7 +64,8 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
         for (unsigned int j = 0; j < nombreJoueurs - 1; j++)
         {
             joueurs[i].insererCarteAdversairePositionJ(pos + 12 * j, joueurs[(i + 1 + j) % nombreJoueurs].numeroJoueur);
-            joueurs[i].tableJoueur[4][pos + 12 * j + 4] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) / 10;
+            if (joueurs[(i + 1 + j) % nombreJoueurs].main.size()>=10)
+                joueurs[i].tableJoueur[4][pos + 12 * j + 4] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) / 10;
             joueurs[i].tableJoueur[4][pos + 12 * j + 5] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) % 10;
         }
     }
@@ -74,14 +75,13 @@ void Jeu::distribueCarte()
 {
     for (unsigned int i = 0; i < nombreJoueurs; i++)
     {
-
         for (unsigned int j = 0; j < 7; j++)
         {
             joueurs[i].main.push_back(pioche.top());
             pioche.pop();
             cout << "BOUM " << endl;
         }
-        //joueurs[i].modifMainTxt();
+        joueurs[i].modifMainTxt();
     }
 }
 
@@ -279,29 +279,17 @@ void Jeu::initCarte()
     {
         jeuCarte.push_back(Carte(0, i)); // On met les quatres 0 de chaque couleur à chaque fois que l'on change de couleur.
         for (j = 1; j < 25; j++)         // Numéro
-        {
             if (j > 12)
-            {
                 jeuCarte.push_back(Carte(j - 12, i));
-                //cout << j << endl;
-            }
             else
-            {
                 jeuCarte.push_back(Carte(j, i));
-                //cout << j << endl;
-            }
-        }
     }
 
     for (i = 1; i < 5; i++) // Couleur : [1] Rouge, [2] Vert, [3] Bleu, [4] jaune
-    {
         for (j = 13; j < 15; j++) // Numéro
-        {
             // 14 : changement de couleur,
             // 13 : carte +4.
             jeuCarte.push_back(Carte(j, i));
-        }
-    }
     
 /*     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::shuffle(jeuCarte.begin(), jeuCarte.end(), std::default_random_engine(seed));
@@ -333,6 +321,8 @@ void Jeu::initTalon()
 {
     talon.push(pioche.top()); // Carte mis dans la talon, celle sur laquelle on va jouer.
     pioche.pop();             // Elle dans la file, on la supprime de la pile.
+    for(int i=0; i<nombreJoueurs; i++)
+        joueurs[i].modifTalonPiocheTxt(talon, pioche);
 }
 
 bool Jeu::piocheVide()
@@ -428,7 +418,7 @@ void Jeu::testRegression()
 
 
     // Test Affichage Joueur.cpp
-    cout << joueurs->getHaut() << joueurs->getLarg() << endl;
+    /*cout << joueurs->getHaut() << joueurs->getLarg() << endl;*/
     /* for(unsigned int i = 0; i < joueurs->getHaut(); i++)
         for(unsigned int j = 0; j < joueurs->getLarg(); j++)
             cout << joueurs[joueurActif].tableJoueur[i][j] << endl;

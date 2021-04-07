@@ -84,11 +84,13 @@ Terrain::Terrain (int dx, int dy) {
     dimx = dx;
     dimy = dy;
     ter = new char[dimx*dimy];
-    clear();
+    clear('.');
     termInit();
+    
 }
 
 void Terrain::clear (char c) {
+    cout << "ok";
     for(int i=0;i<dimx;++i)
         for(int j=0;j<dimy;++j)
             print(i,j,c);
@@ -100,6 +102,7 @@ void Terrain::print (int x, int y, char c) {
     if (x>=dimx) return;
     if (y>=dimy) return;
     ter[y*dimx+x] = c;
+    
 }
 
 void Terrain::print (int x, int y, char* c) {
@@ -109,9 +112,9 @@ void Terrain::print (int x, int y, char* c) {
 
 void Terrain::draw (int x, int y) {
     termMove(0,0);
-    for(int j=0;j<dimy;++j) {
-        for(int i=0;i<dimx;++i)
-            printf("%c",ter[j*dimx+i]);
+    for(int j=0;j<dimx;++j) {
+       for(int i=0;i<dimy;++i)
+            printf("%c",ter[i*dimx+j]);
         printf("\n");
     }
     termMove(0,dimy);
