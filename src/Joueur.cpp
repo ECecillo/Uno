@@ -71,14 +71,8 @@ Joueur::Joueur(const unsigned int num)
     nom += to_string(num);
     //initialisation de la table du Joueur à partir de la table vierge
     for (unsigned int x = 0; x < haut; x++)
-    {
         for (unsigned int y = 0; y < larg; y++)
-            {
                 tableJoueur[x][y] = tableVierge[x][y];
-                //cout << tableJoueur[x][y];
-            }
-        //cout << endl;
-    }
 }
 
 Joueur::~Joueur() {}
@@ -215,17 +209,17 @@ void Joueur::modifTalonPiocheTxt(const queue<Carte> &t, const stack<Carte> &p)
     unsigned int taille = p.size();
     if (taille >= 100)
     {
-        tableJoueur[15][72] = '1';
-        tableJoueur[15][73] = '0' + (taille - 100) / 10;
-        tableJoueur[15][74] = '0' + taille % 10;
+        tableJoueur[15][73] = '1';
+        tableJoueur[15][74] = '0' + (taille - 100) / 10;
+        tableJoueur[15][75] = '0' + taille % 10;
     }
     else if (taille >= 10)
     {
-        tableJoueur[15][72] = '0' + taille / 10;
-        tableJoueur[15][73] = '0' + taille % 10;
+        tableJoueur[15][74] = '0' + taille / 10;
+        tableJoueur[15][75] = '0' + taille % 10;
     }
     else
-        tableJoueur[15][73] = '0' + taille;
+        tableJoueur[15][74] = '0' + taille;
 }
 
 void Joueur::modifAdversairesTxt(Joueur *jo, const unsigned int nbjoueurs)
@@ -259,6 +253,5 @@ char Joueur::getXY(const int x, const int y) const
     assert(y >= 0);
     assert(x < hauteur);
     assert(y < largeur);
-    //cout << tableJoueur[x][y] << " ";
     return tableJoueur[x][y];
 }
