@@ -102,16 +102,18 @@ void Terrain::print (int x, int y, char c) {
     ter[y*dimx+x] = c;
 }
 
-void Terrain::print (int x, int y, char* c) {
+/*
+ void Terrain::print (int x, int y, char* c) {
     int i=0;
     while (c[i]!='\0') {print(x+i,y,c[i]);++i;}
-}
+} 
+*/
 
 void Terrain::draw (int x, int y) {
     termMove(0,0);
-    for(int j=0;j<dimy;++j) {
-        for(int i=0;i<dimx;++i)
-            printf("%c",ter[j*dimx+i]);
+    for(int j=0;j<dimx;++j) {
+        for(int i=0;i<dimy;++i)
+            printf("%c",ter[i*dimx+j]);
         printf("\n");
     }
     termMove(0,dimy);

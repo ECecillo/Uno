@@ -81,7 +81,7 @@ void Jeu::distribueCarte()
             pioche.pop();
             cout << "BOUM " << endl;
         }
-        //joueurs[i].modifMainTxt();
+        joueurs[i].modifMainTxt();
     }
 }
 
