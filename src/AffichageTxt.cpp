@@ -19,7 +19,7 @@ void txtAff(Terrain &win, const Jeu &jeu)
         for (unsigned int y = 0; y < ter.getLarg(); ++y)
             win.print(x, y, ter.getXY(x, y));
 
-    //  win.draw();
+    win.draw();
 }
 
 void txtBoucle(Jeu &jeu)
@@ -30,9 +30,9 @@ void txtBoucle(Jeu &jeu)
     
     bool ok = true;
     int c;
-    txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
+    //txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
 
-    /* 
+    
     do
     {
         txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
@@ -45,17 +45,20 @@ void txtBoucle(Jeu &jeu)
 
         while (jeu.finTour == false) // Tant que l'on a pas terminé le tour.
         {
-            
+            txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.   
             jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
-            cout << "On passe " << endl;
+            //cout << "On passe " << endl;
             c = win.getCh();                    // On récupère le caractère de la touche appuyé et on le met dans c.
+            cout << c << endl;
             if (c == 'a')
             {
+                cout << "Appui sur A" << endl;
                 jeu.actionJoueur('a', 0, 0);
                 continue;
             }
             else if (c == 'd')
             {
+                cout << "J'appuie sur D" << endl;
                 jeu.actionJoueur('q', 0, 0);
                 continue;
             }
@@ -75,5 +78,5 @@ void txtBoucle(Jeu &jeu)
         }
 
     } while (ok || jeu.finPartie == false);
- */
+
 }
