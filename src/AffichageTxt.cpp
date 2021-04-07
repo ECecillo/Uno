@@ -30,10 +30,10 @@ void txtBoucle(Jeu &jeu)
     
     bool ok = true;
     int c;
-    //txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
+    txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
 
     
-    do
+    /*do
     {
         txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
 
@@ -77,6 +77,6 @@ void txtBoucle(Jeu &jeu)
             break;
         }
 
-    } while (ok || jeu.finPartie == false);
+    } while (ok || jeu.finPartie == false);*/
 
 }

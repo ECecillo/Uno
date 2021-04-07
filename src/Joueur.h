@@ -97,16 +97,6 @@ public:
 		
 		/**
 		* @brief 
-		* Actualise les adversaires dans tableJoueur pour la version txt.
-		* 
-		* @param
-		* [in] tableau de Joueur
-		* [in] unsigned int nombre de joueurs
-		*/
-		void modifAdversairesTxt(Joueur * jo, unsigned int nbjoueurs);
-		
-		/**
-		* @brief 
 		* Détermine si le joueur est gagnant.
 		* 
 		* @return

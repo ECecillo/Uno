@@ -64,11 +64,12 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
         for (unsigned int j = 0; j < nombreJoueurs - 1; j++)
         {
             joueurs[i].insererCarteAdversairePositionJ(pos + 12 * j, joueurs[(i + 1 + j) % nombreJoueurs].numeroJoueur);
-            if (joueurs[(i + 1 + j) % nombreJoueurs].main.size()>=10)
+            /*if (joueurs[(i + 1 + j) % nombreJoueurs].main.size()>=10)
                 joueurs[i].tableJoueur[4][pos + 12 * j + 4] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) / 10;
-            joueurs[i].tableJoueur[4][pos + 12 * j + 5] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) % 10;
+            joueurs[i].tableJoueur[4][pos + 12 * j + 5] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) % 10;*/
         }
     }
+    modifAdversairesTxt();
 }
 
 void Jeu::distribueCarte()
@@ -79,7 +80,6 @@ void Jeu::distribueCarte()
         {
             joueurs[i].main.push_back(pioche.top());
             pioche.pop();
-            cout << "BOUM " << endl;
         }
         joueurs[i].modifMainTxt();
     }
@@ -343,12 +343,25 @@ void Jeu::relancePiocheJeu()
     initTalon();
 }
 
+void Jeu::modifAdversairesTxt()
+{
+    unsigned int pos = (180 - (nombreJoueurs - 1) * 11 - (nombreJoueurs - 2)) / 2;
+    for (unsigned int i = 0; i < nombreJoueurs; i++)
+    {
+        for (unsigned int j = 0; j < nombreJoueurs - 1; j++)
+        {
+            joueurs[i].tableJoueur[4][pos + 12 * j + 4] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) / 10;
+            joueurs[i].tableJoueur[4][pos + 12 * j + 5] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) % 10;
+        }
+    }
+}
+
 // à insérer dans la boucle pour la version txt
 void Jeu::MaJTableJoueurActifDebutTour()
 {
     assert(sensJeu == 0 || sensJeu == 1);
     joueurs[joueurActif].modifMainTxt();
-    joueurs[joueurActif].modifAdversairesTxt(joueurs, nombreJoueurs);
+    modifAdversairesTxt();
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 }
 

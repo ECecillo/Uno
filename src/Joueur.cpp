@@ -150,58 +150,58 @@ void Joueur::modifTalonPiocheTxt(const queue<Carte> &t, const stack<Carte> &p)
         switch (v)
         {
         case 10:
-            main[numeroJoueur].carte[15][104] = 'i';
-            main[numeroJoueur].carte[15][105] = 'n';
-            main[numeroJoueur].carte[15][106] = 'v';
+            tableJoueur[15][104] = 'i';
+            tableJoueur[15][105] = 'n';
+            tableJoueur[15][106] = 'v';
             break;
         case 11:
-            main[numeroJoueur].carte[15][104] = 'p';
-            main[numeroJoueur].carte[15][105] = 'a';
-            main[numeroJoueur].carte[15][106] = 's';
+            tableJoueur[15][104] = 'p';
+            tableJoueur[15][105] = 'a';
+            tableJoueur[15][106] = 's';
             break;
         case 12:
-            main[numeroJoueur].carte[15][105] = '+';
-            main[numeroJoueur].carte[15][106] = '2';
+            tableJoueur[15][105] = '+';
+            tableJoueur[15][106] = '2';
             break;
         case 13:
-            main[numeroJoueur].carte[15][105] = '+';
-            main[numeroJoueur].carte[15][106] = '4';
+            tableJoueur[15][105] = '+';
+            tableJoueur[15][106] = '4';
             break;
         case 14:
-            main[numeroJoueur].carte[15][103] = 'j';
-            main[numeroJoueur].carte[15][104] = 'o';
-            main[numeroJoueur].carte[15][105] = 'k';
-            main[numeroJoueur].carte[15][106] = 'e';
-            main[numeroJoueur].carte[15][107] = 'r';
+            tableJoueur[15][103] = 'j';
+            tableJoueur[15][104] = 'o';
+            tableJoueur[15][105] = 'k';
+            tableJoueur[15][106] = 'e';
+            tableJoueur[15][107] = 'r';
             break;
         }
     switch (c)
     {
     case 1:
-        main[numeroJoueur].carte[16][103] = 'r';
-        main[numeroJoueur].carte[16][104] = 'o';
-        main[numeroJoueur].carte[16][105] = 'u';
-        main[numeroJoueur].carte[16][106] = 'g';
-        main[numeroJoueur].carte[16][107] = 'e';
+        tableJoueur[16][103] = 'r';
+        tableJoueur[16][104] = 'o';
+        tableJoueur[16][105] = 'u';
+        tableJoueur[16][106] = 'g';
+        tableJoueur[16][107] = 'e';
         break;
     case 2:
-        main[numeroJoueur].carte[16][104] = 'v';
-        main[numeroJoueur].carte[16][105] = 'e';
-        main[numeroJoueur].carte[16][106] = 'r';
-        main[numeroJoueur].carte[16][107] = 't';
+        tableJoueur[16][104] = 'v';
+        tableJoueur[16][105] = 'e';
+        tableJoueur[16][106] = 'r';
+        tableJoueur[16][107] = 't';
         break;
     case 3:
-        main[numeroJoueur].carte[16][104] = 'b';
-        main[numeroJoueur].carte[16][105] = 'l';
-        main[numeroJoueur].carte[16][106] = 'e';
-        main[numeroJoueur].carte[16][107] = 'u';
+        tableJoueur[16][104] = 'b';
+        tableJoueur[16][105] = 'l';
+        tableJoueur[16][106] = 'e';
+        tableJoueur[16][107] = 'u';
         break;
     case 4:
-        main[numeroJoueur].carte[16][103] = 'j';
-        main[numeroJoueur].carte[16][104] = 'a';
-        main[numeroJoueur].carte[16][105] = 'u';
-        main[numeroJoueur].carte[16][106] = 'n';
-        main[numeroJoueur].carte[16][107] = 'e';
+        tableJoueur[16][103] = 'j';
+        tableJoueur[16][104] = 'a';
+        tableJoueur[16][105] = 'u';
+        tableJoueur[16][106] = 'n';
+        tableJoueur[16][107] = 'e';
         break;
     }
 
@@ -220,19 +220,6 @@ void Joueur::modifTalonPiocheTxt(const queue<Carte> &t, const stack<Carte> &p)
     }
     else
         tableJoueur[15][74] = '0' + taille;
-}
-
-void Joueur::modifAdversairesTxt(Joueur *jo, const unsigned int nbjoueurs)
-{
-    unsigned int pos = (180 - (nbjoueurs - 1) * 11 - (nbjoueurs - 2)) / 2;
-    for (unsigned int i = 0; i < nbjoueurs; i++)
-    {
-        for (unsigned int j = 0; j < nbjoueurs - 1; j++)
-        {
-            jo[i].tableJoueur[4][pos + 12 * j + 4] = (jo[(i + 1 + j) % nbjoueurs].main.size()) / 10;
-            jo[i].tableJoueur[4][pos + 12 * j + 5] = (jo[(i + 1 + j) % nbjoueurs].main.size()) % 10;
-        }
-    }
 }
 
 // gagnant si la main est vide
