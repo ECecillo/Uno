@@ -350,8 +350,9 @@ void Jeu::modifAdversairesTxt()
     {
         for (unsigned int j = 0; j < nombreJoueurs - 1; j++)
         {
-            joueurs[i].tableJoueur[4][pos + 12 * j + 4] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) / 10;
-            joueurs[i].tableJoueur[4][pos + 12 * j + 5] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) % 10;
+            if (joueurs[(i + 1 + j) % nombreJoueurs].main.size()>=10)
+                joueurs[i].tableJoueur[4][pos + 12 * j + 4] = '0' + (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) / 10;
+            joueurs[i].tableJoueur[4][pos + 12 * j + 5] = '0' + (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) % 10;
         }
     }
 }
