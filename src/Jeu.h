@@ -204,6 +204,17 @@ public:
 	void actionJoueur(const char action, const int x, const int y);
 
 	/**
+	* @brief 
+	* Actualise les adversaires dans tableJoueur pour la version txt.
+	* 
+	* @param
+	* [in] tableau de Joueur
+	* [in] unsigned int nombre de joueurs
+	*/
+	void modifAdversairesTxt();
+		
+
+	/**
 	 * @brief 
 	 * Actualise tableJoueur au début de son tour. 
 	 */	
