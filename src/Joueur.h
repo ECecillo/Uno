@@ -66,6 +66,13 @@ public:
 
 		/**
 		* @brief 
+		* Trie la main du joueur.
+		* 
+		*/
+		void trierMain();
+
+		/**
+		* @brief 
 		* Efface les cartes en mettant un espace dans la tableJoueur pour la version txt.
 		* 
 		*/
