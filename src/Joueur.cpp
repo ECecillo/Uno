@@ -118,6 +118,26 @@ void Joueur::insererCarteAdversairePositionJ(unsigned int indj, unsigned int num
     tableJoueur[5][indj + 7] = 's';
 }
 
+// trie la main du joueur
+void Joueur::trierMain()
+{
+    Carte cMin;
+    int indMin;
+    for (int i=0;i<main.size(); i++)
+    {
+        cMin = main[i];
+        indMin = i;
+        for (int j = i+1; j<main.size(); j++)
+            if (main[j] < cMin)
+            {
+                cMin = main[j];
+                indMin = j;
+            }
+        main.insert(main.begin()+i,cMin);
+        main.erase(main.begin()+indMin+1);
+    }
+}
+
 // met des " " dans tableJoueur dans toute la zone de la main en bas pour la version txt
 void Joueur::effacerMainTxt()
 {
@@ -146,6 +166,7 @@ void Joueur::dessinerMainTxt()
 void Joueur::modifMainTxt()
 {
     effacerMainTxt();
+    trierMain();
     dessinerMainTxt();
 }
 
