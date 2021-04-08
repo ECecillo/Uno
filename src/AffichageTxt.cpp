@@ -105,11 +105,12 @@ void txtBoucle(Jeu &jeu)
                 jeu.finPartie = true;
                 break;
             }
-            if (jeu.finTour)
-                cout << "Fin du tour" << endl;
+
+            /* if (jeu.finTour)
+                cout << "Fin du tour" << endl; */
             /* if(ok)
                 cout << "ok = true ?" << endl; */
         }
 
-    } while (ok || jeu.finPartie == false);
+    } while (ok || !jeu.finPartie);
 }

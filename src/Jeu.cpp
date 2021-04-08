@@ -94,13 +94,13 @@ bool Jeu::carteValide(const Carte c) const
         unsigned int i = 0;
         while (i < joueurs[joueurActif].main.size() && !chercheCouleur)
         {
-            if (talon.front().getCouleur() == joueurs[joueurActif].main[i].getCouleur())
+            if (talon.back().getCouleur() == joueurs[joueurActif].main[i].getCouleur())
                 chercheCouleur = true;
             i++;
         }
     }
-    return (c.getValeur() == talon.front().getValeur()) ||
-           (c.getCouleur() == talon.front().getCouleur()) ||
+    return (c.getValeur() == talon.back().getValeur()) ||
+           (c.getCouleur() == talon.back().getCouleur()) ||
            (c.getValeur() == 14) ||
            (c.getValeur() == 13 && chercheCouleur == false); // On compare la carte que l'on a passé en paramètre à celle qui est actuellement retourné sur le talon.
 }
@@ -122,7 +122,7 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
         (talon.front()).setCouleur(1);
     case 'v':
         //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
-        
+
         (talon.front()).setCouleur(2);
     case 'b':
         //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
@@ -163,12 +163,13 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
     case 'p':
         // On Pioche.
         piocherCarte();
+        pioche.pop();
     case 'e':
     {
         // On appuie sur la touche e = poser carte.
         // Fonction qui renvoie l'indice où est l'étoile.
 
-        unsigned int indiceCarte = joueurs[joueurActif].main[joueurActif].positionEtoile; // Indice de de la carte qui sera joué.
+        unsigned int indiceCarte = joueurs[joueurActif].indiceEtoile; // Indice de de la carte qui sera joué.
         string er;                                                                        //Message d'erreur à afficher.
         poserCarte(indiceCarte, er);
 
@@ -182,23 +183,24 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
 void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
 {
     if (carteValide(joueurs[joueurActif].main[indiceCarte]))
-    {                                                       // La carte qu'il veut poser est valide
+    {                                                       // La carte qu'il veut poser est valide        
         talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
         joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
-
+        
+        
         // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
         joueurs[joueurActif].modifMainTxt();
         // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
         joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 
         // gestion des cartes spéciales
-        switch ((talon.front()).getValeur())
+        switch ((talon.back()).getValeur())
         {
         case 10:
             sensJeu += (-1) * sensJeu;
             break;
         case 11:
-            if(joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
+            if (joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
                 joueurActif = 0;
             joueurActif++;
             break;
@@ -207,7 +209,7 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
             piocherCarte();
             piocherCarte();
             break;
-        case 13: // Pioche 4 carte.
+        case 13:
             joueurActif++;
             for (unsigned int i = 0; i < 4; i++)
                 piocherCarte();
@@ -218,8 +220,10 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
     }
     else
     {
+
         messageErreur = "Cette carte ne peut pas être déposée.";
         // Voir si on ajoute d'autre message.
+        cout << messageErreur << endl;
     }
 }
 

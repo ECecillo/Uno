@@ -175,8 +175,8 @@ void Joueur::modifMainTxt()
 void Joueur::modifTalonPiocheTxt(const queue<Carte> &t, const stack<Carte> &p)
 {
     // écrit la carte du talon dans tableJoueur
-    unsigned int v = t.front().getValeur();
-    unsigned int c = t.front().getCouleur();
+    unsigned int v = t.back().getValeur();
+    unsigned int c = t.back().getCouleur();
     if (v >= 0 && v <= 9)
         tableJoueur[15][105] = '0' + v;
     else
