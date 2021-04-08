@@ -55,6 +55,7 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
     distribueCarte();          // On donne les cartes au joueurs
     initTalon();               // On initialise le Talon.
     finTour = false;
+    finPartie = false;
 
     unsigned int pos = (180 - (nombreJoueurs - 1) * 11 - (nombreJoueurs - 2)) / 2;
 
@@ -109,7 +110,6 @@ void Jeu::piocherCarte()
     joueurs[joueurActif].main.push_back(pioche.top());
     joueurs[joueurActif].modifMainTxt();
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
-    finTour = true;
 }
 
 void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // Fenêtre
@@ -117,17 +117,20 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
     switch (action)
     {
     case 'r':
-        if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
-            (talon.front()).setCouleur(1);
+        //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+        cout << "Hello" << endl;
+        (talon.front()).setCouleur(1);
     case 'v':
-        if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
-            (talon.front()).setCouleur(2);
+        //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+        
+        (talon.front()).setCouleur(2);
     case 'b':
-        if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
-            (talon.front()).setCouleur(3);
+        //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+        (talon.front()).setCouleur(3);
+
     case 'j':
-        if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
-            (talon.front()).setCouleur(4);
+        //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+        (talon.front()).setCouleur(4);
     case 'a':
         if (joueurs[joueurActif].indiceEtoile == 0) // Si on est déjà à l'indice 0 on bouge pas.
         {
@@ -195,6 +198,8 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
             sensJeu += (-1) * sensJeu;
             break;
         case 11:
+            if(joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
+                joueurActif = 0;
             joueurActif++;
             break;
         case 12:
@@ -202,7 +207,7 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
             piocherCarte();
             piocherCarte();
             break;
-        case 13:
+        case 13: // Pioche 4 carte.
             joueurActif++;
             for (unsigned int i = 0; i < 4; i++)
                 piocherCarte();

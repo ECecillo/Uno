@@ -35,12 +35,15 @@ void txtBoucle(Jeu &jeu)
     do
     {
         txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
-
+        if (jeu.finPartie)
+            cout << "Fin partie = true ?" << endl;
 #ifdef _WIN32
         Sleep(100);
 #else
         usleep(100000);
 #endif // WIN32
+        jeu.finTour = false;
+
 
         while (jeu.finTour == false) // Tant que l'on a pas terminé le tour.
         {
@@ -58,27 +61,54 @@ void txtBoucle(Jeu &jeu)
                 jeu.actionJoueur('d', 0, 0);
                 break;
             case 'r':
-                jeu.actionJoueur('h', 0, 0);
+                cout << "Je suis la touche R" << endl;
+                if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+                    jeu.actionJoueur('r', 0, 0);
                 break;
             case 'v':
-                jeu.actionJoueur('v', 0, 0);
+                cout << "Je suis la touche V" << endl;
+                if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+                    jeu.actionJoueur('v', 0, 0);
+                break;
+
             case 'b':
-                jeu.actionJoueur('b', 0, 0);
+                cout << "Je suis la touche B" << endl;
+                if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+                    jeu.actionJoueur('b', 0, 0);
+                break;
+
             case 'j':
-                jeu.actionJoueur('j', 0, 0);
-            case 'c':
+                cout << "Je suis la touche J" << endl;
+                if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+                    jeu.actionJoueur('j', 0, 0);
+                break;
+
+            /* case 'c':
+                cout << "Je suis la touche C" << endl;
                 jeu.actionJoueur('c', 0, 0);
             case 'u':
-                jeu.actionJoueur('u', 0, 0);
+                cout << "Je suis la touche U" << endl;
+                jeu.actionJoueur('u', 0, 0); */
             case 'p':
+                cout << "Je suis la touche P" << endl;
                 jeu.actionJoueur('p', 0, 0);
+                jeu.finTour = false;
+                break;
             case 'e':
+                cout << "Je suis la touche E" << endl;
                 jeu.actionJoueur('e', 0, 0);
                 break;
             case 'q':
+                cout << "Je suis la touche Q" << endl;
+                jeu.finTour = true;
                 ok = false;
+                jeu.finPartie = true;
                 break;
             }
+            if (jeu.finTour)
+                cout << "Fin du tour" << endl;
+            /* if(ok)
+                cout << "ok = true ?" << endl; */
         }
 
     } while (ok || jeu.finPartie == false);
