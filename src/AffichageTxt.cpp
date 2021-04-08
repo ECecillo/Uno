@@ -31,7 +31,6 @@ void txtBoucle(Jeu &jeu)
     bool ok = true;
     int c;
     txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
-
     
     /*do
     {

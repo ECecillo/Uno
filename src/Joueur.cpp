@@ -3,6 +3,7 @@
 #include <cassert>
 #include <vector>
 #include <Carte.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -69,20 +70,28 @@ Joueur::Joueur(const unsigned int num)
     haut = hauteur;
     nom = "Joueur ";
     nom += to_string(num);
+    indiceEtoile = 0;
     //initialisation de la table du Joueur à partir de la table vierge
     for (unsigned int x = 0; x < haut; x++)
         for (unsigned int y = 0; y < larg; y++)
-                tableJoueur[x][y] = tableVierge[x][y];
+            tableJoueur[x][y] = tableVierge[x][y];
 }
 
 Joueur::~Joueur() {}
 
 // insère une carte dans tableJoueur pour version txt
-void Joueur::insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte &c)
+void Joueur::insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte &c, const bool aEtoile)
 {
     for (unsigned i = indi; i < indi + 8; i++)
+    {
         for (unsigned int j = indj; j < indj + 11; j++)
+        {
             tableJoueur[i][j] = c.carte[i - indi][j - indj];
+
+            if (aEtoile)
+                c.carte[1][5] = '*';
+        }
+    }
 }
 
 // insère une carte adversaire, sans le nombre de cartes, dans tableJoueur pour version txt
@@ -120,14 +129,16 @@ void Joueur::effacerMainTxt()
 void Joueur::dessinerMainTxt()
 {
     for (unsigned int i = 0; i < main.size(); i++)
+    {
         if (indiceEtoile == i) // On affiche le curseur dans la carte à l'indice i.
         {
-            main[i].carte[1][5] = '*';
+            insererCartePositionIJ(22 + 9 * (main.size() / 15), 12 * (i % 15), main[i], true);
         }
         else
         {
-            insererCartePositionIJ(22 + 9 * (main.size() / 15), 12 * (i % 15), main[i]);
+            insererCartePositionIJ(22 + 9 * (main.size() / 15), 12 * (i % 15), main[i], false);
         }
+    }
 }
 
 // pour la version txt

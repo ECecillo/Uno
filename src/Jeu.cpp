@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <stack> // Pour les piles.
-#include <set> // utile dans initCarte
+#include <set>   // utile dans initCarte
 #include <cassert>
 #include <algorithm>
 #include <string.h>
@@ -36,7 +36,6 @@ Jeu::~Jeu()
     nombreJoueurs = 0;
 }
 
-
 Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
 {
     initCarte();
@@ -52,9 +51,9 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
     default_random_engine re(time(0));
     uniform_int_distribution<int> distrib{1, nombreJoueurs + nombreIA};
     joueurActif = distrib(re); // On génère un numéro de joueur aléatoire pour le début de la partie.
-    sensJeu = 1;      // On tournera à gauche.
-    distribueCarte(); // On donne les cartes au joueurs
-    initTalon();      // On initialise le Talon.
+    sensJeu = 1;               // On tournera à gauche.
+    distribueCarte();          // On donne les cartes au joueurs
+    initTalon();               // On initialise le Talon.
     finTour = false;
 
     unsigned int pos = (180 - (nombreJoueurs - 1) * 11 - (nombreJoueurs - 2)) / 2;
@@ -89,7 +88,7 @@ bool Jeu::carteValide(const Carte c) const
 {
     bool chercheCouleur = false;
     //si carte +4, on regarde dans la main du joueur s'il y a une carte de la même couleur que celle du talon
-    if (c.getValeur() == 13) 
+    if (c.getValeur() == 13)
     {
         unsigned int i = 0;
         while (i < joueurs[joueurActif].main.size() && !chercheCouleur)
@@ -150,22 +149,6 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
         }
 
         break;
-    /* case 'c':
-        if ((x >= (5/16*dimx) && y >= (3/8*dimy))&&
-        ( x <= (7/16*dimx) && y <= (5/8*dimy)))
-        { // On clique sur la pioche.
-            piocherCarte();
-        }
-        if ((x >= (13/16*dimx) && y >= (dimy*7/16)) &&
-        (x <= 15/16*dimx) && (y <= (9/16*dimy)) ) 
-        { // On clique sur passer.
-        }
-        if ((x >= (1/32*dimx) && y >= (dimy*1/32)) &&
-        (x <= (1/4*dimx) && (y <= (1/6*dimy))))
-        { // On clique sur Paramètres.
-        
-        }
-    */
     case 'u':
         // uno.
 
@@ -285,13 +268,13 @@ void Jeu::initCarte()
                 jeuCarte.push_back(Carte(j, i));
     }
 
-    for (i = 1; i < 5; i++) // Couleur : [1] Rouge, [2] Vert, [3] Bleu, [4] jaune
+    for (i = 1; i < 5; i++)       // Couleur : [1] Rouge, [2] Vert, [3] Bleu, [4] jaune
         for (j = 13; j < 15; j++) // Numéro
             // 14 : changement de couleur,
             // 13 : carte +4.
             jeuCarte.push_back(Carte(j, i));
-    
-/*     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+
+    /*     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::shuffle(jeuCarte.begin(), jeuCarte.end(), std::default_random_engine(seed));
 
     unsigned int l = 0;
@@ -301,11 +284,11 @@ void Jeu::initCarte()
         l++;
     } while (l <=jeuCarte.size()); 
 */
-    srand((unsigned int) time(NULL));
+    srand((unsigned int)time(NULL));
     int Ind;
     set<int>::iterator it;
     set<int> indicesJeuCarte;
-    while (pioche.size() != 108 ) 
+    while (pioche.size() != 108)
     {
         Ind = rand() % 108;
         it = indicesJeuCarte.find(Ind);
@@ -321,7 +304,7 @@ void Jeu::initTalon()
 {
     talon.push(pioche.top()); // Carte mis dans la talon, celle sur laquelle on va jouer.
     pioche.pop();             // Elle dans la file, on la supprime de la pile.
-    for(int i=0; i<nombreJoueurs; i++)
+    for (int i = 0; i < nombreJoueurs; i++)
         joueurs[i].modifTalonPiocheTxt(talon, pioche);
 }
 
@@ -350,7 +333,7 @@ void Jeu::modifAdversairesTxt()
     {
         for (unsigned int j = 0; j < nombreJoueurs - 1; j++)
         {
-            if (joueurs[(i + 1 + j) % nombreJoueurs].main.size()>=10)
+            if (joueurs[(i + 1 + j) % nombreJoueurs].main.size() >= 10)
                 joueurs[i].tableJoueur[4][pos + 12 * j + 4] = '0' + (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) / 10;
             joueurs[i].tableJoueur[4][pos + 12 * j + 5] = '0' + (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) % 10;
         }
@@ -372,7 +355,7 @@ void Jeu::testRegression()
     //for (int i=0; i<nombreJoueurs; i++)
     //    assert(joueurs[i].main.size()==7);
     assert(sensJeu == 1);
-    
+
     // test de piocheVide
     //assert(piocheVide());
 
@@ -380,14 +363,11 @@ void Jeu::testRegression()
     //cout << pioche.size() << endl;
     //assert(pioche.size() == 108);
     //assert(talon.size() == 1);
-    
-
 
     //distribueCarte();
     cout << "Numéro du joueur 1 est : " << joueurs[0].nom << endl;
-   
 
-/*    
+    /*    
    stack<Carte> temp;
     while (pioche.empty() == false)
     {
@@ -428,14 +408,10 @@ void Jeu::testRegression()
 
     // relancePiocheJeu
 
-
-
-
     // Test Affichage Joueur.cpp
     /*cout << joueurs->getHaut() << joueurs->getLarg() << endl;*/
     /* for(unsigned int i = 0; i < joueurs->getHaut(); i++)
         for(unsigned int j = 0; j < joueurs->getLarg(); j++)
             cout << joueurs[joueurActif].tableJoueur[i][j] << endl;
  */
-
 }

@@ -55,7 +55,7 @@ public:
 		* Insère une carte dans la tableJoueur pour la version txt.
 		* 
 		*/
-		void insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte & c);
+		void insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte & c, const bool aEtoile);
 
 		/**
 		* @brief 
