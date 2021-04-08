@@ -87,9 +87,10 @@ void Joueur::insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte 
         for (unsigned int j = indj; j < indj + 11; j++)
         {
             tableJoueur[i][j] = c.carte[i - indi][j - indj];
-
             if (aEtoile)
                 c.carte[1][5] = '*';
+            else 
+                c.carte[1][5] = ' ';
         }
     }
 }

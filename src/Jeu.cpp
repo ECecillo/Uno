@@ -109,6 +109,7 @@ void Jeu::piocherCarte()
     joueurs[joueurActif].main.push_back(pioche.top());
     joueurs[joueurActif].modifMainTxt();
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
+    finTour = true;
 }
 
 void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // Fenêtre
@@ -160,7 +161,7 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
         piocherCarte();
     case 'e':
     {
-        // On appuie sur la touche entrée = poser carte.
+        // On appuie sur la touche e = poser carte.
         // Fonction qui renvoie l'indice où est l'étoile.
 
         unsigned int indiceCarte = joueurs[joueurActif].main[joueurActif].positionEtoile; // Indice de de la carte qui sera joué.
