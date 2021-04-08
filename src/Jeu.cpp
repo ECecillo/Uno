@@ -136,11 +136,12 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
         else
         {
             joueurs[joueurActif].indiceEtoile--;
+            break;
         }
         break;
     case 'd':
         // On déplace le curseur * à droite.
-        if (joueurs[joueurActif].indiceEtoile == joueurs[joueurActif].main.size()) // Si on est déjà à l'indice 0 on bouge pas.
+        if (joueurs[joueurActif].indiceEtoile == joueurs[joueurActif].main.size() - 1) // Si on est déjà à l'indice 0 on bouge pas.
         {
             break;
         }
