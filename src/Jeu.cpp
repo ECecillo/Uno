@@ -24,7 +24,7 @@ Jeu::Jeu()
     joueurActif = 0;
     finPartie = false;
     finTour = false;
-    showUno = false;
+    statut_Uno = false;
 }
 
 Jeu::~Jeu()
@@ -53,6 +53,7 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
     distribueCarte();                     // On donne les cartes au joueurs
     initTalon();                          // On initialise le Talon.
     finTour = false;
+    statut_Uno = false;
     finPartie = false;
 
     unsigned int pos = (180 - (nombreJoueurs - 1) * 11 - (nombreJoueurs - 2)) / 2;
@@ -156,14 +157,19 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
             joueurs[joueurActif].indiceEtoile++;
             break;
         }
-
         break;
     case 'u':
         // uno.
-
+        cout << "Bien joué il ne vous reste qu'une carte à poser pour gagner !!!" << endl;
+        termineTour();
         break;
     case 'c':
         // Contre Uno.
+        piocherCarte();
+        pioche.pop();
+        // Passer un bool statut_Uno en vraie pour se barrer d'une boucle attendre touche.
+
+        break;
     case 'p':
         // On Pioche.
         piocherCarte();
@@ -173,7 +179,6 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
     {
         // On appuie sur la touche e = poser carte.
         // Fonction qui renvoie l'indice où est l'étoile.
-
         unsigned int indiceCarte = joueurs[joueurActif].indiceEtoile; // Indice de de la carte qui sera joué.
         string er;                                                    //Message d'erreur à afficher.
         poserCarte(indiceCarte, er);
@@ -227,7 +232,8 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
         case 14:
             break;
         }
-        termineTour();
+        if (testUno() == false)
+            termineTour();
     }
     else
     {
@@ -238,12 +244,33 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
     }
 }
 
-/* bool testUno()
+bool Jeu::testUno()
 {
-    // si le joueur a 2 cartes il pourra dire Uno après avoir posé 1 carte
-    return (joueurs[joueurActif].main).size() == 2;
+    if (joueurs[joueurActif].main.size() == 1) // Il reste 1 carte au joueur.
+    {
+        // On met l'affichage des boutons...
+        statut_Uno = true;
+        return statut_Uno;
+    }
 }
-*/
+void Jeu::Uno(int c)
+{
+    
+    switch (c)
+    {
+    case 'u':
+        statut_Uno = false;
+        actionJoueur('u',0,0);
+        break;
+    case 'c':
+        statut_Uno = false;
+        actionJoueur('c',0,0);
+        break;
+
+    default:
+        break;
+    }
+}
 
 void Jeu::termineTour()
 {

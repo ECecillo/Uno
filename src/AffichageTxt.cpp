@@ -52,7 +52,14 @@ void txtBoucle(Jeu &jeu)
             jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
             //cout << "On passe " << endl;
             c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
-
+            if(jeu.statut_Uno)
+            {
+                sleep(2);
+                cout << "========== Un des joueurs peut jouer UNO !!! ===============" << 
+                "# Vous avez 2 secondes pour appuyer sur U ou C # " << endl;
+                jeu.Uno(c);
+            }
+            
             switch (c)
             {
             case 'a':

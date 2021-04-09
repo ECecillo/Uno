@@ -87,9 +87,10 @@ public:
 
 	/**
 	 * @brief 
-	 * Variable qui permettra de dire si l'on affiche le bouton UNO ou non.
+	 * Variable qui permettra faire une boucle tant que
+	 * qui attendra une touche d'un des joueurs C ou U pour pouvoir relancer le Jeu.
 	 */
-	bool showUno;
+	bool statut_Uno;
 
 	// =========================================== FONCTION / Procédure ===============================================================
 
@@ -169,7 +170,7 @@ public:
 	 * Le joueur a appuyé avant sur ESPACE ce qui provoque le UNO,
 	 * on termine le tour et les autres joueurs ne peuvent plus dire contre Uno.
 	 */
-	void joueUno();
+	void Uno(int c);
 
 	/**
 	 * @brief 
