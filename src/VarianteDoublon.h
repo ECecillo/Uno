@@ -1,3 +1,4 @@
+#include "Jeu.h"
 
 
 class VarianteDoublon : public Jeu
