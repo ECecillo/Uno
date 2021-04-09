@@ -44,6 +44,7 @@ void txtBoucle(Jeu &jeu)
 #endif // WIN32
         jeu.finTour = false;
 
+        //jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
 
         while (jeu.finTour == false) // Tant que l'on a pas terminé le tour.
         {
@@ -92,11 +93,11 @@ void txtBoucle(Jeu &jeu)
             case 'p':
                 cout << "Je suis la touche P" << endl;
                 jeu.actionJoueur('p', 0, 0);
-                jeu.finTour = false;
                 break;
             case 'e':
                 cout << "Je suis la touche E" << endl;
                 jeu.actionJoueur('e', 0, 0);
+
                 break;
             case 'q':
                 cout << "Je suis la touche Q" << endl;
@@ -105,7 +106,6 @@ void txtBoucle(Jeu &jeu)
                 jeu.finPartie = true;
                 break;
             }
-
             /* if (jeu.finTour)
                 cout << "Fin du tour" << endl; */
             /* if(ok)

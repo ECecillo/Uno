@@ -48,12 +48,10 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
         Joueur joueur(i + 1);
         joueurs[i] = joueur;
     }
-    default_random_engine re(time(0));
-    uniform_int_distribution<int> distrib{1, nombreJoueurs + nombreIA};
-    joueurActif = distrib(re); // On génère un numéro de joueur aléatoire pour le début de la partie.
-    sensJeu = 1;               // On tournera à gauche.
-    distribueCarte();          // On donne les cartes au joueurs
-    initTalon();               // On initialise le Talon.
+    joueurActif = rand() % nombreJoueurs; // On génère un numéro de joueur aléatoire pour le début de la partie.
+    sensJeu = 1;                          // On tournera à gauche.
+    distribueCarte();                     // On donne les cartes au joueurs
+    initTalon();                          // On initialise le Talon.
     finTour = false;
     finPartie = false;
 
@@ -99,6 +97,7 @@ bool Jeu::carteValide(const Carte c) const
             i++;
         }
     }
+    cout << talon.back().getValeur() << talon.back().getCouleur() << endl;
     return (c.getValeur() == talon.back().getValeur()) ||
            (c.getCouleur() == talon.back().getCouleur()) ||
            (c.getValeur() == 14) ||
@@ -107,7 +106,8 @@ bool Jeu::carteValide(const Carte c) const
 
 void Jeu::piocherCarte()
 {
-    joueurs[joueurActif].main.push_back(pioche.top());
+    joueurs[joueurActif].main.push_back(pioche.top()); // Working.
+    termineTour();
     joueurs[joueurActif].modifMainTxt();
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 }
@@ -119,18 +119,21 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
     case 'r':
         //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
         cout << "Hello" << endl;
-        (talon.front()).setCouleur(1);
+        (talon.back()).setCouleur(1);
+        break;
     case 'v':
         //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
 
-        (talon.front()).setCouleur(2);
+        (talon.back()).setCouleur(2);
+        break;
     case 'b':
         //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
-        (talon.front()).setCouleur(3);
-
+        (talon.back()).setCouleur(3);
+        break;
     case 'j':
         //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
-        (talon.front()).setCouleur(4);
+        (talon.back()).setCouleur(4);
+        break;
     case 'a':
         if (joueurs[joueurActif].indiceEtoile == 0) // Si on est déjà à l'indice 0 on bouge pas.
         {
@@ -151,6 +154,7 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
         else
         {
             joueurs[joueurActif].indiceEtoile++;
+            break;
         }
 
         break;
@@ -164,13 +168,14 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
         // On Pioche.
         piocherCarte();
         pioche.pop();
+        break;
     case 'e':
     {
         // On appuie sur la touche e = poser carte.
         // Fonction qui renvoie l'indice où est l'étoile.
 
         unsigned int indiceCarte = joueurs[joueurActif].indiceEtoile; // Indice de de la carte qui sera joué.
-        string er;                                                                        //Message d'erreur à afficher.
+        string er;                                                    //Message d'erreur à afficher.
         poserCarte(indiceCarte, er);
 
         break;
@@ -183,11 +188,10 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
 void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
 {
     if (carteValide(joueurs[joueurActif].main[indiceCarte]))
-    {                                                       // La carte qu'il veut poser est valide        
+    {                                                       // La carte qu'il veut poser est valide
         talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
         joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
-        
-        
+
         // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
         joueurs[joueurActif].modifMainTxt();
         // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
@@ -197,7 +201,11 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
         switch ((talon.back()).getValeur())
         {
         case 10:
-            sensJeu += (-1) * sensJeu;
+            cout << "Inverse" << endl;
+            if (sensJeu == 1)
+                sensJeu = 0;
+            else
+                sensJeu = 1;
             break;
         case 11:
             if (joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
@@ -205,18 +213,21 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
             joueurActif++;
             break;
         case 12:
-            joueurActif++;
+            termineTour();
+
             piocherCarte();
             piocherCarte();
             break;
         case 13:
-            joueurActif++;
+            termineTour();
+
             for (unsigned int i = 0; i < 4; i++)
                 piocherCarte();
             break;
         case 14:
             break;
         }
+        termineTour();
     }
     else
     {
@@ -236,26 +247,35 @@ void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
 
 void Jeu::termineTour()
 {
+    cout << "Fin du tour" << endl;
+    cout << "Sens du Jeu" << sensJeu << endl;
+
     switch (sensJeu)
     {
     case 1: // On joue à gauche.
-        if (joueurActif == nombreJoueurs + nombreIA)
+        if (joueurActif == nombreJoueurs - 1)
         {
+            cout << " Je suis le joueur actif " << joueurActif << endl;
             joueurActif = 0;
+            finTour = true;
         }
         else
         {
+            cout << " Je suis le joueur actif " << joueurActif << endl;
             joueurActif++;
+            finTour = true;
         }
         break;
     case 0: // On joue à droite
         if (joueurActif == 0)
         {
-            joueurActif = nombreJoueurs + nombreIA;
+            joueurActif = nombreJoueurs - 1;
+            finTour = true;
         }
         else
         {
             joueurActif--;
+            finTour = true;
         }
         break;
 
@@ -330,7 +350,7 @@ void Jeu::relancePiocheJeu()
     while (talon.empty() != true)
     {
         // Tant que le talon n'est pas vite on met des cartes.
-        pioche.push(talon.front());
+        pioche.push(talon.back());
         talon.pop();
     }
     // On réinit le talon avec la dernière carte ajouté à la pioche.

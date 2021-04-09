@@ -208,8 +208,6 @@ public:
 	* Actualise les adversaires dans tableJoueur pour la version txt.
 	* 
 	* @param
-	* [in] tableau de Joueur
-	* [in] unsigned int nombre de joueurs
 	*/
 	void modifAdversairesTxt();
 		

@@ -69,7 +69,7 @@ Joueur::Joueur(const unsigned int num)
     larg = largeur;
     haut = hauteur;
     nom = "Joueur ";
-    nom += to_string(num);
+    nom += to_string(numeroJoueur);
     indiceEtoile = 0;
     //initialisation de la table du Joueur à partir de la table vierge
     for (unsigned int x = 0; x < haut; x++)
@@ -89,7 +89,7 @@ void Joueur::insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte 
             tableJoueur[i][j] = c.carte[i - indi][j - indj];
             if (aEtoile)
                 c.carte[1][5] = '*';
-            else 
+            else
                 c.carte[1][5] = ' ';
         }
     }
@@ -123,18 +123,18 @@ void Joueur::trierMain()
 {
     Carte cMin;
     int indMin;
-    for (int i=0;i<main.size(); i++)
+    for (int i = 0; i < main.size(); i++)
     {
         cMin = main[i];
         indMin = i;
-        for (int j = i+1; j<main.size(); j++)
+        for (int j = i + 1; j < main.size(); j++)
             if (main[j] < cMin)
             {
                 cMin = main[j];
                 indMin = j;
             }
-        main.insert(main.begin()+i,cMin);
-        main.erase(main.begin()+indMin+1);
+        main.insert(main.begin() + i, cMin);
+        main.erase(main.begin() + indMin + 1);
     }
 }
 
@@ -165,8 +165,8 @@ void Joueur::dessinerMainTxt()
 // pour la version txt
 void Joueur::modifMainTxt()
 {
-    effacerMainTxt();
-    trierMain();
+    effacerMainTxt(); // On efface la du joueur.
+    trierMain();      // On trie la main du joueur (ordre couleur et dans les couleurs ordres val cartes.)
     dessinerMainTxt();
 }
 
@@ -177,6 +177,8 @@ void Joueur::modifTalonPiocheTxt(const queue<Carte> &t, const stack<Carte> &p)
     // écrit la carte du talon dans tableJoueur
     unsigned int v = t.back().getValeur();
     unsigned int c = t.back().getCouleur();
+    for(int i = 0; i < 5; i++)
+        tableJoueur[15][103 + i] = ' ';
     if (v >= 0 && v <= 9)
         tableJoueur[15][105] = '0' + v;
     else
@@ -208,6 +210,8 @@ void Joueur::modifTalonPiocheTxt(const queue<Carte> &t, const stack<Carte> &p)
             tableJoueur[15][107] = 'r';
             break;
         }
+    for(int i = 0; i < 5; i++)
+        tableJoueur[16][103 + i] = ' ';
     switch (c)
     {
     case 1:
