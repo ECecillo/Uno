@@ -1,3 +1,4 @@
+#include "Jeu.h"
 
 
 class VarianteSuite : public Jeu

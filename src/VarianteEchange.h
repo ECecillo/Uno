@@ -1,3 +1,4 @@
+#include "Jeu.h"
 
 
 class VarianteEchange : public Jeu

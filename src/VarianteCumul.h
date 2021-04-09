@@ -1,4 +1,4 @@
-
+#include "Jeu.h"
 
 class VarianteCumul : public Jeu
 {
