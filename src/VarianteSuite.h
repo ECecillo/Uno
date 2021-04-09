@@ -10,10 +10,13 @@ private:
 
 public:
 		
-		bool testSuite(Joueur,Jeu);
-
-
-		bool veutJouerSuite(&Jeu);
+		/**
+		* @brief 
+		* Le joueur met une carte dans le Talon, la carte posée est retirée de la main, l'effet est appliqué.
+		* @param indiceCarte : l'indice de la carte que le joueur veut poser.
+		* @param messageErreur : Message d'erreur à afficher avec l'interface Graphique.
+		*/
+		void poserCarte(unsigned int& indiceCarte, string &messageErreur);
 
 
 		
