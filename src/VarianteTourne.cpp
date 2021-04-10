@@ -21,7 +21,8 @@ void VarianteTourne::poserCarte(unsigned int &indiceCarte, string &messageErreur
     {                                                       // La carte qu'il veut poser est valide
         talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
         joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
-
+        // si la carte posée est 0, on fait tourner les mains
+        if (talon.back().getValeur()==0) tournerMains();
         // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
         joueurs[joueurActif].modifMainTxt();
         // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
@@ -30,9 +31,6 @@ void VarianteTourne::poserCarte(unsigned int &indiceCarte, string &messageErreur
         // gestion des cartes spéciales
         switch ((talon.back()).getValeur())
         {
-        case 0:
-            tournerMains();
-            break;
         case 10:
             cout << "Inverse" << endl;
             if (sensJeu == 1)
