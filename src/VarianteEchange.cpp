@@ -1,10 +1,10 @@
-#include "VarianteTourne.h"
+#include "VarianteEchange.h"
 
-VarianteTourne::VarianteTourne():Jeu() {}
+VarianteEchange::VarianteEchange():Jeu() {}
 
-VarianteTourne::VarianteTourne(const unsigned int nbjoueurs, const unsigned int nbIA = 0):Jeu(nbjoueurs, nbIA) {}
+VarianteEchange::VarianteEchange(const unsigned int nbjoueurs, const unsigned int nbIA = 0):Jeu(nbjoueurs, nbIA) {}
 
-VarianteTourne::~VarianteTourne() 
+VarianteEchange::~VarianteEchange() 
 {
     {
     delete[] joueurs;
@@ -15,14 +15,20 @@ VarianteTourne::~VarianteTourne()
 }
 }
 
-void VarianteTourne::poserCarte(unsigned int &indiceCarte, string &messageErreur)
+void VarianteEchange::poserCarte(unsigned int &indiceCarte, string &messageErreur)
 {
     if (carteValide(joueurs[joueurActif].main[indiceCarte]))
     {                                                       // La carte qu'il veut poser est valide
         talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
         joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
-        // si la carte posée est 0, on fait tourner les mains
-        if (talon.back().getValeur()==0) tournerMains();
+        // si la carte posée est un 7, le joueur échange sa main avec un autre joueur
+        if (talon.back().getValeur()==7)
+        {
+            unsigned int numJoueur;
+            cout << "indique le numéro du joueur avec lequel tu veux échanger ta main: ";
+            cin >> numJoueur;
+            joueurs[joueurActif].main.swap(joueurs[numJoueur-1].main);
+        }
         // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
         joueurs[joueurActif].modifMainTxt();
         // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
@@ -68,14 +74,4 @@ void VarianteTourne::poserCarte(unsigned int &indiceCarte, string &messageErreur
         // Voir si on ajoute d'autre message.
         cout << messageErreur << endl;
     }
-}
-
-void VarianteTourne::tournerMains()
-{
-    if (sensJeu == 1)
-        for(int i = nombreJoueurs-1; i>0; i--)
-            joueurs[i].main.swap(joueurs[i-1].main);
-    else
-        for(int i = 0; i<nombreJoueurs-2; i++)
-            joueurs[i].main.swap(joueurs[i+1].main);
 }
