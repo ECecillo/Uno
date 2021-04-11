@@ -70,8 +70,8 @@ void VarianteDoublon::poserCarte(unsigned int &indiceCarte, string &messageErreu
         case 14:
             break;
         }
-        /*if (testUno() == false)
-            termineTour();*/
+        if (testUno() == false)
+            termineTour();
     }
     else
     {
