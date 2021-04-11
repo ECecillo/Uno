@@ -108,6 +108,7 @@ bool Jeu::carteValide(const Carte c) const
 void Jeu::piocherCarte()
 {
     joueurs[joueurActif].main.push_back(pioche.top()); // Working.
+    pioche.pop();
     termineTour();
     joueurs[joueurActif].modifMainTxt();
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
@@ -173,7 +174,6 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
     case 'p':
         // On Pioche.
         piocherCarte();
-        pioche.pop();
         break;
     case 'e':
     {
