@@ -80,7 +80,10 @@ void termInit()      // configure la saisie : ne pas afficher les caracteres tap
 #endif
 }
 
+// Constructeur: construit le tableau 1D vide
 Fenetre::Fenetre (int dx, int dy) {
+    assert(dx>=0 && dx<38);
+    assert(dy>=0 && dy<180);
     dimx = dx;
     dimy = dy;
     ter = new char[dimx*dimy];
@@ -88,7 +91,7 @@ Fenetre::Fenetre (int dx, int dy) {
     termInit();
     
 }
-
+// Remplit le tableau de caractères c
 void Fenetre::clear (char c) {
     cout << "ok";
     for(int i=0;i<dimx;++i)
@@ -96,6 +99,7 @@ void Fenetre::clear (char c) {
             prepaFenetre(i,j,c);
 }
 
+// Met un caractère à la position x,y.
 void Fenetre::prepaFenetre (int x, int y, char c) {
     if (x<0) return;
     if (y<0) return;
@@ -105,7 +109,7 @@ void Fenetre::prepaFenetre (int x, int y, char c) {
     
 }
 
-
+// Affiche la fenêtre
 void Fenetre::dessine (int x, int y) {
     termMove(0,0);
     for(int j=0;j<dimx;++j) {
@@ -120,7 +124,7 @@ void Fenetre::dessine (int x, int y) {
 int kbhit() {
     struct timeval tv;
     fd_set fds;
-    tv.tv_sec = 0;
+    tv.tv_sec = 0;Prépare la fenêtre avant affichage
     tv.tv_usec = 0;
     FD_ZERO(&fds);
     FD_SET(STDIN_FILENO, &fds); //STDIN_FILENO is 0
@@ -138,6 +142,7 @@ void Fenetre::pause() {
 #endif
 }
 
+// Renvoie une touche
 char Fenetre::getCh() { // lire un caractere si une touche a ete pressee
     char touche=0;
     //c = wgetch();

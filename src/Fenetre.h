@@ -1,60 +1,76 @@
 #ifndef FENETRE_H
 #define FENETRE_H
 
-//! \brief une fen�tre texte est un tableau 2D de caract�res
+/**
+* @brief 
+* Classe qui gère la fenêtre d'affichage.
+*/
 class Fenetre
 {
 
 private:
 	/**
-	 * @brief 
-	 * Largeur de la fenêtre.
-	 */
+	* @brief 
+	* Largeur de la fenêtre.
+	*/
 	int dimx;
 	/**
-	 * @brief 
-	 * Hauteur de la fenêtre.
-	 */
+	* @brief 
+	* Hauteur de la fenêtre.
+	*/
 	int dimy;
 
 	/**
-	 * @brief 
-	 * stocke le contenu de la fenêtre dans un tableau 1D,
-	 * mais on y accede en 2D.
-	 */
+	* @brief 
+	* Stocke le contenu de la fenêtre dans un tableau 1D,mais on y accede en 2D.
+	* 
+	*/
 	char *ter;
 
 public:
 	/**
-	 * @brief Construit un nouvellle Objet Terrain
-	 * 
-	 * @param dx 
-	 * @param dy 
-	 */
+	* @brief 
+	* Constructeur: construit le tableau 1D de caractères.
+	* 
+	* @param 
+	* [in] entier inférieur à 38: hauteur de la fenêtre. 
+	* @param 
+	* [in] entier inférieur à 180: largeur de la fenêtre. 
+	*/
 	Fenetre(int dx, int dy);
 
 	/**
-	 * @brief 
-	 * 
-	 * @param c 
-	 */
+	* @brief 
+	* Remplit le tableau de caractères identiques, utile pour effacer
+	*
+	* @param
+	* [in] caractère: espace pour vider
+	*/
 	void clear(char c = ' ');
 
 	/**
-	 * @brief 
-	 * 
-	 * @param x 
-	 * @param y 
-	 * @param c 
-	 */
+	* @brief 
+	* Met un caractère à la position x,y.
+	* 
+	* @param 
+	* [in] entier: position verticale 
+	* @param 
+	* [in] entier: position horizontale 
+	* @param 
+	* caractère à placer
+	* 
+	*/
 	void prepaFenetre(int x, int y, char c);
 	
 	/**
-	 * @brief 
-	 * 
-	 * @param x 
-	 * @param y 
-	 */
+	* @brief 
+	* Affiche la fenêtre à l'écran
+	*
+	* @param
+	* [in] entier: position verticale.
+	* @param
+	* [in] entier: position horizontale.
+	*/
 	void dessine(int x = 0, int y = 0);
 
 	/**
@@ -64,10 +80,12 @@ public:
 	void pause();
 
 	/**
-	 * @brief Get the Ch object
-	 * 
-	 * @return char 
-	 */
+	* @brief
+	* Accesseur: renvoie une touche.
+	*
+	* @return
+	* caractère
+	*/
 	char getCh();
 };
 

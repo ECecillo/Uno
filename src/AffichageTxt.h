@@ -1,5 +1,5 @@
-#ifndef AFFICHAGE_SDL
-#define AFFICHAGE_SDL
+#ifndef AFFICHAGE_TXT
+#define AFFICHAGE_TXT
 
 #include <vector>
 #include <string>
@@ -8,6 +8,11 @@
 using namespace std;
 
 
+/**
+* @brief 
+* Boucle de jeu.
+*
+*/
 void txtBoucle(Jeu &jeu);
 
 #endif

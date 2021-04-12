@@ -4,6 +4,7 @@
 
 using namespace std;
 
+// intialisation de valeur et couleur à 0 et du tableau vierge pour l'affichage txt
 Carte::Carte()
 {
     valeur = 0;
@@ -16,6 +17,7 @@ Carte::Carte()
             carte[x][y] = carteVierge[x][dimy - 1 - y];
 }
 
+// initialisation de valeur, de couleur et du tableau pour l'affichage txt
 Carte::Carte(const unsigned int val, const unsigned int col)
 {
     assert(val <= 14);
@@ -94,32 +96,39 @@ Carte::Carte(const unsigned int val, const unsigned int col)
 
 Carte::~Carte() {}
 
+// récupère la valeur de la carte
 unsigned int Carte::getValeur() const
 {
     return valeur;
 }
 
+// récupère la couleur de la carte
 unsigned int Carte::getCouleur() const
 {
     return couleur;
 }
 
+// modifie la couleur de la carte
 void Carte::setCouleur(const unsigned int c)
 {
     assert (c<5);
     couleur = c;
 }
+
+// modifie la valeur de la carte
 void Carte::setValeur(const unsigned int val)
 {
     assert (val<15);
     valeur = val;
 }
 
+// pour un tri par couleur, puis par valeur
 bool Carte::operator<(const Carte &c2)
 {
     return (couleur < c2.getCouleur()) || (couleur == c2.getCouleur() && valeur < c2.getValeur());
 }
 
+// valeurs et couleurs égales
 bool Carte::operator==(const Carte &c)
 {
     return (couleur == c.getCouleur()) && (valeur == c.getValeur());
