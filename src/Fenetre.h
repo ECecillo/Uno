@@ -1,8 +1,8 @@
-#ifndef TERRAIN_H
-#define TERRAIN_H
+#ifndef FENETRE_H
+#define FENETRE_H
 
 //! \brief une fen�tre texte est un tableau 2D de caract�res
-class Terrain
+class Fenetre
 {
 
 private:
@@ -31,13 +31,15 @@ public:
 	 * @param dx 
 	 * @param dy 
 	 */
-	Terrain(int dx, int dy);
+	Fenetre(int dx, int dy);
+
 	/**
 	 * @brief 
 	 * 
 	 * @param c 
 	 */
 	void clear(char c = ' ');
+
 	/**
 	 * @brief 
 	 * 
@@ -45,27 +47,22 @@ public:
 	 * @param y 
 	 * @param c 
 	 */
-	void print(int x, int y, char c);
-	/**
-	 * @brief 
-	 * 
-	 * @param x 
-	 * @param y 
-	 * @param c 
-	 */
-	void print(int x, int y, char *c);
+	void prepaFenetre(int x, int y, char c);
+	
 	/**
 	 * @brief 
 	 * 
 	 * @param x 
 	 * @param y 
 	 */
-	void draw(int x = 0, int y = 0);
+	void dessine(int x = 0, int y = 0);
+
 	/**
 	 * @brief 
 	 * 
 	 */
 	void pause();
+
 	/**
 	 * @brief Get the Ch object
 	 * 

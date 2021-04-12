@@ -4,11 +4,11 @@
 #else
 #include <unistd.h>
 #endif // WIN32
-#include "Terrain.h"
+#include "Fenetre.h"
 
 #include <Jeu.h>
 
-void txtAff(Terrain &win, const Jeu &jeu)
+void txtAff(Fenetre &win, const Jeu &jeu)
 {
     const Joueur &ter = jeu.joueurs[jeu.joueurActif];
 
@@ -17,16 +17,16 @@ void txtAff(Terrain &win, const Jeu &jeu)
     // Affichage de la pioche, talon, passer ...
     for (unsigned int x = 0; x < ter.getHaut(); ++x)
         for (unsigned int y = 0; y < ter.getLarg(); ++y)
-            win.print(x, y, ter.getXY(x, y));
+            win.prepaFenetre(x, y, ter.getXY(x, y));
 
-    win.draw();
+    win.dessine();
 }
 
 void txtBoucle(Jeu &jeu)
 {
     // Creation d'une nouvelle fenetre en mode texte
     // => fenetre de dimension et position (WIDTH,HEIGHT,STARTX,STARTY)
-    Terrain win(jeu.joueurs[jeu.joueurActif].getHaut(), jeu.joueurs[jeu.joueurActif].getLarg());
+    Fenetre win(jeu.joueurs[jeu.joueurActif].getHaut(), jeu.joueurs[jeu.joueurActif].getLarg());
 
     bool ok = true;
     int c;

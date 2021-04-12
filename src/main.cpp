@@ -1,5 +1,5 @@
 #include "AffichageTxt.h"
-#include "Terrain.h"
+#include "Fenetre.h"
 #include <iostream>
 
 using namespace std;

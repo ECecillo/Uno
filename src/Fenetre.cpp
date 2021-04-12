@@ -1,4 +1,4 @@
-#include "Terrain.h"
+#include "Fenetre.h"
 #include <cassert>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -80,7 +80,7 @@ void termInit()      // configure la saisie : ne pas afficher les caracteres tap
 #endif
 }
 
-Terrain::Terrain (int dx, int dy) {
+Fenetre::Fenetre (int dx, int dy) {
     dimx = dx;
     dimy = dy;
     ter = new char[dimx*dimy];
@@ -89,14 +89,14 @@ Terrain::Terrain (int dx, int dy) {
     
 }
 
-void Terrain::clear (char c) {
+void Fenetre::clear (char c) {
     cout << "ok";
     for(int i=0;i<dimx;++i)
         for(int j=0;j<dimy;++j)
-            print(i,j,c);
+            prepaFenetre(i,j,c);
 }
 
-void Terrain::print (int x, int y, char c) {
+void Fenetre::prepaFenetre (int x, int y, char c) {
     if (x<0) return;
     if (y<0) return;
     if (x>=dimx) return;
@@ -105,14 +105,8 @@ void Terrain::print (int x, int y, char c) {
     
 }
 
-/*
- void Terrain::print (int x, int y, char* c) {
-    int i=0;
-    while (c[i]!='\0') {print(x+i,y,c[i]);++i;}
-} 
-*/
 
-void Terrain::draw (int x, int y) {
+void Fenetre::dessine (int x, int y) {
     termMove(0,0);
     for(int j=0;j<dimx;++j) {
        for(int i=0;i<dimy;++i)
@@ -135,7 +129,7 @@ int kbhit() {
 }
 #endif
 
-void Terrain::pause() {
+void Fenetre::pause() {
 #ifdef _WIN32
     system("pause");
 #else
@@ -144,7 +138,7 @@ void Terrain::pause() {
 #endif
 }
 
-char Terrain::getCh() { // lire un caractere si une touche a ete pressee
+char Fenetre::getCh() { // lire un caractere si une touche a ete pressee
     char touche=0;
     //c = wgetch();
 #ifdef _WIN32
