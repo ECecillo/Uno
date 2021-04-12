@@ -6,7 +6,6 @@
 
 
 #include <Joueur.h>
-#include <Terrain.h>
 #include <Carte.h>
 
 
