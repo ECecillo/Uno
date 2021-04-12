@@ -12,18 +12,65 @@
 
 using namespace std;
 
+/**
+* @brief
+* Classe gérant chaque joueur.
+* 
+*/
 class Joueur
 {
 private:
+		/**
+		* @brief
+		* Largeur de la table de jeu du joueur, pour l'affichage txt.
+		* 
+		*/
 		unsigned int larg;
+
+		/**
+		* @brief
+		* Hauteur de la table de jeu du joueur, pour l'affichage txt.
+		* 
+		*/
 		unsigned int haut;	 
 
 public:
+		/**
+		* @brief
+		* Nom du joueur.
+		* 
+		*/		
 		string nom;
-		vector<Carte> main;		
+		
+		/**
+		* @brief
+		* Tableau dynamique contenant les cartes du joueur.
+		* 
+		*/
+		vector<Carte> main;
+
+		/**
+		* @brief
+		* Numéro du joueur.
+		* 
+		*/		
 		unsigned int numeroJoueur;
-		char tableJoueur [50][200];// dessin de la table du Joueur en version txt
+
+		/**
+		* @brief
+		* Dessin de la table du Joueur pour l'affichage txt.
+		* 
+		*/
+		char tableJoueur [50][200];// 
+
+		/**
+		* @brief
+		* Position du curseur pour l'affichage txt.
+		* 
+		*/
 		unsigned int indiceEtoile;
+
+
 
 		
 		/**
@@ -35,11 +82,11 @@ public:
 		
 		/**
 		* @brief 
-		* Constructeur. Affecte num à numeroJoueur et n à nom.
+		* Constructeur. Affecte num à numeroJoueur.
 		* 
 		* @param
-		* [in] entier naturel inférieur ou égal au nombre de joueurs
-		* [in] chaîne de caractères
+		* [in] entier naturel inférieur ou égal au nombre de joueurs.
+		* 
 		*/
 		Joueur (const unsigned int num);
 		
@@ -54,19 +101,31 @@ public:
 		* @brief 
 		* Insère une carte dans la tableJoueur pour la version txt.
 		* 
+		* @param
+		* [in] entier naturel inférieur à 38, position verticale.
+		* @param
+		* [in] entier naturel inférieur à 180, position horizontale.
+		* @param
+		* [in/out] carte à insérer.
+		* @param
+		* [in] booléen indiquant si le curseur est ici.
 		*/
-		void insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte & c, const bool aEtoile);
+		void insererCartePositionIJ(const unsigned int indi, const unsigned int indj, Carte & c, const bool aEtoile);
 
 		/**
 		* @brief 
-		* Insère une carte adversaire avec le nom de l'adversaire dans tableJoueur pour la version txt.
+		* Insère une carte adversaire vierge avec le nom de l'adversaire dans tableJoueur pour la version txt.
 		* 
+		* @param
+		* [in] entier naturel inférieur à 180, position sur la ligne.
+		* @param
+		* [in] entier naturel, numéro de l'adversaire.
 		*/
-		void insererCarteAdversairePositionJ(unsigned int indj, unsigned int num);
+		void insererCarteAdversairePositionJ(const unsigned int indj, const unsigned int num);
 
 		/**
 		* @brief 
-		* Trie la main du joueur.
+		* Trie les cartes du joueur par couleur puis par valeur.
 		* 
 		*/
 		void trierMain();
@@ -97,8 +156,8 @@ public:
 		* Actualise le talon et la pioche dans tableJoueur pour la version txt.
 		* 
 		* @param
-		* [in] queue de Carte pour le talon
-		* [in] stack de Carte pour la pioche
+		* [in] queue de Carte pour le talon.
+		* [in] stack de Carte pour la pioche.
 		*/
 		void modifTalonPiocheTxt(const queue<Carte> & t, const stack<Carte> & p);
 		
@@ -116,7 +175,7 @@ public:
 		* Accesseur: récupère la largeur de la table du joueur.
 		* 
 		* @return
-		* Entier
+		* Entier naturel: largeur de la table.
 		*/
 		unsigned int getLarg () const;
 
@@ -125,11 +184,23 @@ public:
 		* Accesseur: récupère la hauteur de la table du joueur.
 		* 
 		* @return
-		* Entier
+		* [in] entier naturel: hauteur de la table.
 		*/
 		unsigned int getHaut () const;
 
-
+		/**
+		* @brief 
+		* Accesseur: récupère le caractère de la table du joueur à la position x,y.
+		* 
+		* @param
+		* [in] entier inférieur à 38, position verticale.
+		* 
+		* @param
+		* [in] entier inférieur à 180, position horizontale.
+		*
+		* @return
+		* Caractère: à la position x,y de la table.
+		*/
 		char getXY (const int x, const int y) const;
 
 };

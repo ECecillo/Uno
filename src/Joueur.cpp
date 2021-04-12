@@ -63,6 +63,7 @@ Joueur::Joueur()
             tableJoueur[x][y] = tableVierge[x][y];
 }
 
+// Affecte num à numeroJoueur et crée la table du joueur avec pioche et talon
 Joueur::Joueur(const unsigned int num)
 {
     numeroJoueur = num;
@@ -79,9 +80,11 @@ Joueur::Joueur(const unsigned int num)
 
 Joueur::~Joueur() {}
 
-// insère une carte dans tableJoueur pour version txt
-void Joueur::insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte &c, const bool aEtoile)
+// Insère une carte dans tableJoueur pour version txt
+void Joueur::insererCartePositionIJ(const unsigned int indi, const unsigned int indj, Carte &c, const bool aEtoile)
 {
+    assert(indi<38);
+    assert(indj<180);
     for (unsigned i = indi; i < indi + 8; i++)
     {
         for (unsigned int j = indj; j < indj + 11; j++)
@@ -95,9 +98,10 @@ void Joueur::insererCartePositionIJ(unsigned int indi, unsigned int indj, Carte 
     }
 }
 
-// insère une carte adversaire, sans le nombre de cartes, dans tableJoueur pour version txt
-void Joueur::insererCarteAdversairePositionJ(unsigned int indj, unsigned int num)
+// Insère une carte adversaire, sans le nombre de cartes, dans tableJoueur pour version txt
+void Joueur::insererCarteAdversairePositionJ(const unsigned int indj, const unsigned int num)
 {
+    assert(indj<180);
     tableJoueur[0][indj] = 'j';
     tableJoueur[0][indj + 1] = 'o';
     tableJoueur[0][indj + 2] = 'u';
@@ -118,7 +122,7 @@ void Joueur::insererCarteAdversairePositionJ(unsigned int indj, unsigned int num
     tableJoueur[5][indj + 7] = 's';
 }
 
-// trie la main du joueur
+// Trie les cartes du joueur par couleur puis par valeur
 void Joueur::trierMain()
 {
     Carte cMin;
@@ -146,7 +150,7 @@ void Joueur::effacerMainTxt()
             tableJoueur[i][j] = ' ';
 }
 
-// dessine toutes les cartes de la main dans tableJoueur pour la version txt
+// Dessine toutes les cartes de la main dans tableJoueur pour la version txt
 void Joueur::dessinerMainTxt()
 {
     for (unsigned int i = 0; i < main.size(); i++)
@@ -162,7 +166,7 @@ void Joueur::dessinerMainTxt()
     }
 }
 
-// pour la version txt
+// Pour la version txt
 void Joueur::modifMainTxt()
 {
     effacerMainTxt(); // On efface la du joueur.
@@ -271,6 +275,7 @@ unsigned int Joueur::getLarg() const { return larg; }
 // récupère la hauteur pour la version txt
 unsigned int Joueur::getHaut() const { return haut; }
 
+// récupère le caractère à la position x,y pour la version txt
 char Joueur::getXY(const int x, const int y) const
 {
     assert(x >= 0);

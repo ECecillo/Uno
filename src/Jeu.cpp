@@ -14,6 +14,7 @@
 
 using namespace std;
 
+// constructeur par défaut
 Jeu::Jeu()
 {
     joueurs = NULL;
@@ -71,6 +72,62 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
     modifAdversairesTxt();
 }
 
+// Initialise la pioche
+void Jeu::initCarte()
+{
+    unsigned int i, j = 0;
+
+    vector<Carte> jeuCarte;
+    for (i = 1; i < 5; i++) // Couleur
+    {
+        jeuCarte.push_back(Carte(0, i)); // On met les quatres 0 de chaque couleur à chaque fois que l'on change de couleur.
+        for (j = 1; j < 25; j++)         // Numéro
+            if (j > 12)
+                jeuCarte.push_back(Carte(j - 12, i));
+            else
+                jeuCarte.push_back(Carte(j, i));
+    }
+
+    for (i = 1; i < 5; i++)       // Couleur : [1] Rouge, [2] Vert, [3] Bleu, [4] jaune
+        for (j = 13; j < 15; j++) // Numéro
+            // 14 : changement de couleur,
+            // 13 : carte +4.
+            jeuCarte.push_back(Carte(j, i));
+
+    /*     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(jeuCarte.begin(), jeuCarte.end(), std::default_random_engine(seed));
+
+    unsigned int l = 0;
+    do
+    {
+        pioche.push(jeuCarte[l]);
+        l++;
+    } while (l <=jeuCarte.size()); 
+*/
+    srand((unsigned int)time(NULL));
+    int Ind;
+    set<int>::iterator it;
+    set<int> indicesJeuCarte;
+    while (pioche.size() != 108)
+    {
+        Ind = rand() % 108;
+        it = indicesJeuCarte.find(Ind);
+        if (it == indicesJeuCarte.end())
+        {
+            indicesJeuCarte.insert(Ind);
+            pioche.push(jeuCarte[Ind]);
+        }
+    }
+}
+
+void Jeu::initTalon()
+{
+    talon.push(pioche.top()); // Carte mis dans la talon, celle sur laquelle on va jouer.
+    pioche.pop();             // Elle dans la file, on la supprime de la pile.
+    for (int i = 0; i < nombreJoueurs; i++)
+        joueurs[i].modifTalonPiocheTxt(talon, pioche);
+}
+// 7 cartes par joueur
 void Jeu::distribueCarte()
 {
     for (unsigned int i = 0; i < nombreJoueurs; i++)
@@ -84,6 +141,7 @@ void Jeu::distribueCarte()
     }
 }
 
+// true si la carte est valide
 bool Jeu::carteValide(const Carte c) const
 {
     bool chercheCouleur = false;
@@ -105,6 +163,7 @@ bool Jeu::carteValide(const Carte c) const
            (c.getValeur() == 13 && chercheCouleur == false); // On compare la carte que l'on a passé en paramètre à celle qui est actuellement retourné sur le talon.
 }
 
+// Met une carte de la pioche dans la main du joueur
 void Jeu::piocherCarte()
 {
     joueurs[joueurActif].main.push_back(pioche.top()); // Working.
@@ -114,6 +173,61 @@ void Jeu::piocherCarte()
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 }
 
+void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
+{
+    if (carteValide(joueurs[joueurActif].main[indiceCarte]))
+    {                                                       // La carte qu'il veut poser est valide
+        talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
+        joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
+
+        // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
+        joueurs[joueurActif].modifMainTxt();
+        // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
+        joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
+
+        // gestion des cartes spéciales
+        switch ((talon.back()).getValeur())
+        {
+        case 10:
+            cout << "Inverse" << endl;
+            if (sensJeu == 1)
+                sensJeu = 0;
+            else
+                sensJeu = 1;
+            break;
+        case 11:
+            if (joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
+                joueurActif = 0;
+            joueurActif++;
+            break;
+        case 12:
+            termineTour();
+
+            piocherCarte();
+            piocherCarte();
+            break;
+        case 13:
+            termineTour();
+
+            for (unsigned int i = 0; i < 4; i++)
+                piocherCarte();
+            break;
+        case 14:
+            break;
+        }
+        if (testUno() == false)
+            termineTour();
+    }
+    else
+    {
+
+        messageErreur = "Cette carte ne peut pas être déposée.";
+        // Voir si on ajoute d'autre message.
+        cout << messageErreur << endl;
+    }
+}
+
+// Actions clavier du joueur
 void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // Fenêtre
 {
     switch (action)
@@ -190,60 +304,27 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
     }
 }
 
-void Jeu::poserCarte(unsigned int &indiceCarte, string &messageErreur)
-{
-    if (carteValide(joueurs[joueurActif].main[indiceCarte]))
-    {                                                       // La carte qu'il veut poser est valide
-        talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
-        joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
-
-        // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
-        joueurs[joueurActif].modifMainTxt();
-        // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
-        joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
-
-        // gestion des cartes spéciales
-        switch ((talon.back()).getValeur())
-        {
-        case 10:
-            cout << "Inverse" << endl;
-            if (sensJeu == 1)
-                sensJeu = 0;
-            else
-                sensJeu = 1;
-            break;
-        case 11:
-            if (joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
-                joueurActif = 0;
-            joueurActif++;
-            break;
-        case 12:
-            termineTour();
-
-            piocherCarte();
-            piocherCarte();
-            break;
-        case 13:
-            termineTour();
-
-            for (unsigned int i = 0; i < 4; i++)
-                piocherCarte();
-            break;
-        case 14:
-            break;
-        }
-        if (testUno() == false)
-            termineTour();
-    }
-    else
-    {
-
-        messageErreur = "Cette carte ne peut pas être déposée.";
-        // Voir si on ajoute d'autre message.
-        cout << messageErreur << endl;
-    }
+// true si la pioche est vide
+bool Jeu::piocheVide()
+{ 
+    return pioche.empty() == true;
 }
 
+// Réinitialisation de la pioche avec le talon
+void Jeu::relancePiocheJeu()
+{
+    // Préalablement : on vérifie que la pioche est vide et que le bool fin != true (fin de la partie).
+    while (talon.empty() != true)
+    {
+        // Tant que le talon n'est pas vite on met des cartes.
+        pioche.push(talon.back());
+        talon.pop();
+    }
+    // On réinit le talon avec la dernière carte ajouté à la pioche.
+    initTalon();
+}
+
+// Teste si je le joueur actif est en situation de dire Uno
 bool Jeu::testUno()
 {
     if (joueurs[joueurActif].main.size() == 1) // Il reste 1 carte au joueur.
@@ -253,6 +334,8 @@ bool Jeu::testUno()
         return statut_Uno;
     }
 }
+
+// Actions Uno et contreUno
 void Jeu::Uno(int c)
 {
     
@@ -272,6 +355,7 @@ void Jeu::Uno(int c)
     }
 }
 
+// Change le joueur actif, et metTour à true
 void Jeu::termineTour()
 {
     cout << "Fin du tour" << endl;
@@ -311,79 +395,7 @@ void Jeu::termineTour()
     }
 }
 
-void Jeu::initCarte()
-{
-    unsigned int i, j = 0;
-
-    vector<Carte> jeuCarte;
-    for (i = 1; i < 5; i++) // Couleur
-    {
-        jeuCarte.push_back(Carte(0, i)); // On met les quatres 0 de chaque couleur à chaque fois que l'on change de couleur.
-        for (j = 1; j < 25; j++)         // Numéro
-            if (j > 12)
-                jeuCarte.push_back(Carte(j - 12, i));
-            else
-                jeuCarte.push_back(Carte(j, i));
-    }
-
-    for (i = 1; i < 5; i++)       // Couleur : [1] Rouge, [2] Vert, [3] Bleu, [4] jaune
-        for (j = 13; j < 15; j++) // Numéro
-            // 14 : changement de couleur,
-            // 13 : carte +4.
-            jeuCarte.push_back(Carte(j, i));
-
-    /*     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(jeuCarte.begin(), jeuCarte.end(), std::default_random_engine(seed));
-
-    unsigned int l = 0;
-    do
-    {
-        pioche.push(jeuCarte[l]);
-        l++;
-    } while (l <=jeuCarte.size()); 
-*/
-    srand((unsigned int)time(NULL));
-    int Ind;
-    set<int>::iterator it;
-    set<int> indicesJeuCarte;
-    while (pioche.size() != 108)
-    {
-        Ind = rand() % 108;
-        it = indicesJeuCarte.find(Ind);
-        if (it == indicesJeuCarte.end())
-        {
-            indicesJeuCarte.insert(Ind);
-            pioche.push(jeuCarte[Ind]);
-        }
-    }
-}
-
-void Jeu::initTalon()
-{
-    talon.push(pioche.top()); // Carte mis dans la talon, celle sur laquelle on va jouer.
-    pioche.pop();             // Elle dans la file, on la supprime de la pile.
-    for (int i = 0; i < nombreJoueurs; i++)
-        joueurs[i].modifTalonPiocheTxt(talon, pioche);
-}
-
-bool Jeu::piocheVide()
-{ // Dis si la pioche est vide ou non.
-    return pioche.empty() == true;
-}
-
-void Jeu::relancePiocheJeu()
-{
-    // Préalablement : on vérifie que la pioche est vide et que le bool fin != true (fin de la partie).
-    while (talon.empty() != true)
-    {
-        // Tant que le talon n'est pas vite on met des cartes.
-        pioche.push(talon.back());
-        talon.pop();
-    }
-    // On réinit le talon avec la dernière carte ajouté à la pioche.
-    initTalon();
-}
-
+// Modifie le nombre de cartes des adversaires dans la main des joueurs
 void Jeu::modifAdversairesTxt()
 {
     unsigned int pos = (180 - (nombreJoueurs - 1) * 11 - (nombreJoueurs - 2)) / 2;
@@ -398,7 +410,7 @@ void Jeu::modifAdversairesTxt()
     }
 }
 
-// à insérer dans la boucle pour la version txt
+// A insérer dans la boucle pour la version txt
 void Jeu::MaJTableJoueurActifDebutTour()
 {
     assert(sensJeu == 0 || sensJeu == 1);
@@ -407,41 +419,31 @@ void Jeu::MaJTableJoueurActifDebutTour()
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 }
 
+// Teste les fonctions et procédures
 void Jeu::testRegression()
 {
     // test du constructeur
-    //for (int i=0; i<nombreJoueurs; i++)
-    //    assert(joueurs[i].main.size()==7);
     assert(sensJeu == 1);
 
-    // test de piocheVide
-    //assert(piocheVide());
-
     // test de initCarte
-    //cout << pioche.size() << endl;
-    //assert(pioche.size() == 108);
-    //assert(talon.size() == 1);
+    assert(pioche.size() == 108);
+
+    // test de initTalon
+    assert(talon.size() == 1);
 
     //distribueCarte();
-    cout << "Numéro du joueur 1 est : " << joueurs[0].nom << endl;
+    for (int i=0; i<nombreJoueurs; i++)
+        assert(joueurs[i].main.size()==7);
 
-    /*    
-   stack<Carte> temp;
+    // test de piocheVide    
+    stack<Carte> temp;
     while (pioche.empty() == false)
     {
         temp.push(pioche.top());
         pioche.pop();
     }  
- 
-    while (temp.empty() == false)
-    {
-        Carte t = temp.top();
-        cout << "La valeur de la carte est "<<t.getValeur() << " et la couleur est " << t.getCouleur() << endl;
-        temp.pop();
-    }
-    cout << "===================================================== " << endl;
-	cout<<endl; 
-*/
+    assert(piocheVide());
+
     //  test de carteValide
     Carte t = talon.front();
     Carte c1(t.getValeur(), 4);
