@@ -54,20 +54,62 @@ public:
 				
 
 
-
+		/**
+		* @brief 
+		* Constructeur par défaut. Initialise nombreJoueurs à 2, nombreIA à 0 ,variante à 1 et la salle pour l'affichage txt.
+		* 
+		*/
 		SalleAttente(); 
 
-
+		/**
+		* @brief 
+		* Destructeur par défaut.
+		* 
+		*/
 		~SalleAttente();
 		
+		/**
+		* @brief
+		* Modifie le tableau de caractères pour l'affichage du choix des règles.
+		* 
+		*/
 		void fenetreSalleRegles();
 
+		/**
+		* @brief
+		* Modifie l'intérieur du cadre, accueil ou choix des règles.
+		* 
+		* @param
+		[in] caractère, 'a' pour accueil, 'r' pour règles
+		*/
+		void insererContenuCadre(char cadre);
+
+		/**
+		* @brief
+		* Modifie le tableau de caractères avec les valeurs collectées.
+		* 
+		*/
 		void MaJFenetreSalle();
 
+		/**
+		* @brief
+		* Demande le nombre de joueurs et met à jour le tableau de caractères.
+		* 
+		*/
 		void choixNombreJoueurs();
 
+		/**
+		* @brief
+		* Demande le nombre d'ordinateurs et met à jour le tableau de caractères.
+		* 
+		*/
 		void choixNombreIA();
-
+		
+		/**
+		* @brief
+		* Demande la variante et met à jour le tableau de caractères.
+		* 
+		*/
 		void choixJeu();
 		
 				
