@@ -166,9 +166,8 @@ bool Jeu::carteValide(const Carte c) const
 // Met une carte de la pioche dans la main du joueur
 void Jeu::piocherCarte()
 {
-    joueurs[joueurActif].main.push_back(pioche.top()); // Working.
-    pioche.pop();
-    termineTour();
+    joueurs[joueurActif].main.push_back(pioche.top());
+    //termineTour();
     joueurs[joueurActif].modifMainTxt();
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 }
@@ -228,7 +227,7 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 }
 
 // Actions clavier du joueur
-void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // Fenêtre
+void Jeu::actionJoueur(const char action) // Fenêtre
 {
     switch (action)
     {
@@ -281,13 +280,15 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
     case 'c':
         // Contre Uno.
         piocherCarte();
-        pioche.pop();
+        termineTour();
         // Passer un bool statut_Uno en vraie pour se barrer d'une boucle attendre touche.
 
         break;
     case 'p':
         // On Pioche.
         piocherCarte();
+        pioche.pop();
+        termineTour();
         break;
     case 'e':
     {
@@ -309,7 +310,6 @@ bool Jeu::piocheVide()
 { 
     return pioche.empty() == true;
 }
-
 // Réinitialisation de la pioche avec le talon
 void Jeu::relancePiocheJeu()
 {
@@ -338,16 +338,16 @@ bool Jeu::testUno()
 // Actions Uno et contreUno
 void Jeu::Uno(int c)
 {
-    
+
     switch (c)
     {
     case 'u':
         statut_Uno = false;
-        actionJoueur('u',0,0);
+        actionJoueur('u');
         break;
     case 'c':
         statut_Uno = false;
-        actionJoueur('c',0,0);
+        actionJoueur('c');
         break;
 
     default:
@@ -366,13 +366,11 @@ void Jeu::termineTour()
     case 1: // On joue à gauche.
         if (joueurActif == nombreJoueurs - 1)
         {
-            cout << " Je suis le joueur actif " << joueurActif << endl;
             joueurActif = 0;
             finTour = true;
         }
         else
         {
-            cout << " Je suis le joueur actif " << joueurActif << endl;
             joueurActif++;
             finTour = true;
         }

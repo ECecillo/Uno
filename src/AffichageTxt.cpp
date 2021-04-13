@@ -8,6 +8,52 @@
 
 #include <Jeu.h>
 
+void changeCouleurCarte(Jeu &jeu, Fenetre win)
+{
+    int indiceCarte = jeu.joueurs[jeu.joueurActif].indiceEtoile;
+    int numeroCarte = jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur();
+    int c;
+
+    if (numeroCarte == 13 || numeroCarte == 14)
+    {
+        bool choixCouleur = false;
+        cout << "### Vous devez choisir une nouvelle couleur sur laquelle vous jouerez ###" << endl;
+        while (choixCouleur)
+        {
+            c = win.getCh();
+            switch (c)
+            {
+            case 'r':
+                cout << "Je suis la touche R" << endl;
+                //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+                jeu.actionJoueur('r');
+                choixCouleur = true;
+                break;
+            case 'v':
+                cout << "Je suis la touche V" << endl;
+                //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+                jeu.actionJoueur('v');
+                choixCouleur = true;
+                break;
+
+            case 'b':
+                cout << "Je suis la touche B" << endl;
+                //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+                jeu.actionJoueur('b');
+                choixCouleur = true;
+                break;
+
+            case 'j':
+                cout << "Je suis la touche J" << endl;
+                //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+                jeu.actionJoueur('j');
+                choixCouleur = true;
+                break;
+            }
+        }
+    }
+}
+
 void txtAff(Fenetre &win, const Jeu &jeu)
 {
     const Joueur &ter = jeu.joueurs[jeu.joueurActif];
@@ -30,7 +76,7 @@ void txtBoucle(Jeu &jeu)
 
     bool ok = true;
     int c;
-    txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
+    //txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
 
     do
     {
@@ -52,58 +98,52 @@ void txtBoucle(Jeu &jeu)
             jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
             //cout << "On passe " << endl;
             c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
-            if(jeu.statut_Uno)
+            if (jeu.statut_Uno)
             {
                 sleep(2);
-                cout << "========== Un des joueurs peut jouer UNO !!! ===============" << 
-                "# Vous avez 2 secondes pour appuyer sur U ou C # " << endl;
+                cout << "========== Un des joueurs peut jouer UNO !!! ==============="
+                     << "# Vous avez 2 secondes pour appuyer sur U ou C # " << endl;
                 jeu.Uno(c);
             }
-            
+
             switch (c)
             {
             case 'a':
-                jeu.actionJoueur('a', 0, 0);
+                jeu.actionJoueur('a');
                 break;
             case 'd':
-                jeu.actionJoueur('d', 0, 0);
+                jeu.actionJoueur('d');
                 break;
-            case 'r':
+            /* case 'r':
                 cout << "Je suis la touche R" << endl;
                 if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
-                    jeu.actionJoueur('r', 0, 0);
+                    jeu.actionJoueur('r');
                 break;
             case 'v':
                 cout << "Je suis la touche V" << endl;
                 if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
-                    jeu.actionJoueur('v', 0, 0);
+                    jeu.actionJoueur('v');
                 break;
 
             case 'b':
                 cout << "Je suis la touche B" << endl;
                 if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
-                    jeu.actionJoueur('b', 0, 0);
+                    jeu.actionJoueur('b');
                 break;
 
             case 'j':
                 cout << "Je suis la touche J" << endl;
                 if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
-                    jeu.actionJoueur('j', 0, 0);
-                break;
-
-            /* case 'c':
-                cout << "Je suis la touche C" << endl;
-                jeu.actionJoueur('c', 0, 0);
-            case 'u':
-                cout << "Je suis la touche U" << endl;
-                jeu.actionJoueur('u', 0, 0); */
+                    jeu.actionJoueur('j');
+                break; */
             case 'p':
                 cout << "Je suis la touche P" << endl;
-                jeu.actionJoueur('p', 0, 0);
+                jeu.actionJoueur('p');
                 break;
             case 'e':
                 cout << "Je suis la touche E" << endl;
-                jeu.actionJoueur('e', 0, 0);
+                changeCouleurCarte(jeu, win);
+                jeu.actionJoueur('e');
 
                 break;
             case 'q':
