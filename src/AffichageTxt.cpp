@@ -7,6 +7,10 @@
 #include "Terrain.h"
 
 #include <Jeu.h>
+/* 
+void (Jeu &jeu)
+ */
+
 
 void txtAff(Terrain &win, const Jeu &jeu)
 {
@@ -30,7 +34,7 @@ void txtBoucle(Jeu &jeu)
 
     bool ok = true;
     int c;
-    txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
+    //txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
 
     do
     {
@@ -103,6 +107,20 @@ void txtBoucle(Jeu &jeu)
                 break;
             case 'e':
                 cout << "Je suis la touche E" << endl;
+                int indiceCarte = jeu.joueurs[jeu.joueurActif].indiceEtoile;
+                int numeroCarte = jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur();
+                
+
+                if(numeroCarte == 13 || numeroCarte == 14)
+                {
+                    bool choixCouleur = false;
+                    cout << "### Vous devez choisir une nouvelle couleur sur laquelle vous jouerez ###" << endl;
+                    while(choixCouleur)
+                    {
+                        c = win.getCh();
+
+                    }
+                }
                 jeu.actionJoueur('e', 0, 0);
 
                 break;
