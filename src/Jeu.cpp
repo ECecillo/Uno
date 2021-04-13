@@ -145,8 +145,9 @@ void Jeu::distribueCarte()
 bool Jeu::carteValide(const Carte c) const
 {
     bool chercheCouleur = false;
+    cout << "Carte Valide" << endl;
     //si carte +4, on regarde dans la main du joueur s'il y a une carte de la même couleur que celle du talon
-    if (c.getValeur() == 13)
+    /* if (c.getValeur() == 13)
     {
         unsigned int i = 0;
         while (i < joueurs[joueurActif].main.size() && !chercheCouleur)
@@ -155,19 +156,21 @@ bool Jeu::carteValide(const Carte c) const
                 chercheCouleur = true;
             i++;
         }
-    }
+    } */
     cout << talon.back().getValeur() << talon.back().getCouleur() << endl;
     return (c.getValeur() == talon.back().getValeur()) ||
            (c.getCouleur() == talon.back().getCouleur()) ||
            (c.getValeur() == 14) ||
-           (c.getValeur() == 13 && chercheCouleur == false); // On compare la carte que l'on a passé en paramètre à celle qui est actuellement retourné sur le talon.
+           (c.getValeur() == 13); // On compare la carte que l'on a passé en paramètre à celle qui est actuellement retourné sur le talon.
 }
 
 // Met une carte de la pioche dans la main du joueur
 void Jeu::piocherCarte()
 {
     joueurs[joueurActif].main.push_back(pioche.top());
+    cout << "Valeur :" << pioche.top().getValeur() << " et la couleur " << pioche.top().getCouleur() << endl;
     //termineTour();
+    pioche.pop();
     joueurs[joueurActif].modifMainTxt();
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 }
@@ -183,7 +186,7 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
         joueurs[joueurActif].modifMainTxt();
         // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
         joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
-
+        bool carteSpeciale = false;
         // gestion des cartes spéciales
         switch ((talon.back()).getValeur())
         {
@@ -195,27 +198,38 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                 sensJeu = 1;
             break;
         case 11:
-            if (joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
+            if (joueurActif == nombreJoueurs - 1) // Si On passe le tour du dernier joueur on revient au premier.
                 joueurActif = 0;
             joueurActif++;
+
             break;
         case 12:
             termineTour();
 
             piocherCarte();
             piocherCarte();
+            carteSpeciale = true;
             break;
         case 13:
+            carteSpeciale = true;
+
             termineTour();
 
             for (unsigned int i = 0; i < 4; i++)
                 piocherCarte();
             break;
         case 14:
+            carteSpeciale = true;
+
             break;
         }
+
+        if (carteSpeciale)
+            return;
         if (testUno() == false)
+        {
             termineTour();
+        }
     }
     else
     {
@@ -229,25 +243,30 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 // Actions clavier du joueur
 void Jeu::actionJoueur(const char action) // Fenêtre
 {
+    int indiceCarte = joueurs[joueurActif].indiceEtoile;
+
     switch (action)
     {
     case 'r':
         //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
         cout << "Hello" << endl;
-        (talon.back()).setCouleur(1);
+        joueurs[joueurActif].main[indiceCarte].setCouleur(1);
+
         break;
     case 'v':
         //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
+        joueurs[joueurActif].main[indiceCarte].setCouleur(2);
 
-        (talon.back()).setCouleur(2);
         break;
     case 'b':
         //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
-        (talon.back()).setCouleur(3);
+        joueurs[joueurActif].main[indiceCarte].setCouleur(3);
+
         break;
     case 'j':
         //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
-        (talon.back()).setCouleur(4);
+        joueurs[joueurActif].main[indiceCarte].setCouleur(4);
+
         break;
     case 'a':
         if (joueurs[joueurActif].indiceEtoile == 0) // Si on est déjà à l'indice 0 on bouge pas.
@@ -287,7 +306,6 @@ void Jeu::actionJoueur(const char action) // Fenêtre
     case 'p':
         // On Pioche.
         piocherCarte();
-        pioche.pop();
         termineTour();
         break;
     case 'e':
@@ -307,7 +325,7 @@ void Jeu::actionJoueur(const char action) // Fenêtre
 
 // true si la pioche est vide
 bool Jeu::piocheVide()
-{ 
+{
     return pioche.empty() == true;
 }
 // Réinitialisation de la pioche avec le talon
@@ -342,12 +360,12 @@ void Jeu::Uno(int c)
     switch (c)
     {
     case 'u':
-        statut_Uno = false;
         actionJoueur('u');
+        statut_Uno = false;
         break;
     case 'c':
-        statut_Uno = false;
         actionJoueur('c');
+        statut_Uno = false;
         break;
 
     default:
@@ -430,16 +448,16 @@ void Jeu::testRegression()
     assert(talon.size() == 1);
 
     //distribueCarte();
-    for (int i=0; i<nombreJoueurs; i++)
-        assert(joueurs[i].main.size()==7);
+    for (int i = 0; i < nombreJoueurs; i++)
+        assert(joueurs[i].main.size() == 7);
 
-    // test de piocheVide    
+    // test de piocheVide
     stack<Carte> temp;
     while (pioche.empty() == false)
     {
         temp.push(pioche.top());
         pioche.pop();
-    }  
+    }
     assert(piocheVide());
 
     //  test de carteValide

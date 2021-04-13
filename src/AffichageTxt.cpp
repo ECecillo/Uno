@@ -16,7 +16,7 @@ void changeCouleurCarte(Jeu &jeu, Fenetre win)
 
     if (numeroCarte == 13 || numeroCarte == 14)
     {
-        bool choixCouleur = false;
+        bool choixCouleur = true;
         cout << "### Vous devez choisir une nouvelle couleur sur laquelle vous jouerez ###" << endl;
         while (choixCouleur)
         {
@@ -27,27 +27,27 @@ void changeCouleurCarte(Jeu &jeu, Fenetre win)
                 cout << "Je suis la touche R" << endl;
                 //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
                 jeu.actionJoueur('r');
-                choixCouleur = true;
+                choixCouleur = false;
                 break;
             case 'v':
                 cout << "Je suis la touche V" << endl;
                 //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
                 jeu.actionJoueur('v');
-                choixCouleur = true;
+                choixCouleur = false;
                 break;
 
             case 'b':
                 cout << "Je suis la touche B" << endl;
                 //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
                 jeu.actionJoueur('b');
-                choixCouleur = true;
+                choixCouleur = false;
                 break;
 
             case 'j':
                 cout << "Je suis la touche J" << endl;
                 //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
                 jeu.actionJoueur('j');
-                choixCouleur = true;
+                choixCouleur = false;
                 break;
             }
         }
@@ -98,9 +98,8 @@ void txtBoucle(Jeu &jeu)
             jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
             //cout << "On passe " << endl;
             c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
-            if (jeu.statut_Uno)
+            if(jeu.statut_Uno)
             {
-                sleep(2);
                 cout << "========== Un des joueurs peut jouer UNO !!! ==============="
                      << "# Vous avez 2 secondes pour appuyer sur U ou C # " << endl;
                 jeu.Uno(c);
