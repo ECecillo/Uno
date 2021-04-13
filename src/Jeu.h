@@ -172,7 +172,7 @@ public:
 	* [in].
 	*
 	*/
-	void actionJoueur(const char action, const int x, const int y);
+	void actionJoueur(const char action);
 
 	/**
 	* @brief 

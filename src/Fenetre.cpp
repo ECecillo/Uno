@@ -82,8 +82,9 @@ void termInit()      // configure la saisie : ne pas afficher les caracteres tap
 
 // Constructeur: construit le tableau 1D vide
 Fenetre::Fenetre (int dx, int dy) {
-    assert(dx>=0 && dx<38);
-    assert(dy>=0 && dy<180);
+    cout << dx << " " << dy << endl;
+    assert(dx>=0 && dx<=38);
+    assert(dy>=0 && dy<=180);
     dimx = dx;
     dimy = dy;
     ter = new char[dimx*dimy];
@@ -124,7 +125,7 @@ void Fenetre::dessine (int x, int y) {
 int kbhit() {
     struct timeval tv;
     fd_set fds;
-    tv.tv_sec = 0;Prépare la fenêtre avant affichage
+    tv.tv_sec = 0; //Prépare la fenêtre avant affichage
     tv.tv_usec = 0;
     FD_ZERO(&fds);
     FD_SET(STDIN_FILENO, &fds); //STDIN_FILENO is 0
