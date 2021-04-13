@@ -124,7 +124,7 @@ void Fenetre::dessine (int x, int y) {
 int kbhit() {
     struct timeval tv;
     fd_set fds;
-    tv.tv_sec = 0;Prépare la fenêtre avant affichage
+    tv.tv_sec = 0;//Prépare la fenêtre avant affichage
     tv.tv_usec = 0;
     FD_ZERO(&fds);
     FD_SET(STDIN_FILENO, &fds); //STDIN_FILENO is 0

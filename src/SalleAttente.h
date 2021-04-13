@@ -112,7 +112,7 @@ public:
 		*/
 		void choixJeu();
 		
-				
+		void Affiche();
 };
 
 #endif
