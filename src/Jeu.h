@@ -12,6 +12,8 @@
 
 using namespace std;
 
+class Bot;
+
 /**
 * @brief 
 * Classe gérant les actions du jeu.
