@@ -50,7 +50,7 @@ public:
 		* Position du curseur pour l'affichage txt.
 		* 
 		*/
-		unsigned int indiceEtoile; 
+		unsigned int etoile; 
 				
 
 
@@ -112,7 +112,7 @@ public:
 		*/
 		void choixJeu();
 		
-		void Affiche();
+				
 };
 
 #endif
