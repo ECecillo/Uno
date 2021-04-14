@@ -81,8 +81,6 @@ void txtBoucle(Jeu &jeu)
     do
     {
         txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
-        if (jeu.finPartie)
-            cout << "Fin partie = true ?" << endl;
 #ifdef _WIN32
         Sleep(100);
 #else

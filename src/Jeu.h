@@ -7,6 +7,7 @@
 
 #include <Joueur.h>
 #include <Carte.h>
+#include <Bot.h>
 
 
 using namespace std;
@@ -37,6 +38,8 @@ public:
 	* Tableau de Joueurs.
 	*/
 	Joueur *joueurs;
+
+	Bot *joueursBot;
 
 	/**
 	* @brief 
