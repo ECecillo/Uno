@@ -11,6 +11,7 @@
 #include <time.h>
 #include <random>
 #include <chrono>
+#include <Bot.h>
 
 using namespace std;
 
@@ -177,7 +178,7 @@ void Jeu::distribueCarte()
             case 4:
                 joueursBot[i].setCarteJaune();
                 break;
-            
+
             default:
                 break;
             }

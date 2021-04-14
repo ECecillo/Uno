@@ -6,10 +6,9 @@
 #include <Carte.h>
 #include <algorithm>
 #include <iostream>
-#include <Jeu.h>
 #include <cassert>
 
-
+class Jeu;
 
 class Bot
 {
@@ -57,7 +56,7 @@ public:
          * @brief Compte le nombre de carte qui ont la couleur du talon.
          *
          */
-    int carteMemeCouleurTalon(const Jeu &jeu) const;
+    int carteMemeCouleurTalon(const Jeu &) const;
 
      /**
       * @brief
@@ -65,9 +64,9 @@ public:
       * @param jeu
       * @return int
       */
-    int carteMemeValeurTalon(const Jeu &jeu) const;
+    int carteMemeValeurTalon(const Jeu &) const;
 
-    void choixJeu(const Jeu &jeu);
+    void choixJeu(const Jeu &);
 
      void testRegression();
 
@@ -75,7 +74,6 @@ public:
     void setCarteVert();
     void setCarteBleu();
     void setCarteJaune();
-    void testDeFonctionPourVim();
 
 private:
     int nbCarteRouge;
