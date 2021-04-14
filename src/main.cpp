@@ -12,8 +12,8 @@ int main ( int argc, char** argv ) {
 	//jeu.testRegression();
     //txtBoucle(jeu);
     //termClear();
-    SalleAttente sa;
-    sa.Affiche();
+    SalleAttente Attente;
+    txtBoucleDebut(Attente);
 	return 0;
 
 }

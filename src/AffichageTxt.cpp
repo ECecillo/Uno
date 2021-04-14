@@ -5,8 +5,15 @@
 #include <unistd.h>
 #endif // WIN32
 #include "Fenetre.h"
+#include "SalleAttente.h"
+#include "VarianteDoublon.h"
+#include "VarianteEchange.h"
+#include "VarianteTourne.h"
+#include "VarianteSuite.h"
+#include "VarianteCumul.h"
+#include "AffichageTxt.h"
 
-#include <Jeu.h>
+#include "Jeu.h"
 
 void txtAff(Fenetre &win, const Jeu &jeu)
 {
@@ -22,8 +29,87 @@ void txtAff(Fenetre &win, const Jeu &jeu)
     win.dessine();
 }
 
-void txtBoucle(Jeu &jeu)
+void txtAffSalleAttente(Fenetre & winSA, const SalleAttente & s)
 {
+    winSA.clear();
+    for (unsigned int x=0; x<s.haut; x++)
+        for (unsigned int y=0; y<s.larg; y++)
+            winSA.prepaFenetre(x,y,s.salle[x][y]);
+    winSA.dessine();
+}
+
+void txtBoucleDebut(SalleAttente & s)
+{
+    Fenetre winSA(s.haut,s.larg);
+    txtAffSalleAttente(winSA,s);
+    int c;
+    bool debutPartie=false;
+    while (!debutPartie)
+    {
+        c=winSA.getCh();
+        switch (c)
+        {
+            case 't':if (s.etoile>11) {
+                        s.salle[s.etoile][49]=' ';
+                        s.etoile--;
+                        s.MaJFenetreSalle();
+                        txtAffSalleAttente(winSA,s);}
+                    break;
+            case 'b':if (s.etoile<14) {
+                        s.salle[s.etoile][49]=' ';
+                        s.etoile++;
+                        s.MaJFenetreSalle();
+                        txtAffSalleAttente(winSA,s);}
+                    break;
+            case 'e':switch (s.etoile) {
+                        case 11:s.fenetreSalleRegles();
+                                txtAffSalleAttente(winSA,s);
+                                s.choixJeu();
+                                txtAffSalleAttente(winSA,s);
+                                break;
+                        case 12:s.choixNombreJoueurs();
+                                txtAffSalleAttente(winSA,s);
+                                break;
+                        case 13:s.choixNombreIA();
+                                txtAffSalleAttente(winSA,s);
+                                break;
+                        case 14:if (s.nombreJoueurs+s.nombreIA>1) 
+                                switch (s.variante)
+                                {
+                                    case 1: {Jeu jeu(s.nombreJoueurs,s.nombreIA);
+                                            txtBoucle(jeu);
+                                            break;}
+                                    case 2: {VarianteCumul jeu(s.nombreJoueurs,s.nombreIA);
+                                            txtBoucle(jeu);
+                                            break;}
+                                    case 3: {VarianteDoublon jeu(s.nombreJoueurs,s.nombreIA);
+                                            txtBoucle(jeu);
+                                            break;}
+                                    case 4: {VarianteEchange jeu(s.nombreJoueurs,s.nombreIA);
+                                            txtBoucle(jeu);
+                                            break;}
+                                    case 5: {VarianteSuite jeu(s.nombreJoueurs,s.nombreIA);
+                                            txtBoucle(jeu);
+                                            break;}
+                                    case 6: {VarianteTourne jeu(s.nombreJoueurs,s.nombreIA);
+                                            txtBoucle(jeu);
+                                            break;}
+                                    default: break;
+                                debutPartie=true;
+                                }
+                                else cout << "Pas assez de joueurs pour commencer la partie." << endl;
+                                break;
+                        default: break;
+                        }
+                    break;
+            default: break;
+        }
+    }
+}
+
+void txtBoucle(Jeu & jeu)
+{
+    
     // Creation d'une nouvelle fenetre en mode texte
     // => fenetre de dimension et position (WIDTH,HEIGHT,STARTX,STARTY)
     Fenetre win(jeu.joueurs[jeu.joueurActif].getHaut(), jeu.joueurs[jeu.joueurActif].getLarg());
