@@ -18,9 +18,10 @@ using namespace std;
 Jeu::Jeu()
 {
     joueurs = NULL;
+    joueursBot = NULL;
     nombreJoueurs = 0;
-    sensJeu = 1;
     nombreIA = 0;
+    sensJeu = 1;
 
     joueurActif = 0;
     finPartie = false;
@@ -32,9 +33,14 @@ Jeu::~Jeu()
 {
     delete[] joueurs;
     joueurs = NULL;
+
+    delete[] joueursBot;
+    joueursBot = NULL;
+
     sensJeu = 1;
     joueurActif = 0;
     nombreJoueurs = 0;
+    nombreIA = 0;
 }
 
 Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
@@ -44,19 +50,30 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
     nombreIA = nbIA;
     // création du tableau joueurs
     joueurs = new Joueur[nombreJoueurs];
+    // Création du tableau de Bots
+    joueursBot = new Bot[nombreIA];
+
+    // Initialisation du tableau de joueurs
     for (unsigned int i = 0; i < nombreJoueurs; i++)
     {
         Joueur joueur(i + 1);
         joueurs[i] = joueur;
     }
-    joueurActif = rand() % nombreJoueurs; // On génère un numéro de joueur aléatoire pour le début de la partie.
-    sensJeu = 1;                          // On tournera à gauche.
-    distribueCarte();                     // On donne les cartes au joueurs
-    initTalon();                          // On initialise le Talon.
+    // Initialisation du tableau de bots.
+    for (unsigned int i = 0; i < nombreIA; i++)
+    {
+        Bot bot(i + 1);
+        joueursBot[i] = bot;
+    }
+
+    joueurActif = rand() % nombreJoueurs + nombreIA; // On génère un numéro de joueur aléatoire pour le début de la partie.
+    sensJeu = 1;                                     // On tournera à gauche.
+    distribueCarte();                                // On donne les cartes au joueurs
+    initTalon();                                     // On initialise le Talon.
     finTour = false;
     statut_Uno = false;
     finPartie = false;
-
+    //nombreJoueurs += nombreIA; // On regroupe le nombre d'IA avec le nombre de joueurs.
     unsigned int pos = (180 - (nombreJoueurs - 1) * 11 - (nombreJoueurs - 2)) / 2;
 
     for (unsigned int i = 0; i < nombreJoueurs; i++)
@@ -127,7 +144,7 @@ void Jeu::initTalon()
     for (int i = 0; i < nombreJoueurs; i++)
         joueurs[i].modifTalonPiocheTxt(talon, pioche);
 }
-// 7 cartes par joueur
+// 7 cartes par joueur et par Bot.
 void Jeu::distribueCarte()
 {
     for (unsigned int i = 0; i < nombreJoueurs; i++)
@@ -138,6 +155,35 @@ void Jeu::distribueCarte()
             pioche.pop();
         }
         joueurs[i].modifMainTxt();
+    }
+    // Distribution pour les bots.
+    for (unsigned int i = 0; i < nombreIA; i++)
+    {
+        for (unsigned int j = 0; j < 7; j++)
+        {
+            joueursBot[i].main.push_back(pioche.top());
+            // On récupère le nombre de carte de chaque couleur à chaque ajout.
+            switch (pioche.top().getCouleur())
+            {
+            case 1:
+                joueursBot[i].setCarteRouge();
+                break;
+            case 2:
+                joueursBot[i].setCarteVert();
+                break;
+            case 3:
+                joueursBot[i].setCarteBleu();
+                break;
+            case 4:
+                joueursBot[i].setCarteJaune();
+                break;
+            
+            default:
+                break;
+            }
+            pioche.pop();
+        }
+        //joueursBot[i].modifMainTxt();
     }
 }
 
