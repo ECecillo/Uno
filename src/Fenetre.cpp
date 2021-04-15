@@ -93,7 +93,6 @@ Fenetre::Fenetre (int dx, int dy) {
 }
 // Remplit le tableau de caractères c
 void Fenetre::clear (char c) {
-    cout << "ok";
     for(int i=0;i<dimx;++i)
         for(int j=0;j<dimy;++j)
             prepaFenetre(i,j,c);

@@ -47,13 +47,15 @@ void txtBoucleDebut(SalleAttente & s)
     // on affiche la salle d'attente
     txtAffSalleAttente(winSA,s);
     int c;
-    bool debutPartie=false;
-    while (!debutPartie)
+    bool finPartie=false;
+    while (!finPartie)
     {
         c=winSA.getCh();
         switch (c)
         {
             // l'étoile monte
+            case 'q':finPartie = true;
+                    break;
             case 't':if (s.etoile>11) {
                         s.salle[s.etoile][49]=' ';
                         s.etoile--;
@@ -107,7 +109,7 @@ void txtBoucleDebut(SalleAttente & s)
                                             txtBoucle(jeu);
                                             break;}
                                     default: break;
-                                debutPartie=true;
+                                finPartie=true;
                                 }
                                 else cout << "Pas assez de joueurs pour commencer la partie." << endl;
                                 break;
@@ -167,24 +169,20 @@ void txtBoucle(Jeu & jeu)
                 jeu.actionJoueur('d', 0, 0);
                 break;
             case 'r':
-                cout << "Je suis la touche R" << endl;
                 if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
                     jeu.actionJoueur('r', 0, 0);
                 break;
             case 'v':
-                cout << "Je suis la touche V" << endl;
                 if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
                     jeu.actionJoueur('v', 0, 0);
                 break;
 
             case 'b':
-                cout << "Je suis la touche B" << endl;
                 if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
                     jeu.actionJoueur('b', 0, 0);
                 break;
 
             case 'j':
-                cout << "Je suis la touche J" << endl;
                 if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
                     jeu.actionJoueur('j', 0, 0);
                 break;
@@ -196,16 +194,13 @@ void txtBoucle(Jeu & jeu)
                 cout << "Je suis la touche U" << endl;
                 jeu.actionJoueur('u', 0, 0); */
             case 'p':
-                cout << "Je suis la touche P" << endl;
                 jeu.actionJoueur('p', 0, 0);
                 break;
             case 'e':
-                cout << "Je suis la touche E" << endl;
                 jeu.actionJoueur('e', 0, 0);
 
                 break;
             case 'q':
-                cout << "Je suis la touche Q" << endl;
                 jeu.finTour = true;
                 ok = false;
                 jeu.finPartie = true;
