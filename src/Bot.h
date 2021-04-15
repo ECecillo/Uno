@@ -7,80 +7,89 @@
 #include <algorithm>
 #include <iostream>
 #include <cassert>
+#include <unistd.h>
 
 class Jeu;
 
 class Bot
 {
 public:
-    /**
+     /**
          * @brief
          * Numéro du bot
          */
-    unsigned int numeroBot;
+     unsigned int numeroBot;
 
-    /**
+     /**
      * @brief
      * Nom du bot.
      */
-    string nom;
+     string nom;
 
-    /**
+     /**
 		* @brief
 		* Tableau dynamique contenant les cartes du bot.
 		*
 		*/
-    vector<Carte> main;
+     vector<Carte> main;
 
-    /**
+     /**
      * @brief Construit un nouvelle objet Bot.
      *
      */
-    Bot();
+     Bot();
 
-    /**
+     /**
      * @brief Construit un nouvelle objet Bot avec le numéro du bot.
      *
      * @param num : Numéro du bot.
      */
-    Bot(const unsigned int num);
+     Bot(const unsigned int num);
 
-    /**
-         * @brief Selon les résultats retournés par les autres fonctions l'IA
-         *  posera la carte sur talon.
-         *
+     /**
+      * @brief 
+      * Trie le vecteur main du bot.
+      * 
+      */
+     void trierMain();
+
+     /**
+         * @brief 
+         * Procédure qui posera la carte que l'on aura choisit dans choix Jeu.
          */
-    void poserCarte() const;
+     void poserCarte() const;
 
-    /**
+     /**
          * @brief Compte le nombre de carte qui ont la couleur du talon.
          *
          */
-    int carteMemeCouleurTalon(const Jeu &) const;
+     int carteMemeCouleurTalon(const Jeu &) const;
 
      /**
-      * @brief
+      * @brief 
       * Compte le nombre de Carte de la couleur de la carte qui a la même valeur que celle du Talon.
-      * @param jeu
-      * @return int
+      * @param tab : tableau dans lequelle on met le nombre de carte par couleur.
       */
-    int carteMemeValeurTalon(const Jeu &) const;
+     int carteMemeValeurTalon(const Jeu &, char &c) const;
 
-    void choixJeu(const Jeu &);
+    /**
+     * @brief 
+     * D'après les fonctions carteMemeCouleur et CarteMemeValeur on dit à l'ordinateur quelle carte il va jouer.
+     */
+     void choixJeu(const Jeu &);
 
-     void testRegression();
+     void testRegression(const Jeu &);
 
-    void setCarteRouge();
-    void setCarteVert();
-    void setCarteBleu();
-    void setCarteJaune();
+     void setCarteRouge();
+     void setCarteVert();
+     void setCarteBleu();
+     void setCarteJaune();
 
 private:
-    int nbCarteRouge;
-    int nbCarteVert;
-    int nbCarteBleu;
-    int nbCarteJaune;
-
+     int nbCarteRouge;
+     int nbCarteVert;
+     int nbCarteBleu;
+     int nbCarteJaune;
 };
 
 #endif
