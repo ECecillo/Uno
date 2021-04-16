@@ -65,7 +65,7 @@ int Bot::carteMemeCouleurTalon(const Jeu &jeu) const
     }
 }
 
-int Bot::carteMemeValeurTalon(const Jeu &jeu, char &c) const
+int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c) const
 {
     // variable contenant le nombre de Carte avec la couleur de la carte qui a la meme valeur que celle du talon.
     int nbCarteMemeCouleur = 0;
@@ -73,8 +73,7 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, char &c) const
     int indexBot = numeroBot - 1;
     for (int i = 0; i < jeu.joueursBot[indexBot].main.size(); i++)
     {
-        if (jeu.joueursBot[indexBot].main[i].getValeur() == jeu.talon.back().getValeur()
-            && jeu.joueursBot[indexBot].main[i].getCouleur() != jeu.talon.back().getCouleur())
+        if (jeu.joueursBot[indexBot].main[i].getValeur() == jeu.talon.back().getValeur() && jeu.joueursBot[indexBot].main[i].getCouleur() != jeu.talon.back().getCouleur())
         {
             // On récupère la Couleur de la carte qui a la même valeur que talon
             int couleurCarte = jeu.joueursBot[indexBot].main[i].getCouleur();
@@ -115,7 +114,7 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, char &c) const
                 if (compareValeur > nbCarteMemeCouleur)
                 {
                     nbCarteMemeCouleur = compareValeur;
-                    c = 'r';
+                    c = 1;
                 }
 
                 break;
@@ -149,7 +148,7 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, char &c) const
                 if (compareValeur > nbCarteMemeCouleur)
                 {
                     nbCarteMemeCouleur = compareValeur;
-                    c = 'v';
+                    c = 2;
                 }
 
                 break;
@@ -183,7 +182,7 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, char &c) const
                 if (compareValeur > nbCarteMemeCouleur)
                 {
                     nbCarteMemeCouleur = compareValeur;
-                    c = 'b';
+                    c = 3;
                 }
 
                 break;
@@ -217,7 +216,7 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, char &c) const
                 if (compareValeur > nbCarteMemeCouleur)
                 {
                     nbCarteMemeCouleur = compareValeur;
-                    c = 'j';
+                    c = 4;
                 }
 
                 break;
@@ -230,29 +229,104 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, char &c) const
     return nbCarteMemeCouleur;
 }
 
-void Bot::choixJeu(const Jeu &jeu)
+void Bot::joueCouleurSelonEntier(int couleur, int carteSpeciale)
 {
-    int nbCarteCouleur, nbCarteValeur;
+    string er;
+    switch (couleur) // On joue en fonction de la carte du talon.
+    {
+    case 1:
+        // if (carteSpeciale != 0)
+        //  poserCarte(carteSpeciale, er);
+        // else
+        // poserCarte((rand() % nbCarteRouge), er);
+        break;
+    case 2:
+        // if (carteSpeciale != 0)
+        //  poserCarte(carteSpeciale, er);
+        // else
+        // poserCarte((rand() + nbCarteRouge % nbCarteVert), er);
+        break;
+    case 3:
+        // if (carteSpeciale != 0)
+        //  poserCarte(carteSpeciale, er);
+        // else
+        //  poserCarte((rand() + (nbCarteRouge + nbCarteVert)% nbCarteBleu), er);
+        break;
+    case 4:
+        // if (carteSpeciale != 0)
+        //  poserCarte(carteSpeciale, er);
+        // else
+        // poserCarte((rand() + (nbCarteRouge + nbCarteVert + nbCarteBleu) % nbCarteJaune), er);
+        break;
 
-    nbCarteCouleur = carteMemeCouleurTalon(jeu); // Nombre de carte meme couleur que talon.
-    char couleur;                                // Caractère qui permettra de savoir quelle couleur a le plus de carte.
-    nbCarteValeur = carteMemeValeurTalon(jeu, couleur);
-    // On compare les deux en prenant en compte que c'est mieux de finir une couleur avant d'en changer
-    if (!(nbCarteCouleur == 0) && !(nbCarteValeur == 0)) // Cas où on peut jouer.
-    {
-        if (nbCarteCouleur > nbCarteValeur)
-        {
-            // On joue sur les cartes avec la couleur du talon.
-            // string er;
-            // PoserCarte();
-        }
-    }
-    else
-    {
-        // piocher.
+    default:
+        break;
     }
 }
 
+void Bot::choixJeu(Jeu &jeu)
+{
+    int nbCarteCouleur, nbCarteValeur;
+    int maxNbCouleur = couleurAvecPlusDeCarte(); // Renvoie la couleur avec le plus de carte.
+    nbCarteCouleur = carteMemeCouleurTalon(jeu); // Nombre de carte meme couleur que talon.
+    int couleur;                                 // Caractère qui permettra de savoir quelle couleur a le plus de carte.
+    nbCarteValeur = carteMemeValeurTalon(jeu, couleur);
+
+    assert(nbCarteCouleur >= 0 && nbCarteValeur >= 0);
+    // On compare les deux en prenant en compte que c'est mieux de finir une couleur avant d'en changer
+    if (!(nbCarteCouleur == 0) && nbCarteValeur == 0) // Cas où on peut jouer que les cartes mêmes couleurs.
+    {
+        joueCouleurSelonEntier(jeu.talon.back().getCouleur(), 0);
+    }
+    else if (!(nbCarteCouleur == 0) && !(nbCarteValeur == 0)) // Cas où on peut jouer Carte Couleur.
+    {
+        if (nbCarteCouleur > nbCarteValeur) // Cas où c'est mieux de jouer meme couleur.
+        {
+            joueCouleurSelonEntier(jeu.talon.back().getCouleur(), 0);
+        }
+        else // On a plus de carte de la couleur de celle qui a la meme valeur que talon.
+        {
+            joueCouleurSelonEntier(couleur, 0);
+        }
+    }
+    else if (!(nbCarteValeur == 0) && nbCarteCouleur == 0) // On ne peut jouer que la carte avec la même couleur.
+    {
+        // On joue la carte qui a la même valeur.
+        joueCouleurSelonEntier(couleur, 0);
+    }
+    else if (indCarteJoker != 0) // Change couleur.
+    {                            // Si on peut pas jouer de carte meme valeur ou couleur talon.
+        // changerCouleurCarte(jeu, maxCouleur);
+        joueCouleurSelonEntier(maxNbCouleur, indCarteJoker);
+    }
+    else if (indCartePlus4 != 0) // +4
+    {
+        joueCouleurSelonEntier(maxNbCouleur, indCartePlus4);
+    }
+    else
+    {
+        // On pioche car on ne peut pas jouer.
+        jeu.piocherCarte();
+    }
+}
+
+int Bot::couleurAvecPlusDeCarte() const
+{
+    int tabNbCarte[] = {nbCarteRouge, nbCarteVert, nbCarteBleu, nbCarteJaune};
+    int max = tabNbCarte[0];
+    int couleur = 0;
+    int length = sizeof tabNbCarte / sizeof tabNbCarte[0];
+    for (int n = 1; n < length; n++)
+    {
+        if (tabNbCarte[n] > max)
+        {
+            max = tabNbCarte[n]; // On met à jour le max pour continuer à comparer.
+            couleur = n + 1;     // On stock quelle couleur est la plus grande.
+        }
+    }
+
+    return couleur;
+}
 void Bot::setCarteRouge()
 {
     nbCarteRouge++;
@@ -269,7 +343,14 @@ void Bot::setCarteJaune()
 {
     nbCarteJaune++;
 }
-
+void Bot::setCarteJoker(unsigned int &indiceJoker)
+{
+    indCarteJoker = indiceJoker;
+}
+void Bot::setCartePlus4(unsigned int &indicePlus4)
+{
+    indCartePlus4 = indicePlus4;
+}
 void Bot::testRegression(const Jeu &jeu)
 {
     assert(main.size() >= 7);
@@ -288,24 +369,25 @@ void Bot::testRegression(const Jeu &jeu)
 
     cout << "La carte du talon est " << jeu.talon.back().getValeur() << " et la couleur est " << jeu.talon.back().getCouleur() << endl;
     int CouleurTalon = carteMemeCouleurTalon(jeu);
-    char c;
+    int c;
     int nbValeur = carteMemeValeurTalon(jeu, c);
 
     cout << "Le nombre de carte qui ont la couleur du talon : " << CouleurTalon << endl;
     cout << "Le nombre de carte qui ont la valeur du talon : " << nbValeur << endl;
     switch (c)
     {
-    case 'r':
+    case 1:
         cout << "La couleur est Rouge" << endl;
         break;
-    case 'v':
+    case 2:
         cout << "La couleur est Vert" << endl;
         break;
-    case 'b':
+    case 3:
         cout << "La couleur est Bleu" << endl;
         break;
-    case 'j':
+    case 4:
         cout << "La couleur est Jaune" << endl;
         break;
     }
+    // Test sur le choixJeu du bot.
 }

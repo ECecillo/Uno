@@ -94,14 +94,28 @@ void txtBoucle(Jeu &jeu)
         {
             txtAff(win, jeu);                   // On initialise le jeu avec les éléments principaux.
             jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
-            //cout << "On passe " << endl;
-            c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
-            if(jeu.statut_Uno)
+            if (jeu.joueurActif >= jeu.nombreJoueurs)
             {
-                cout << "========== Un des joueurs peut jouer UNO !!! ==============="
-                     << "# Vous avez 2 secondes pour appuyer sur U ou C # " << endl;
-                jeu.Uno(c);
+                // Appelle choix joueur.
+                jeu.joueursBot[jeu.joueurActif].choixJeu(jeu);
             }
+
+            if (jeu.statut_Uno)
+            {
+                c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
+                cout << "========== Un des joueurs peut jouer UNO !!! ===============" << endl;
+                sleep(0.5);
+                if (c == 'c')
+                {
+                    jeu.Uno(c);
+                }
+                else
+                {
+                    jeu.statut_Uno = false;
+                    jeu.termineTour();
+                }
+            }
+            c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
 
             switch (c)
             {
