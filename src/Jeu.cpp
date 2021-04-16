@@ -67,7 +67,7 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
         joueursBot[i] = bot;
     }
 
-    joueurActif = rand() % nombreJoueurs + nombreIA; // On génère un numéro de joueur aléatoire pour le début de la partie.
+    joueurActif = rand() % (nombreJoueurs + nombreIA); // On génère un numéro de joueur aléatoire pour le début de la partie.
     sensJeu = 1;                                     // On tournera à gauche.
     distribueCarte();                                // On donne les cartes au joueurs
     initTalon();                                     // On initialise le Talon.
@@ -262,7 +262,7 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
     {
         int indexBot = joueurActif - nombreJoueurs;
         cout << indiceCarte << endl;
-        cout << "Le bot "<< indexBot <<" joue" << endl;
+        cout << "Le bot " << indexBot << " joue" << endl;
         cout << "La carte choisit a pour valeur : " << joueursBot[indexBot].main[indiceCarte].getValeur() << " et pour couleur " << joueursBot[indexBot].main[indiceCarte].getCouleur() << endl;
         if (carteValide(joueursBot[indexBot].main[indiceCarte]))
         {
@@ -591,9 +591,17 @@ void Jeu::modifAdversairesTxt()
 void Jeu::MaJTableJoueurActifDebutTour()
 {
     assert(sensJeu == 0 || sensJeu == 1);
-    joueurs[joueurActif].modifMainTxt();
-    modifAdversairesTxt();
-    joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
+    if (joueurActif >= nombreJoueurs)
+    {
+        joueurs[0].modifTalonPiocheTxt(talon, pioche);
+        return;
+    }
+    else
+    {
+        joueurs[joueurActif].modifMainTxt();
+        modifAdversairesTxt();
+        joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
+    }
 }
 
 // Teste les fonctions et procédures
