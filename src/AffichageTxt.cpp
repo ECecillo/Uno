@@ -56,23 +56,31 @@ void changeCouleurCarte(Jeu &jeu, Fenetre win)
 
 void txtAff(Fenetre &win, const Jeu &jeu)
 {
-    const Joueur &ter = jeu.joueurs[jeu.joueurActif];
+    if (jeu.joueurActif >= jeu.nombreJoueurs)
+    {
+        return;
+    }
+    else
+    {
+        const Joueur &ter = jeu.joueurs[jeu.joueurActif];
 
-    win.clear();
+        win.clear();
 
-    // Affichage de la pioche, talon, passer ...
-    for (unsigned int x = 0; x < ter.getHaut(); ++x)
-        for (unsigned int y = 0; y < ter.getLarg(); ++y)
-            win.prepaFenetre(x, y, ter.getXY(x, y));
+        // Affichage de la pioche, talon, passer ...
+        for (unsigned int x = 0; x < ter.getHaut(); ++x)
+            for (unsigned int y = 0; y < ter.getLarg(); ++y)
+                win.prepaFenetre(x, y, ter.getXY(x, y));
 
-    win.dessine();
+        win.dessine();
+    }
 }
 
 void txtBoucle(Jeu &jeu)
 {
     // Creation d'une nouvelle fenetre en mode texte
     // => fenetre de dimension et position (WIDTH,HEIGHT,STARTX,STARTY)
-    Fenetre win(jeu.joueurs[jeu.joueurActif].getHaut(), jeu.joueurs[jeu.joueurActif].getLarg());
+    //Fenetre win(jeu.joueurs[jeu.joueurActif].getHaut(), jeu.joueurs[jeu.joueurActif].getLarg());
+    Fenetre win(38, 180);
 
     bool ok = true;
     int c;
@@ -88,16 +96,20 @@ void txtBoucle(Jeu &jeu)
 #endif // WIN32
         jeu.finTour = false;
 
-        //jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
+        jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
 
         while (jeu.finTour == false) // Tant que l'on a pas terminé le tour.
         {
-            txtAff(win, jeu);                   // On initialise le jeu avec les éléments principaux.
+            //cout << "Joueur Actif " << jeu.joueurActif << endl;
+            txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
             jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
             if (jeu.joueurActif >= jeu.nombreJoueurs)
             {
+                sleep(1);
                 // Appelle choix joueur.
-                jeu.joueursBot[jeu.joueurActif].choixJeu(jeu);
+                int indexBot = jeu.joueurActif - jeu.nombreJoueurs;
+                jeu.joueursBot[indexBot].choixJeu(jeu);
+                jeu.termineTour();
             }
 
             if (jeu.statut_Uno)

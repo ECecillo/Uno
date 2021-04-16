@@ -318,12 +318,12 @@ void Bot::choixJeu(Jeu &jeu)
     else if ((nbCarteValeur == 0 && nbCarteCouleur == 0) && indCarteJoker != 0) // Change couleur.
     {                            // Si on peut pas jouer de carte meme valeur ou couleur talon.
         // changerCouleurCarte(jeu, maxCouleur);
-        cout << "On joue le joker car pas d'autres options " << endl; 
+        cout << "On joue le joker car pas d'autres options avec indice : " << indCarteJoker << endl;
         joueCouleurSelonEntier(jeu, maxNbCouleur, indCarteJoker);
     }
     else if ((nbCarteValeur == 0 && nbCarteCouleur == 0) && indCartePlus4 != 0) // +4
     {
-        cout << "On joue le joker +4 car pas d'autres options " << endl;
+        cout << "On joue le joker +4 car pas d'autres options avec indice : " << indCartePlus4 << endl;
         joueCouleurSelonEntier(jeu, maxNbCouleur, indCartePlus4);
     }
     else
@@ -331,6 +331,7 @@ void Bot::choixJeu(Jeu &jeu)
         cout << "On pioche" << endl;
         // On pioche car on ne peut pas jouer.
         jeu.piocherCarte();
+        jeu.termineTour();
     }
 }
 
