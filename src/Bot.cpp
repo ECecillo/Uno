@@ -190,7 +190,6 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c) const
                 k = jeu.joueursBot[indexBot].main.size() - 1;
                 while (jeu.joueursBot[indexBot].main[k].getCouleur() == 4) // Si on est dans le cas d'une valeur Jaune.
                 {
-                    cout << jeu.joueursBot[indexBot].main[k].getValeur() << endl;
                     // Si on a des cartes spéciales dans cette couleur alors on met une valeur plus élevé à jouer cette couleur.
                     if (jeu.joueursBot[indexBot].main[k].getValeur() == 10)
                     {
@@ -229,34 +228,45 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c) const
     return nbCarteMemeCouleur;
 }
 
-void Bot::joueCouleurSelonEntier(int couleur, int carteSpeciale)
+void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
 {
     string er;
     switch (couleur) // On joue en fonction de la carte du talon.
     {
     case 1:
-        // if (carteSpeciale != 0)
-        //  poserCarte(carteSpeciale, er);
-        // else
-        // poserCarte((rand() % nbCarteRouge), er);
+        cout << "JoueCouleurSelonEntier Rouge" << endl;
+        cout << "indice carte Rouge " << rand() % nbCarteRouge << endl;
+        if (carteSpeciale != 0)
+            jeu.poserCarte(carteSpeciale, er);
+        else
+            jeu.poserCarte((rand() % nbCarteRouge), er);
         break;
     case 2:
-        // if (carteSpeciale != 0)
-        //  poserCarte(carteSpeciale, er);
-        // else
-        // poserCarte((rand() + nbCarteRouge % nbCarteVert), er);
+        cout << "JoueCouleurSelonEntier Vert" << endl;
+        //cout << "Nombre carte Rouge " << nbCarteVert << endl;
+
+        if (carteSpeciale != 0)
+            jeu.poserCarte(carteSpeciale, er);
+        else
+            jeu.poserCarte((rand() % nbCarteVert + nbCarteRouge), er);
         break;
     case 3:
-        // if (carteSpeciale != 0)
-        //  poserCarte(carteSpeciale, er);
-        // else
-        //  poserCarte((rand() + (nbCarteRouge + nbCarteVert)% nbCarteBleu), er);
+        cout << "JoueCouleurSelonEntier Bleu" << endl;
+        //cout <<  "Nombre carte Rouge " << nbCarteBleu << endl;
+
+        if (carteSpeciale != 0)
+            jeu.poserCarte(carteSpeciale, er);
+        else
+            jeu.poserCarte((rand() % nbCarteBleu + (nbCarteRouge + nbCarteVert)), er);
         break;
     case 4:
-        // if (carteSpeciale != 0)
-        //  poserCarte(carteSpeciale, er);
-        // else
-        // poserCarte((rand() + (nbCarteRouge + nbCarteVert + nbCarteBleu) % nbCarteJaune), er);
+
+        cout << "JoueCouleurSelonEntier Jaune" << endl;
+        //cout <<  "Nombre carte Rouge " << nbCarteJaune << endl;
+        if (carteSpeciale != 0)
+            jeu.poserCarte(carteSpeciale, er);
+        else
+            jeu.poserCarte((rand() % nbCarteJaune + (nbCarteRouge + nbCarteVert + nbCarteBleu)), er);
         break;
 
     default:
@@ -271,40 +281,54 @@ void Bot::choixJeu(Jeu &jeu)
     nbCarteCouleur = carteMemeCouleurTalon(jeu); // Nombre de carte meme couleur que talon.
     int couleur;                                 // Caractère qui permettra de savoir quelle couleur a le plus de carte.
     nbCarteValeur = carteMemeValeurTalon(jeu, couleur);
-
     assert(nbCarteCouleur >= 0 && nbCarteValeur >= 0);
     // On compare les deux en prenant en compte que c'est mieux de finir une couleur avant d'en changer
     if (!(nbCarteCouleur == 0) && nbCarteValeur == 0) // Cas où on peut jouer que les cartes mêmes couleurs.
     {
-        joueCouleurSelonEntier(jeu.talon.back().getCouleur(), 0);
+        cout << "Joue carte meme couleur" << endl;
+        joueCouleurSelonEntier(jeu, jeu.talon.back().getCouleur(), 0);
     }
     else if (!(nbCarteCouleur == 0) && !(nbCarteValeur == 0)) // Cas où on peut jouer Carte Couleur.
     {
-        if (nbCarteCouleur > nbCarteValeur) // Cas où c'est mieux de jouer meme couleur.
+        if (nbCarteCouleur > nbCarteValeur || nbCarteCouleur == 1) // Cas où c'est mieux de jouer meme couleur.
         {
-            joueCouleurSelonEntier(jeu.talon.back().getCouleur(), 0);
+            cout << "Joue meme couleur quand on peut jouer meme valeur" << endl;
+            joueCouleurSelonEntier(jeu, jeu.talon.back().getCouleur(), 0);
+        }
+        else if(nbCarteCouleur == 2 && nbCarteValeur == 1)
+        {
+            joueCouleurSelonEntier(jeu, jeu.talon.back().getCouleur(), 0);
+        }
+        else if(nbCarteValeur == 2 && nbCarteCouleur == 1)
+        {
+            joueCouleurSelonEntier(jeu, couleur, 0);
         }
         else // On a plus de carte de la couleur de celle qui a la meme valeur que talon.
         {
-            joueCouleurSelonEntier(couleur, 0);
+            cout << "Joue meme valeur quand on a quand meme couleur" << endl;
+            joueCouleurSelonEntier(jeu, couleur, 0);
         }
     }
     else if (!(nbCarteValeur == 0) && nbCarteCouleur == 0) // On ne peut jouer que la carte avec la même couleur.
     {
         // On joue la carte qui a la même valeur.
-        joueCouleurSelonEntier(couleur, 0);
+        cout << "On joue la carte qui a la meme valeur car on peut pas jouer autre chose" << endl;
+        joueCouleurSelonEntier(jeu, couleur, 0);
     }
-    else if (indCarteJoker != 0) // Change couleur.
+    else if ((nbCarteValeur == 0 && nbCarteCouleur == 0) && indCarteJoker != 0) // Change couleur.
     {                            // Si on peut pas jouer de carte meme valeur ou couleur talon.
         // changerCouleurCarte(jeu, maxCouleur);
-        joueCouleurSelonEntier(maxNbCouleur, indCarteJoker);
+        cout << "On joue le joker car pas d'autres options " << endl; 
+        joueCouleurSelonEntier(jeu, maxNbCouleur, indCarteJoker);
     }
-    else if (indCartePlus4 != 0) // +4
+    else if ((nbCarteValeur == 0 && nbCarteCouleur == 0) && indCartePlus4 != 0) // +4
     {
-        joueCouleurSelonEntier(maxNbCouleur, indCartePlus4);
+        cout << "On joue le joker +4 car pas d'autres options " << endl;
+        joueCouleurSelonEntier(jeu, maxNbCouleur, indCartePlus4);
     }
     else
     {
+        cout << "On pioche" << endl;
         // On pioche car on ne peut pas jouer.
         jeu.piocherCarte();
     }
@@ -351,7 +375,7 @@ void Bot::setCartePlus4(unsigned int &indicePlus4)
 {
     indCartePlus4 = indicePlus4;
 }
-void Bot::testRegression(const Jeu &jeu)
+void Bot::testRegression(Jeu &jeu)
 {
     assert(main.size() >= 7);
     assert(numeroBot >= 0);
@@ -390,4 +414,5 @@ void Bot::testRegression(const Jeu &jeu)
         break;
     }
     // Test sur le choixJeu du bot.
+    choixJeu(jeu);
 }

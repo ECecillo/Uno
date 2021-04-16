@@ -240,7 +240,8 @@ void Jeu::piocherCarte()
 {
     if (joueurActif >= nombreJoueurs) // Si on a un bot pas besoin de modif affichage.
     {
-        joueursBot[joueurActif].main.push_back(pioche.top());
+        int indexBot = joueurActif - nombreJoueurs;
+        joueursBot[indexBot].main.push_back(pioche.top());
         pioche.pop();
         return;
     }
@@ -259,10 +260,15 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
     if (joueurActif >= nombreJoueurs) // alors on a affaire à un bot.
     {
-        if (carteValide(joueursBot[joueurActif].main[indiceCarte]))
-        {                                                          // La carte qu'il veut poser est valide
-            talon.push(joueursBot[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
-            joueursBot[joueurActif].main.erase(joueursBot[joueurActif].main.begin() + indiceCarte);
+        int indexBot = joueurActif - nombreJoueurs;
+        cout << indiceCarte << endl;
+        cout << "Le bot "<< indexBot <<" joue" << endl;
+        cout << "La carte choisit a pour valeur : " << joueursBot[indexBot].main[indiceCarte].getValeur() << " et pour couleur " << joueursBot[indexBot].main[indiceCarte].getCouleur() << endl;
+        if (carteValide(joueursBot[indexBot].main[indiceCarte]))
+        {
+            //cout << "La carte du bot est valide" << endl;          // La carte qu'il veut poser est valide
+            talon.push(joueursBot[indexBot].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
+            joueursBot[indexBot].main.erase(joueursBot[indexBot].main.begin() + indiceCarte);
 
             //bool carteSpeciale = false;
             // gestion des cartes spéciales
@@ -301,13 +307,9 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 
                 break;
             }
-
-            /*if (carteSpeciale)
-            {
-                
-            } */
             if (testUno() == false)
             {
+                cout << "Ouf" << endl;
                 termineTour();
             }
         }
@@ -492,7 +494,8 @@ bool Jeu::testUno()
 {
     if (joueurActif >= nombreJoueurs)
     {
-        if (joueursBot[joueurActif].main.size() == 1) // Si il reste 1 carte dans la main du bot.
+        int indexBot = joueurActif - nombreJoueurs;
+        if (joueursBot[indexBot].main.size() == 1) // Si il reste 1 carte dans la main du bot.
         {
             statut_Uno = true;
             return statut_Uno;
