@@ -92,11 +92,11 @@ public:
      * @param couleur : Couleur de la carte qui sera joué.
      * @param valeurCarteSpeciale : Dans le cas où on va jouer une carte 13 ou 14.
      */
-    void joueCouleurSelonEntier(int couleur, int valeurCarteSpeciale);
+    void joueCouleurSelonEntier(Jeu &jeu, int couleur, int valeurCarteSpeciale);
 
     void changeCouleurCarte(Jeu &jeu, const int );
 
-    void testRegression(const Jeu &);
+    void testRegression(Jeu &);
 
     void setCarteRouge();
     void setCarteVert();
