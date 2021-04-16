@@ -63,10 +63,7 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
     {
         for (unsigned int j = 0; j < nombreJoueurs - 1; j++)
         {
-            joueurs[i].insererCarteAdversairePositionJ(pos + 12 * j, joueurs[(i + 1 + j) % nombreJoueurs].numeroJoueur);
-            /*if (joueurs[(i + 1 + j) % nombreJoueurs].main.size()>=10)
-                joueurs[i].tableJoueur[4][pos + 12 * j + 4] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) / 10;
-            joueurs[i].tableJoueur[4][pos + 12 * j + 5] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) % 10;*/
+            joueurs[i].insererCarteAdversairePositionJ(pos + 12 * j, joueurs[(i + 1 + j) % nombreJoueurs]);
         }
     }
     modifAdversairesTxt();
@@ -156,7 +153,6 @@ bool Jeu::carteValide(const Carte c) const
             i++;
         }
     }
-    cout << talon.back().getValeur() << talon.back().getCouleur() << endl;
     return (c.getValeur() == talon.back().getValeur()) ||
            (c.getCouleur() == talon.back().getCouleur()) ||
            (c.getValeur() == 14) ||
@@ -189,7 +185,6 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
         switch ((talon.back()).getValeur())
         {
         case 10:
-            cout << "Inverse" << endl;
             if (sensJeu == 1)
                 sensJeu = 0;
             else
@@ -366,13 +361,11 @@ void Jeu::termineTour()
     case 1: // On joue à gauche.
         if (joueurActif == nombreJoueurs - 1)
         {
-            cout << " Je suis le joueur actif " << joueurActif << endl;
             joueurActif = 0;
             finTour = true;
         }
         else
         {
-            cout << " Je suis le joueur actif " << joueurActif << endl;
             joueurActif++;
             finTour = true;
         }
@@ -414,6 +407,12 @@ void Jeu::modifAdversairesTxt()
 void Jeu::MaJTableJoueurActifDebutTour()
 {
     assert(sensJeu == 0 || sensJeu == 1);
+    int i = 0;
+    while (joueurs[joueurActif].nom[i]!='\0') 
+    {
+        joueurs[joueurActif].tableJoueur[20][i]=joueurs[joueurActif].nom[i];
+        i++;
+    }
     joueurs[joueurActif].modifMainTxt();
     modifAdversairesTxt();
     joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
@@ -468,10 +467,4 @@ void Jeu::testRegression()
 
     // relancePiocheJeu
 
-    // Test Affichage Joueur.cpp
-    /*cout << joueurs->getHaut() << joueurs->getLarg() << endl;*/
-    /* for(unsigned int i = 0; i < joueurs->getHaut(); i++)
-        for(unsigned int j = 0; j < joueurs->getLarg(); j++)
-            cout << joueurs[joueurActif].tableJoueur[i][j] << endl;
- */
 }
