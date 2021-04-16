@@ -41,6 +41,10 @@ public:
 	*/
 	Joueur *joueurs;
 
+	/**
+	 * @brief 
+	 * Tableau de Joueurs.
+	 */
 	Bot *joueursBot;
 
 	/**
