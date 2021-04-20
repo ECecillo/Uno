@@ -232,7 +232,11 @@ public:
 	*/
 	void termineTour();
 
-	
+	/**
+	 * @brief 
+	 * Annonce le gagnant de la partie.
+	 */
+	void annonceGagnant();
 
 	/**
 	* @brief 
