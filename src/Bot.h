@@ -71,7 +71,7 @@ public:
       * Compte le nombre de Carte de la couleur de la carte qui a la même valeur que celle du Talon.
       * @param tab : tableau dans lequelle on met le nombre de carte par couleur.
       */
-    int carteMemeValeurTalon(const Jeu &, int &c) const;
+    int carteMemeValeurTalon(const Jeu &, int &c, int &indiceCarte) const;
 
     /**
      * @brief 
@@ -96,6 +96,8 @@ public:
 
     void changeCouleurCarte(Jeu &jeu, const int );
 
+    void changeIndiceCarteSpeciale();
+
     void testRegression(Jeu &);
 
     void setCarteRouge();
@@ -105,12 +107,19 @@ public:
     void setCarteJoker(unsigned int &i);
     void setCartePlus4(unsigned int &i);
 
+    int getCarteRouge();
+    int getCarteVert();
+    int getCarteBleu();
+    int getCarteJaune();
+    int getCarteJoker();
+    int getCartePlus4();
+
 private:
     int nbCarteRouge;
     int nbCarteVert;
     int nbCarteBleu;
     int nbCarteJaune;
-    int indCarteJoker; //
+    unsigned int indCarteJoker; //
     unsigned int indCartePlus4;
     unsigned int indChoixCarte; // Indice qui dit quelle carte le bot a joué.
 };

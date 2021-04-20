@@ -96,20 +96,33 @@ void txtBoucle(Jeu &jeu)
 #endif // WIN32
         jeu.finTour = false;
 
+        jeu.joueurs[jeu.joueurActif].indiceEtoile = 0;
         jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
 
-        while (jeu.finTour == false) // Tant que l'on a pas terminé le tour.
+        while (jeu.finTour == false || jeu.finPartie == false) // Tant que l'on a pas terminé le tour.
         {
             //cout << "Joueur Actif " << jeu.joueurActif << endl;
-            txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
+            txtAff(win, jeu);                   // On initialise le jeu avec les éléments principaux.
             jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
+            if (jeu.joueurActif >= jeu.nombreJoueurs && jeu.joueursBot[jeu.joueurActif - 1].main.size() == 0)
+            {
+                jeu.finPartie = true;
+                cout << "C'est le " << jeu.joueursBot[jeu.joueurActif - 1].nom << " qui a gagné !" << endl;
+                return;
+            }
+            else if (jeu.joueurActif < jeu.nombreJoueurs && jeu.joueurs[jeu.joueurActif].main.size() == 0)
+            {
+                jeu.finPartie = true;
+                cout << "C'est le " << jeu.joueurs[jeu.joueurActif].nom << " qui a gagné !" << endl;
+                return;
+            }
             if (jeu.joueurActif >= jeu.nombreJoueurs)
             {
                 sleep(1);
                 // Appelle choix joueur.
                 int indexBot = jeu.joueurActif - jeu.nombreJoueurs;
                 jeu.joueursBot[indexBot].choixJeu(jeu);
-                jeu.termineTour();
+                //jeu.termineTour();
             }
 
             if (jeu.statut_Uno)
@@ -132,9 +145,12 @@ void txtBoucle(Jeu &jeu)
             switch (c)
             {
             case 'a':
+                cout << "Indice etoile " << jeu.joueurs[jeu.joueurActif].indiceEtoile << endl;
                 jeu.actionJoueur('a');
                 break;
             case 'd':
+                cout << "Indice etoile " << jeu.joueurs[jeu.joueurActif].indiceEtoile << endl;
+
                 jeu.actionJoueur('d');
                 break;
             /* case 'r':
