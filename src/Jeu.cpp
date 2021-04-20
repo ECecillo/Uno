@@ -417,6 +417,7 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                 piocherCarte();
                 piocherCarte();
                 carteSpeciale = true;
+                termineTour();
                 break;
             case 13:
                 carteSpeciale = true;
@@ -427,14 +428,18 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                     piocherCarte();
                 break;
             case 14:
+                termineTour();
                 carteSpeciale = true;
 
                 break;
             }
+            if(carteSpeciale && testUno() != false)
+                termineTour();
             if (testUno() == false)
             {
-                cout << "Ouf" << endl;
                 termineTour();
+                if(joueursBot[indexBot].main.size() == 0)
+                    annonceGagnant();
                 return;
             }
         }
@@ -472,6 +477,8 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                 {
                     joueurActif--;
                 }
+                else if(joueurActif == 0 && sensJeu == 0)
+                    joueurActif = nombreIA + nombreJoueurs - 1;
                 joueurActif++;
 
                 break;
@@ -491,6 +498,7 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                     piocherCarte();
                 break;
             case 14:
+                //termineTour();
                 carteSpeciale = true;
 
                 break;
@@ -498,12 +506,14 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 
             if (carteSpeciale)
             {
-                termineTour();
                 return;
             }
             if (testUno() == false)
             {
+                if(joueurs[joueurActif].main.size() == 0)
+                    annonceGagnant();
                 termineTour();
+                return;
             }
         }
         else
