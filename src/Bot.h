@@ -119,8 +119,8 @@ private:
     int nbCarteVert;
     int nbCarteBleu;
     int nbCarteJaune;
-    unsigned int indCarteJoker; //
-    unsigned int indCartePlus4;
+    int indCarteJoker; //
+    int indCartePlus4;
     unsigned int indChoixCarte; // Indice qui dit quelle carte le bot a joué.
 };
 

@@ -98,51 +98,50 @@ void txtBoucle(Jeu &jeu)
 
         jeu.joueurs[jeu.joueurActif].indiceEtoile = 0;
         jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
-
+        jeu.annonceGagnant(); // Annonce le gagnant de la partie.
+        if(jeu.finPartie == true)
+            return;
         while (jeu.finTour == false || jeu.finPartie == false) // Tant que l'on a pas terminé le tour.
         {
             //cout << "Joueur Actif " << jeu.joueurActif << endl;
             txtAff(win, jeu);                   // On initialise le jeu avec les éléments principaux.
             jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
-            jeu.annonceGagnant();               // Annonce le gagnant de la partie.
-            if(jeu.finPartie == true)
-            {
-                return;
-            }
+            c = win.getCh();                    // On récupère le caractère de la touche appuyé et on le met dans c.
+
             if (jeu.joueurActif >= jeu.nombreJoueurs)
             {
                 sleep(1);
                 // Appelle choix joueur.
                 int indexBot = jeu.joueurActif - jeu.nombreJoueurs;
                 jeu.joueursBot[indexBot].choixJeu(jeu);
-                //jeu.termineTour();
             }
-
-            while (jeu.statut_Uno)
+            if (jeu.statut_Uno)
             {
                 cout << "========== Un des joueurs peut jouer UNO !!! ===============" << endl;
-                sleep(1);
+                sleep(1.0);
                 c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
-                sleep(1);
-                if (c == 'u' && jeu.joueurActif < jeu.nombreJoueurs)
-                { // Si le joueur humain appuie sur U pour uno, avant le sleep alors il continue de jouer.
-                    jeu.actionJoueur('u');
-                }
-                else if (c == 'c' && jeu.joueurActif >= jeu.nombreJoueurs)
-                { // Si le joueur Humain fait un contre Uno alors que le bot est en situation de Uno, le bot pioche.
-                    jeu.Uno(c);
-                }
-                else if(jeu.joueurActif >= jeu.nombreJoueurs && c != 'c' || c != 'u')
+                while (jeu.statut_Uno)
                 {
-                    jeu.Uno('u');
-                }
-                // Si le joueur Humain n'appuie pas sur une des touches après le sleep alors l'ordi fait un contre uno.
-                else if (c != 'c' || c != 'u' && jeu.joueurActif < jeu.nombreJoueurs)
-                {
-                    jeu.Uno('c');
+                    sleep(1);
+                    if (c == 'u' && jeu.joueurActif < jeu.nombreJoueurs)
+                    { // Si le joueur humain appuie sur U pour uno, avant le sleep alors il continue de jouer.
+                        jeu.actionJoueur('u');
+                    }
+                    else if (c == 'c' && jeu.joueurActif >= jeu.nombreJoueurs)
+                    { // Si le joueur Humain fait un contre Uno alors que le bot est en situation de Uno, le bot pioche.
+                        jeu.Uno(c);
+                    }
+                    else if (jeu.joueurActif >= jeu.nombreJoueurs && (c != 'c' || c != 'u'))
+                    {
+                        jeu.Uno('u');
+                    }
+                    // Si le joueur Humain n'appuie pas sur une des touches après le sleep alors l'ordi fait un contre uno.
+                    else if ((c != 'c' || c != 'u') && jeu.joueurActif < jeu.nombreJoueurs)
+                    {
+                        jeu.Uno('c');
+                    }
                 }
             }
-            c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
 
             switch (c)
             {
@@ -155,28 +154,6 @@ void txtBoucle(Jeu &jeu)
 
                 jeu.actionJoueur('d');
                 break;
-            /* case 'r':
-                cout << "Je suis la touche R" << endl;
-                if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
-                    jeu.actionJoueur('r');
-                break;
-            case 'v':
-                cout << "Je suis la touche V" << endl;
-                if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
-                    jeu.actionJoueur('v');
-                break;
-
-            case 'b':
-                cout << "Je suis la touche B" << endl;
-                if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
-                    jeu.actionJoueur('b');
-                break;
-
-            case 'j':
-                cout << "Je suis la touche J" << endl;
-                if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
-                    jeu.actionJoueur('j');
-                break; */
             case 'p':
                 cout << "Je suis la touche P" << endl;
                 jeu.actionJoueur('p');
@@ -184,6 +161,8 @@ void txtBoucle(Jeu &jeu)
             case 'e':
                 cout << "Je suis la touche E" << endl;
                 changeCouleurCarte(jeu, win);
+                if (jeu.joueurs[jeu.joueurActif].main.size() == 1)
+                    jeu.finPartie = true;
                 jeu.actionJoueur('e');
 
                 break;
@@ -199,6 +178,5 @@ void txtBoucle(Jeu &jeu)
             /* if(ok)
                 cout << "ok = true ?" << endl; */
         }
-
     } while (ok || !jeu.finPartie);
 }

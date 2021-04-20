@@ -9,8 +9,8 @@ Bot::Bot()
     nbCarteVert = 0;
     nbCarteBleu = 0;
     nbCarteJaune = 0;
-    indCarteJoker = 0;
-    indCartePlus4 = 0;
+    indCarteJoker = -1;
+    indCartePlus4 = -1;
     nom = "";
 }
 
@@ -21,8 +21,8 @@ Bot::Bot(const unsigned int num)
     nbCarteVert = 0;
     nbCarteBleu = 0;
     nbCarteJaune = 0;
-    indCarteJoker = 0;
-    indCartePlus4 = 0;
+    indCarteJoker = -1;
+    indCartePlus4 = -1;
     nom = "Bot ";
     nom += to_string(numeroBot);
 }
@@ -425,22 +425,23 @@ void Bot::choixJeu(Jeu &jeu)
         changeIndiceCarteSpeciale();
         joueCouleurSelonEntier(jeu, couleur, indiceCarteMemeValeur);
     }
-    else if ((nbCarteValeur == 0 && nbCarteCouleur == 0) && indCarteJoker != 0) // Change couleur.
+    else if ((nbCarteValeur == 0 && nbCarteCouleur == 0) && indCarteJoker >= 0) // Change couleur.
     {                                                                           // Si on peut pas jouer de carte meme valeur ou couleur talon.
         // changerCouleurCarte(jeu, maxCouleur);
         cout << "Indice du joker est : " << indCarteJoker << endl;
         cout << "La valeur du Joker doit être " << main[indCarteJoker].getValeur() << " la couleur est " << main[indCartePlus4].getCouleur() << endl;
         cout << "On joue le joker car pas d'autres options avec indice : " << indCarteJoker << endl;
         joueCouleurSelonEntier(jeu, maxNbCouleur, indCarteJoker);
-        indCarteJoker = 0;
+        indCarteJoker = -1;
     }
-    else if ((nbCarteValeur == 0 && nbCarteCouleur == 0) && indCartePlus4 != 0) // +4
+    else if ((nbCarteValeur == 0 && nbCarteCouleur == 0) && indCartePlus4 >= 0) // +4
     {
         cout << "Indice du +4 est : " << indCartePlus4 << endl;
         cout << "La valeur du +4 doit être " << main[indCartePlus4].getValeur() << " la couleur est " << main[indCartePlus4].getCouleur() << endl;
         cout << "On joue le joker +4 car pas d'autres options avec indice : " << indCartePlus4 << endl;
+        sleep(3);
         joueCouleurSelonEntier(jeu, maxNbCouleur, indCartePlus4);
-        indCartePlus4 = 0;
+        indCartePlus4 = -1;
     }
     else
     {
