@@ -150,7 +150,7 @@ void Jeu::distribueCarte()
 {
     for (unsigned int i = 0; i < nombreJoueurs; i++)
     {
-        for (unsigned int j = 0; j < 7; j++)
+        for (unsigned int j = 0; j < 2; j++)
         {
             joueurs[i].main.push_back(pioche.top());
             pioche.pop();
@@ -160,7 +160,7 @@ void Jeu::distribueCarte()
     // Distribution pour les bots.
     for (unsigned int i = 0; i < nombreIA; i++)
     {
-        for (unsigned int j = 0; j < 7; j++)
+        for (unsigned int j = 0; j < 2; j++)
         {
             joueursBot[i].main.push_back(pioche.top());
             // On récupère le nombre de carte de chaque couleur à chaque ajout.
@@ -379,7 +379,6 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
     if (joueurActif >= nombreJoueurs) // alors on a affaire à un bot.
     {
         int indexBot = joueurActif - nombreJoueurs;
-        //joueursBot[indexBot].trierMain();
         cout << "L'actuel carte du talon est : " << talon.back().getValeur() << " et sa couleur est : " << (talon.back()).getCouleur() << endl;
         cout << indiceCarte << endl;
         cout << "Le bot " << indexBot << " joue" << endl;
@@ -498,7 +497,10 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
             }
 
             if (carteSpeciale)
+            {
+                termineTour();
                 return;
+            }
             if (testUno() == false)
             {
                 termineTour();
@@ -699,6 +701,21 @@ void Jeu::termineTour()
 
     default:
         break;
+    }
+}
+void Jeu::annonceGagnant()
+{
+    if (joueurActif >= nombreJoueurs && joueursBot[joueurActif - nombreJoueurs].main.size() == 0)
+    {
+        finPartie = true;
+        cout << "C'est le " << joueursBot[joueurActif - nombreJoueurs].nom << " qui a gagné !" << endl;
+        return;
+    }
+    else if (joueurActif < nombreJoueurs && joueurs[joueurActif].main.size() == 0)
+    {
+        finPartie = true;
+        cout << "C'est le " << joueurs[joueurActif].nom << " qui a gagné !" << endl;
+        return;
     }
 }
 
