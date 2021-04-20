@@ -14,6 +14,6 @@ int main ( int argc, char** argv ) {
     //cout << "Le joueur actif est : " << jeu.joueurActif << endl;
     //jeu.joueursBot[0].testRegression(jeu);
     txtBoucle(jeu);
-    termClear();
+    //termClear();
 	return 0;
 }
