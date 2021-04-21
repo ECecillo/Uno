@@ -161,8 +161,6 @@ void txtBoucle(Jeu &jeu)
             case 'e':
                 cout << "Je suis la touche E" << endl;
                 changeCouleurCarte(jeu, win);
-                if (jeu.joueurs[jeu.joueurActif].main.size() == 1)
-                    jeu.finPartie = true;
                 jeu.actionJoueur('e');
 
                 break;

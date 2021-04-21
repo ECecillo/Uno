@@ -150,7 +150,7 @@ void Jeu::distribueCarte()
 {
     for (unsigned int i = 0; i < nombreJoueurs; i++)
     {
-        for (unsigned int j = 0; j < 2; j++)
+        for (unsigned int j = 0; j < 7; j++)
         {
             joueurs[i].main.push_back(pioche.top());
             pioche.pop();
@@ -160,7 +160,7 @@ void Jeu::distribueCarte()
     // Distribution pour les bots.
     for (unsigned int i = 0; i < nombreIA; i++)
     {
-        for (unsigned int j = 0; j < 2; j++)
+        for (unsigned int j = 0; j < 7; j++)
         {
             joueursBot[i].main.push_back(pioche.top());
             // On récupère le nombre de carte de chaque couleur à chaque ajout.
@@ -169,67 +169,18 @@ void Jeu::distribueCarte()
             case 1:
                 joueursBot[i].setCarteRouge();
 
-                if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
-                {
-                    cout << "Le j du +4 Rouge est : " << j << endl;
-                    sleep(1);
-                    joueursBot[i].setCartePlus4(j);
-                }
-
-                else if (pioche.top().getValeur() == 13)
-                {
-                    cout << "Le j du joker Rouge est : " << j << endl;
-                    sleep(1);
-                    joueursBot[i].setCarteJoker(j);
-                }
                 break;
             case 2:
                 joueursBot[i].setCarteVert();
-                if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
-                {
-                    cout << "Le j du +4 Rouge est : " << j << endl;
-                    sleep(1);
-                    joueursBot[i].setCartePlus4(j);
-                }
 
-                else if (pioche.top().getValeur() == 13)
-                {
-                    cout << "Le j du joker Rouge est : " << j << endl;
-                    sleep(1);
-                    joueursBot[i].setCarteJoker(j);
-                }
                 break;
             case 3:
                 joueursBot[i].setCarteBleu();
-                if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
-                {
-                    cout << "Le j du +4 Rouge est : " << j << endl;
-                    sleep(1);
-                    joueursBot[i].setCartePlus4(j);
-                }
 
-                else if (pioche.top().getValeur() == 13)
-                {
-                    cout << "Le j du joker Rouge est : " << j << endl;
-                    sleep(1);
-                    joueursBot[i].setCarteJoker(j);
-                }
                 break;
             case 4:
                 joueursBot[i].setCarteJaune();
-                if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
-                {
-                    cout << "Le j du +4 Rouge est : " << j << endl;
-                    sleep(1);
-                    joueursBot[i].setCartePlus4(j);
-                }
 
-                else if (pioche.top().getValeur() == 13)
-                {
-                    cout << "Le j du joker Rouge est : " << j << endl;
-                    sleep(1);
-                    joueursBot[i].setCarteJoker(j);
-                }
                 break;
 
             default:
@@ -284,14 +235,14 @@ void Jeu::piocherCarte()
             {
                 indCarte = joueursBot[indexBot].getCarteRouge() - 1;
                 sleep(1);
-                joueursBot[indexBot].setCartePlus4(indCarte);
+                joueursBot[indexBot].setCarteJoker(indCarte);
             }
 
             else if (pioche.top().getValeur() == 13)
             {
                 indCarte = joueursBot[indexBot].getCarteRouge() - 1;
                 sleep(1);
-                joueursBot[indexBot].setCarteJoker(indCarte);
+                joueursBot[indexBot].setCartePlus4(indCarte);
             }
             break;
         case 2:
@@ -304,14 +255,14 @@ void Jeu::piocherCarte()
             {
                 indCarte = joueursBot[indexBot].getCarteVert() - 1;
                 sleep(1);
-                joueursBot[indexBot].setCartePlus4(indCarte);
+                joueursBot[indexBot].setCarteJoker(indCarte);
             }
 
             else if (pioche.top().getValeur() == 13)
             {
                 indCarte = joueursBot[indexBot].getCarteVert() - 1;
                 sleep(1);
-                joueursBot[indexBot].setCarteJoker(indCarte);
+                joueursBot[indexBot].setCartePlus4(indCarte);
             }
             break;
         case 3:
@@ -324,14 +275,14 @@ void Jeu::piocherCarte()
             {
                 indCarte = joueursBot[indexBot].getCarteBleu() - 1;
                 sleep(1);
-                joueursBot[indexBot].setCartePlus4(indCarte);
+                joueursBot[indexBot].setCarteJoker(indCarte);
             }
 
             else if (pioche.top().getValeur() == 13)
             {
                 indCarte = joueursBot[indexBot].getCarteBleu() - 1;
                 sleep(1);
-                joueursBot[indexBot].setCarteJoker(indCarte);
+                joueursBot[indexBot].setCartePlus4(indCarte);
             }
             break;
         case 4:
@@ -344,14 +295,14 @@ void Jeu::piocherCarte()
             {
                 indCarte = joueursBot[indexBot].getCarteJaune() - 1;
                 sleep(1);
-                joueursBot[indexBot].setCartePlus4(indCarte);
+                joueursBot[indexBot].setCarteJoker(indCarte);
             }
 
             else if (pioche.top().getValeur() == 13)
             {
                 indCarte = joueursBot[indexBot].getCarteJaune() - 1;
                 sleep(1);
-                joueursBot[indexBot].setCarteJoker(indCarte);
+                joueursBot[indexBot].setCartePlus4(indCarte);
             }
             break;
 
@@ -385,63 +336,71 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
         cout << "La carte choisit a pour valeur : " << joueursBot[indexBot].main[indiceCarte].getValeur() << " et pour couleur " << joueursBot[indexBot].main[indiceCarte].getCouleur() << endl;
         if (carteValide(joueursBot[indexBot].main[indiceCarte]))
         {
+            
             //cout << "La carte du bot est valide" << endl;          // La carte qu'il veut poser est valide
             talon.push(joueursBot[indexBot].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
 
             joueursBot[indexBot].main.erase(joueursBot[indexBot].main.begin() + indiceCarte);
             cout << "La nouvelle carte du talon est : " << talon.back().getValeur() << " et sa couleur est : " << (talon.back()).getCouleur() << endl;
             bool carteSpeciale = false;
-            // gestion des cartes spéciales
-            switch ((talon.back()).getValeur())
+            if (testUno() == false) // Si on est pas dans le cas du Uno
             {
-            case 10:
-                cout << "Inverse" << endl;
-                if (sensJeu == 1)
-                    sensJeu = 0;
-                else
-                    sensJeu = 1;
-                break;
-            case 11:
-                if (joueurActif == nombreJoueurs + nombreIA - 1) // Si On passe le tour du dernier joueur on revient au premier.
-                    joueurActif = 0;
-                else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
+                int newIndice = -1;
+                // gestion des cartes spéciales
+                switch ((talon.back()).getValeur())
                 {
-                    joueurActif--;
-                }
-                joueurActif++;
+                case 10:
+                    cout << "Inverse" << endl;
+                    if (sensJeu == 1)
+                        sensJeu = 0;
+                    else
+                        sensJeu = 1;
+                    break;
+                case 11:
+                    if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
+                        joueurActif = 0;
+                    else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
+                    {
+                        joueurActif--;
+                    }
+                    else if (joueurActif == 0 && sensJeu == 0)
+                        joueurActif = nombreIA + nombreJoueurs - 1;
+                    joueurActif++;
+                    
+                    termineTour();
+                    break;
+                case 12:
+                    termineTour();
 
-                break;
-            case 12:
-                termineTour();
-
-                piocherCarte();
-                piocherCarte();
-                carteSpeciale = true;
-                termineTour();
-                break;
-            case 13:
-                carteSpeciale = true;
-
-                termineTour();
-
-                for (unsigned int i = 0; i < 4; i++)
                     piocherCarte();
-                break;
-            case 14:
-                termineTour();
-                carteSpeciale = true;
+                    piocherCarte();
+                    carteSpeciale = true;
+                    termineTour();
+                    break;
+                case 13:
+                    carteSpeciale = true;
+                    joueursBot[indexBot].setCartePlus4(newIndice);
+                    termineTour();
 
-                break;
-            }
-            if(carteSpeciale && testUno() != false)
+                    for (unsigned int i = 0; i < 4; i++)
+                        piocherCarte();
+                    termineTour();
+
+                    break;
+                case 14:
+                    joueursBot[indexBot].setCarteJoker(newIndice);
+                    termineTour();
+                    carteSpeciale = true;
+
+                    break;
+                }
                 termineTour();
-            if (testUno() == false)
-            {
-                termineTour();
-                if(joueursBot[indexBot].main.size() == 0)
+                if (joueursBot[indexBot].main.size() == 0)
                     annonceGagnant();
                 return;
             }
+            /* if (carteSpeciale && testUno() != false)
+                termineTour(); */
         }
         else
         {
@@ -460,58 +419,56 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
             // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
             joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
             bool carteSpeciale = false;
-            // gestion des cartes spéciales
-            switch ((talon.back()).getValeur())
-            {
-            case 10:
-                cout << "Inverse" << endl;
-                if (sensJeu == 1)
-                    sensJeu = 0;
-                else
-                    sensJeu = 1;
-                break;
-            case 11:
-                if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
-                    joueurActif = 0;
-                else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
-                {
-                    joueurActif--;
-                }
-                else if(joueurActif == 0 && sensJeu == 0)
-                    joueurActif = nombreIA + nombreJoueurs - 1;
-                joueurActif++;
-
-                break;
-            case 12:
-                termineTour();
-
-                piocherCarte();
-                piocherCarte();
-                carteSpeciale = true;
-                break;
-            case 13:
-                carteSpeciale = true;
-
-                termineTour();
-
-                for (unsigned int i = 0; i < 4; i++)
-                    piocherCarte();
-                break;
-            case 14:
-                //termineTour();
-                carteSpeciale = true;
-
-                break;
-            }
-
-            if (carteSpeciale)
-            {
-                return;
-            }
             if (testUno() == false)
             {
-                if(joueurs[joueurActif].main.size() == 0)
+                // gestion des cartes spéciales
+                switch ((talon.back()).getValeur())
+                {
+                case 10:
+                    cout << "Inverse" << endl;
+                    if (sensJeu == 1)
+                        sensJeu = 0;
+                    else
+                        sensJeu = 1;
+                    break;
+                case 11:
+                    if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
+                        joueurActif = 0;
+                    else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
+                    {
+                        joueurActif--;
+                    }
+                    else if (joueurActif == 0 && sensJeu == 0)
+                        joueurActif = nombreIA + nombreJoueurs - 1;
+                    joueurActif++;
+                    
+                    break;
+                case 12:
+                    termineTour();
+
+                    piocherCarte();
+                    piocherCarte();
+                    carteSpeciale = true;
+                    break;
+                case 13:
+                    carteSpeciale = true;
+
+                    termineTour();
+
+                    for (unsigned int i = 0; i < 4; i++)
+                        piocherCarte();
+                    //termineTour();
+                    break;
+                case 14:
+                    termineTour();
+                    carteSpeciale = true;
+
+                    break;
+                }
+                if (joueurs[joueurActif].main.size() == 0)
                     annonceGagnant();
+                if (carteSpeciale)
+                    return;
                 termineTour();
                 return;
             }
