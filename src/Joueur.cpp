@@ -99,16 +99,22 @@ void Joueur::insererCartePositionIJ(const unsigned int indi, const unsigned int 
 }
 
 // Insère une carte adversaire, sans le nombre de cartes, dans tableJoueur pour version txt
-void Joueur::insererCarteAdversairePositionJ(const unsigned int indj, const unsigned int num)
+void Joueur::insererCarteAdversairePositionJ(const unsigned int indj, const Joueur & j)
 {
     assert(indj<180);
-    tableJoueur[0][indj] = 'j';
+    int i = 0;
+    while (j.nom[i]!='\0') 
+    {
+        tableJoueur[0][indj+i]=j.nom[i];
+        i++;
+    }
+    /*ableJoueur[0][indj] = 'j';
     tableJoueur[0][indj + 1] = 'o';
     tableJoueur[0][indj + 2] = 'u';
     tableJoueur[0][indj + 3] = 'e';
     tableJoueur[0][indj + 4] = 'u';
     tableJoueur[0][indj + 5] = 'r';
-    tableJoueur[0][indj + 7] = '0' + num;
+    tableJoueur[0][indj + 7] = '0' + num;*/
     //contour de la carte
     for (unsigned int i = 1; i < 9; i++)
         for (unsigned int j = indj; j < indj + 11; j++)

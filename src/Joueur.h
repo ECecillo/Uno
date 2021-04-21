@@ -121,7 +121,7 @@ public:
 		* @param
 		* [in] entier naturel, numéro de l'adversaire.
 		*/
-		void insererCarteAdversairePositionJ(const unsigned int indj, const unsigned int num);
+		void insererCarteAdversairePositionJ(const unsigned int indj, const Joueur & j);
 
 		/**
 		* @brief 

@@ -93,7 +93,6 @@ Fenetre::Fenetre (int dx, int dy) {
 }
 // Remplit le tableau de caractères c
 void Fenetre::clear (char c) {
-    cout << "ok";
     for(int i=0;i<dimx;++i)
         for(int j=0;j<dimy;++j)
             prepaFenetre(i,j,c);
@@ -125,7 +124,6 @@ int kbhit() {
     struct timeval tv;
     fd_set fds;
     tv.tv_sec = 0;
-    tv.tv_usec = 0;
     FD_ZERO(&fds);
     FD_SET(STDIN_FILENO, &fds); //STDIN_FILENO is 0
     select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
