@@ -454,10 +454,13 @@ void Bot::choixJeu(Jeu &jeu)
 
 int Bot::couleurAvecPlusDeCarte() const
 {
-    int tabNbCarte[] = {nbCarteRouge, nbCarteVert, nbCarteBleu, nbCarteJaune};
+int tabNbCarte[] = {nbCarteRouge, nbCarteVert, nbCarteBleu, nbCarteJaune};
     int max = tabNbCarte[0];
     int couleur = 0;
     int length = sizeof tabNbCarte / sizeof tabNbCarte[0];
+    cout << "Contenu tableau Nombre de carte" << endl;
+    for (int i = 0; i < length; i++)
+        cout << tabNbCarte[i] << endl; 
     for (int n = 1; n < length; n++)
     {
         if (tabNbCarte[n] > max)
