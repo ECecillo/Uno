@@ -76,6 +76,7 @@ void VarianteSuite::poserCarte(unsigned int &indiceCarte, string &messageErreur)
         }
         if (testUno() == false)
             termineTour();
+
     }
     else
     {
