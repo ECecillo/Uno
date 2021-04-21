@@ -1,5 +1,3 @@
-// g++ simple.cpp -lSDL2 -lSDL2_ttf -lSDL2_image
-
 #include <cassert>
 #include <time.h>
 #include <stdlib.h>
@@ -14,6 +12,8 @@
 
 const int TAILLE_SPRITE = 32;
 
+const SDL_Color noir={0,0,0};
+const SDL_Color bleu={0,0,255};
 const SDL_Color jaune={255,255,0};
 
 
@@ -103,6 +103,10 @@ void Image::setSurface(SDL_Surface * surf) {surface = surf;}
 // ============= CLASS SDLJEU =============== //
 
 
+/**
+    La classe g�rant le jeu avec un affichage SDL
+*/
+
 
 sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
 {
@@ -120,6 +124,7 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
         cout << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << endl;SDL_Quit();exit(1);
     }
 
+
     // Creation de la fenetre
     window = SDL_CreateWindow("UNO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 2000/*dimx*/, 1000/*dimy*/, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (window == NULL) {
@@ -130,9 +135,10 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
 
     renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
 
-    // beaucoup de cartes, on ne peut pas une im_carte pour chaque carte
+
     // IMAGES
     im_salleAttente.loadFromFile("data/uno4.png",renderer);
+
 
     // FONTS
     font = TTF_OpenFont("data/DejaVuSansCondensed.ttf",1000);
@@ -143,8 +149,6 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
             SDL_Quit(); 
             exit(1);
 	}
-	
-
 }
     
 sdlJeu::~sdlJeu () {
@@ -224,7 +228,7 @@ void sdlJeu::sdlAffSalleAttente ()
 			    case SDL_KEYDOWN:  // Si une touche est enfoncee
                     if(events.key.keysym.scancode==SDL_SCANCODE_Q) quit = true;
                     break;
-                case SDL_MOUSEBUTTONUP: // Si le bouton de la souris est relevé
+                /*case SDL_MOUSEBUTTONUP: // Si le bouton de la souris est relevé
                     if (events.button.x>600 && events.button.x<700 && events.button.y>300 && events.button.y<350) // clic sur la ligne "Jeu"
                     {
                         sdlAffChoixJeu();
@@ -239,9 +243,9 @@ void sdlJeu::sdlAffSalleAttente ()
                     }
                     if (events.button.x>600 && events.button.x<900 && events.button.y>600 && events.button.y<650) // clic sur la ligne "Lancer le jeu"
                     {
-                        sdlBoucle();
+                        sdlBoucleJeu();
                     }
-                    break;
+                    break;*/
 			}
 		}
         // on permute les deux buffers (cette fonction ne doit se faire qu'une seule fois dans la boucle)
@@ -249,7 +253,7 @@ void sdlJeu::sdlAffSalleAttente ()
     }
 }
 
-void sdlJeu::sdlAffChoixJeu()
+/*void sdlJeu::sdlAffChoixJeu()
 {
     // Rectangle noir par dessus
     SDL_Rect jeux;
@@ -266,14 +270,168 @@ void sdlJeu::sdlAffChoixJeu()
     SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&titre);
 
 
+}*/
+
+void sdlJeu::sdlAffJoueurActif ()
+{
+    //Remplir l'écran de noir
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    // la main du joueur actif est vide ici !!!
+
+
+
+    // affiche le nom des adversaires, leurs cartes, avec le nombre de cartes
+    for (unsigned int i=0; i<jeu.nombreJoueurs+jeu.nombreIA-1; i++)
+    {
+        int positionCarte=(2000 - (130*(jeu.nombreJoueurs+jeu.nombreIA-1)-20))/2 + 130*i;
+
+        im_carte.loadFromFile("data/dosvide.png",renderer);
+        im_carte.draw(renderer,positionCarte,50,110,157);
+
+        SDL_Rect adversaire;
+        adversaire.x = positionCarte;adversaire.y = 0;adversaire.w = 110;adversaire.h = 50;
+        font_im.setSurface(TTF_RenderText_Solid(font,jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs+jeu.nombreIA)].nom.c_str(),jaune));
+        font_im.loadFromCurrentSurface(renderer);
+        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&adversaire);
+
+        
+        SDL_Rect nombreCartes;
+        nombreCartes.x = positionCarte+40;nombreCartes.y = 113;nombreCartes.w = 30;nombreCartes.h = 30;
+        font_im.setSurface(TTF_RenderText_Solid(font,to_string(jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs+jeu.nombreIA)].main.size()).c_str(),jaune));
+        font_im.loadFromCurrentSurface(renderer);
+        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&nombreCartes);
+    }
+    
+    
+    // affiche les cartes de la main
+    int carteEntier;
+    char nomFichier[20];
+    string nomCarte;
+    char const * nomImage;
+    
+    for (int i=0; i<(jeu.joueurs[jeu.joueurActif].main).size(); i++)
+    {
+        if ((jeu.joueurs[jeu.joueurActif].main[i]).getValeur()==13)
+        {
+            im_carte.loadFromFile("data/+4.png",renderer);
+            im_carte.draw(renderer,110*i,600,110,157);
+        }
+        if ((jeu.joueurs[jeu.joueurActif].main[i]).getValeur()==14)
+        {
+            im_carte.loadFromFile("data/joker.png",renderer);
+            im_carte.draw(renderer,110*i,600,110,157);
+        }
+        if ((jeu.joueurs[jeu.joueurActif].main[i]).getValeur()<=9)
+        {
+            carteEntier = 10 * jeu.joueurs[jeu.joueurActif].main[i].getValeur() + jeu.joueurs[jeu.joueurActif].main[i].getCouleur();
+            nomCarte = to_string(carteEntier);
+            nomImage = nomCarte.c_str();
+            strcpy (nomFichier,"data/");
+            strcat (nomFichier,nomImage);
+            strcat (nomFichier,".png");
+            im_carte.loadFromFile(nomFichier,renderer);
+            im_carte.draw(renderer,110*i,600,110,157);
+        }     
+    }
+    SDL_RenderPresent(renderer);
 }
-
-
 
 
 
 void sdlJeu::sdlBoucleJeu () 
 {
+    Jeu jeu(4,0);
+    
+    SDL_Event events;
+	bool quit = false;
 
+    Uint32 t = SDL_GetTicks(), nt;
+
+	// tant que ce n'est pas la fin ...
+	while (!quit) {
+        
+
+        /* ne devrait pas être ici, c'est sdlAffJoueurActif
+
+
+        //Remplir l'écran de noir
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+
+        // affiche les cartes des adversaires 
+        for (unsigned int i=0; i<jeu.nombreJoueurs+jeu.nombreIA-1; i++)
+        {
+            int positionCarte=(2000 - (130*(jeu.nombreJoueurs+jeu.nombreIA-1)-20))/2 + 130*i;
+
+            im_carte.loadFromFile("data/dosvide.png",renderer);
+            im_carte.draw(renderer,positionCarte,50,110,157);
+
+            SDL_Rect adversaire;
+            adversaire.x = positionCarte;adversaire.y = 0;adversaire.w = 110;adversaire.h = 50;
+            font_im.setSurface(TTF_RenderText_Solid(font,jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs+jeu.nombreIA)].nom.c_str(),jaune));
+            font_im.loadFromCurrentSurface(renderer);
+            SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&adversaire);
+
+            
+            SDL_Rect nombreCartes;
+            nombreCartes.x = positionCarte+40;nombreCartes.y = 113;nombreCartes.w = 30;nombreCartes.h = 30;
+            font_im.setSurface(TTF_RenderText_Solid(font,to_string(jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs+jeu.nombreIA)].main.size()).c_str(),jaune));
+            font_im.loadFromCurrentSurface(renderer);
+            SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&nombreCartes);
+        }
+        int carteEntier;
+        char nomFichier[20];
+        string nomCarte;
+        char const * nomImage;
+        cout << "main3"<< (jeu.joueurs[jeu.joueurActif].main).size()<<endl;
+        for (int i=0; i<(jeu.joueurs[jeu.joueurActif].main).size(); i++)
+        {
+            cout<<i<<endl;
+            if ((jeu.joueurs[jeu.joueurActif].main[i]).getValeur()==13)
+            {
+                im_carte.loadFromFile("data/+4.png",renderer);
+                im_carte.draw(renderer,110*i,600,110,157);
+            }
+            if ((jeu.joueurs[jeu.joueurActif].main[i]).getValeur()==14)
+            {
+                im_carte.loadFromFile("data/joker.png",renderer);
+                im_carte.draw(renderer,110*i,600,110,157);
+            }
+            if ((jeu.joueurs[jeu.joueurActif].main[i]).getValeur()<=9)
+            {
+                carteEntier = 10 * jeu.joueurs[jeu.joueurActif].main[i].getValeur() + jeu.joueurs[jeu.joueurActif].main[i].getCouleur();
+                nomCarte = to_string(carteEntier);
+                nomImage = nomCarte.c_str();
+                strcpy (nomFichier,"data/");
+                strcat (nomFichier,nomImage);
+                strcat (nomFichier,".png");
+                im_carte.loadFromFile(nomFichier,renderer);
+                im_carte.draw(renderer,110*i,600,110,157);
+            }     
+        }
+        SDL_RenderPresent(renderer);  
+        
+        */
+        
+        
+        
+        sdlAffJoueurActif ();
+
+
+
+        while (SDL_PollEvent(&events))
+        {
+            switch (events.type)
+            {
+                case SDL_QUIT:     // Si l'utilisateur a clique sur la croix de fermeture
+                    quit = true;
+                    break;          
+			    case SDL_KEYDOWN:  // Si une touche est enfoncee
+                    if(events.key.keysym.scancode==SDL_SCANCODE_Q) quit = true;
+                    break;
+            }
+        }
+    }
 }
-
