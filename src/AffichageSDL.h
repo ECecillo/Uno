@@ -4,15 +4,13 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
 
 #include "Jeu.h"
-#include "VarianteCumul"
-#include "VarianteDoublon"
-#include "VarianteEchange"
-#include "VarianteSuite"
-#include "VarianteTourne"
 
-//! \brief Pour gérer une image avec SDL2
+using namespace std;
+
 class Image {
 
 private:
@@ -22,19 +20,27 @@ private:
     bool has_changed;
 
 public:
-    Image () ;
+Image () ;
     void loadFromFile (const char* filename, SDL_Renderer * renderer);
     void loadFromCurrentSurface (SDL_Renderer * renderer);
     void draw (SDL_Renderer * renderer, int x, int y, int w=-1, int h=-1);
     SDL_Texture * getTexture() const;
     void setSurface(SDL_Surface * surf);
+
+
+		
+		
+
+
+		
+
+
+		
+				
 };
 
 
 
-/**
-    La classe gérant le jeu avec un affichage SDL
-*/
 class sdlJeu {
 
 private :
@@ -48,23 +54,26 @@ private :
     Image font_im;
     SDL_Color font_color;
 
-    Mix_Chunk * sound;
-    bool withSound;
 
-    Image im_pacman;
-    Image im_mur;
-    Image im_pastille;
-    Image im_fantome;
+    Image im_salleAttente;
+    Image im_carte;
+/*	Image im_pacman; //? im_carte im_pioche im_talon im_passer im_uno im_contre_uno im_adversaire im_main
+    Image im_mur;	//?
+    Image im_pastille;	//?
+    Image im_fantome;	//?
 
-    bool souris;
-    bool touche;
+    bool souris;	//?
+    bool touche;	//?*/
 public :
+
+
 
     sdlJeu ();
     ~sdlJeu ();
+void sdlAffSalleAttente();
+void sdlAffJoueurActif();
     void sdlBoucleJeu ();
-    void sdlAffSalleAttente ();
-    void sdlChoixJeu ();
+    /*void sdlAff ();*/
 
 };
 
