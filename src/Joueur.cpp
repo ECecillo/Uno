@@ -83,8 +83,8 @@ Joueur::~Joueur() {}
 // Insère une carte dans tableJoueur pour version txt
 void Joueur::insererCartePositionIJ(const unsigned int indi, const unsigned int indj, Carte &c, const bool aEtoile)
 {
-    assert(indi<38);
-    assert(indj<180);
+    assert(indi < 38);
+    assert(indj < 180);
     for (unsigned i = indi; i < indi + 8; i++)
     {
         for (unsigned int j = indj; j < indj + 11; j++)
@@ -101,13 +101,14 @@ void Joueur::insererCartePositionIJ(const unsigned int indi, const unsigned int 
 // Insère une carte adversaire, sans le nombre de cartes, dans tableJoueur pour version txt
 void Joueur::insererCarteAdversairePositionJ(const unsigned int indj, const unsigned int num)
 {
-    assert(indj<180);
+    assert(indj < 180);
     tableJoueur[0][indj] = 'j';
     tableJoueur[0][indj + 1] = 'o';
     tableJoueur[0][indj + 2] = 'u';
     tableJoueur[0][indj + 3] = 'e';
     tableJoueur[0][indj + 4] = 'u';
     tableJoueur[0][indj + 5] = 'r';
+
     tableJoueur[0][indj + 7] = '0' + num;
     //contour de la carte
     for (unsigned int i = 1; i < 9; i++)
@@ -181,7 +182,7 @@ void Joueur::modifTalonPiocheTxt(const queue<Carte> &t, const stack<Carte> &p)
     // écrit la carte du talon dans tableJoueur
     unsigned int v = t.back().getValeur();
     unsigned int c = t.back().getCouleur();
-    for(int i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++)
         tableJoueur[15][103 + i] = ' ';
     if (v >= 0 && v <= 9)
         tableJoueur[15][105] = '0' + v;
@@ -214,7 +215,7 @@ void Joueur::modifTalonPiocheTxt(const queue<Carte> &t, const stack<Carte> &p)
             tableJoueur[15][107] = 'r';
             break;
         }
-    for(int i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++)
         tableJoueur[16][103 + i] = ' ';
     switch (c)
     {
