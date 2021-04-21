@@ -69,7 +69,7 @@ int Bot::carteMemeCouleurTalon(const Jeu &jeu) const
     }
 }
 
-int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c, int &indiceCarte) const
+int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c, int &indiceCarte)
 {
     cout << "Fonction Carte meme valeur talon " << endl;
     // variable contenant le nombre de Carte avec la couleur de la carte qui a la meme valeur que celle du talon.
@@ -235,6 +235,16 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c, int &indiceCarte) const
                 break;
             }
         }
+        else if (jeu.joueursBot[indexBot].main[i].getValeur() == 13 && indCartePlus4 == -1)
+        { // On regarde si la carte est un +4 et si on a pas déjà un autre +4 dans la main.
+            // edit : Si on a déjà un joker on en prend pas un autre.
+            indCartePlus4 = i;
+        }
+        else if (jeu.joueursBot[indexBot].main[i].getValeur() == 14 && indCarteJoker == -1)
+        { // On regarde si la carte est un Joker et si on a pas déjà un autre joker dans la main.
+            // edit : Si on a déjà un joker on en prend pas un autre.
+            indCarteJoker = i;
+        }
     }
     return nbCarteMemeCouleur;
 }
@@ -243,13 +253,15 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
 {
     string er;
     srand(time(NULL));
+    if (carteSpeciale >= 0) // On change la couleur du joker ou du plus 4 avec la meilleur couleur a jouer.
+        main[carteSpeciale].setCouleur(couleur);
     int max; // Variable temporaire servant à définir dans quelle intervalle on génère val aléa.
     int min;
     switch (couleur) // On joue en fonction de la carte du talon.
     {
     case 1:
         cout << "JoueCouleurSelonEntier Rouge" << endl;
-        if (carteSpeciale != 0)
+        if (carteSpeciale >= 0)
         {
             nbCarteRouge--;
             jeu.poserCarte(carteSpeciale, er);
@@ -274,7 +286,7 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
         cout << "JoueCouleurSelonEntier Vert" << endl;
         //cout << "Nombre carte Rouge " << nbCarteVert << endl;
 
-        if (carteSpeciale != 0)
+        if (carteSpeciale >= 0)
         {
             nbCarteVert--;
             jeu.poserCarte(carteSpeciale, er);
@@ -299,7 +311,7 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
         cout << "JoueCouleurSelonEntier Bleu" << endl;
         //cout <<  "Nombre carte Rouge " << nbCarteBleu << endl;
 
-        if (carteSpeciale != 0)
+        if (carteSpeciale >= 0)
         {
             nbCarteBleu--;
             jeu.poserCarte(carteSpeciale, er);
@@ -326,7 +338,7 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
 
         cout << "JoueCouleurSelonEntier Jaune" << endl;
         //cout <<  "Nombre carte Rouge " << nbCarteJaune << endl;
-        if (carteSpeciale != 0)
+        if (carteSpeciale >= 0)
         {
             nbCarteJaune--;
             jeu.poserCarte(carteSpeciale, er);
@@ -357,11 +369,11 @@ void Bot::changeIndiceCarteSpeciale()
 {
     // Comme les indices des jokers sont absolues car on les récups lors de la distrib des cartes,
     // On doit les modifier pour ne pas avoir un segfault.
-    if (indCarteJoker != 0 && indCartePlus4 == 0)
+    if (indCarteJoker > 0 && indCartePlus4 == -1)
         indCarteJoker--;
-    else if (indCarteJoker == 0 && indCartePlus4 != 0)
+    else if (indCarteJoker == -1 && indCartePlus4 > 0)
         indCartePlus4--;
-    else if (indCarteJoker != 0 && indCartePlus4 != 0)
+    else if (indCarteJoker > 0 && indCartePlus4 > 0)
     {
         indCartePlus4--;
         indCarteJoker--;
@@ -377,21 +389,21 @@ void Bot::choixJeu(Jeu &jeu)
         cout << "La valeur est " << i.getValeur() << " et la couleur " << i.getCouleur() << endl;
     }
     sleep(5);
-    cout << "L'indice de la carte du joker est : " << indCarteJoker << endl;
-    cout << "L'indice de la carte du Plus 4 est : " << indCartePlus4 << endl;
     int nbCarteCouleur, nbCarteValeur;
     int maxNbCouleur = couleurAvecPlusDeCarte(); // Renvoie la couleur avec le plus de carte.
     nbCarteCouleur = carteMemeCouleurTalon(jeu); // Nombre de carte meme couleur que talon.
     int couleur;                                 // Entier qui permettra de savoir quelle couleur a le plus de carte.
     int indiceCarteMemeValeur;
     nbCarteValeur = carteMemeValeurTalon(jeu, couleur, indiceCarteMemeValeur);
+    cout << "L'indice de la carte du joker est : " << indCarteJoker << endl;
+    cout << "L'indice de la carte du Plus 4 est : " << indCartePlus4 << endl;
     assert(nbCarteCouleur >= 0 || nbCarteValeur >= 0);
     // On compare les deux en prenant en compte que c'est mieux de finir une couleur avant d'en changer
     if (!(nbCarteCouleur == 0) && nbCarteValeur == 0) // Cas où on peut jouer que les cartes mêmes couleurs.
     {
         cout << "Joue carte meme couleur" << endl;
         changeIndiceCarteSpeciale();
-        joueCouleurSelonEntier(jeu, jeu.talon.back().getCouleur(), 0);
+        joueCouleurSelonEntier(jeu, jeu.talon.back().getCouleur(), -1);
     }
     else if (!(nbCarteCouleur == 0) && !(nbCarteValeur == 0)) // Cas où on peut jouer Carte Couleur.
     {
@@ -399,17 +411,17 @@ void Bot::choixJeu(Jeu &jeu)
         {
             cout << "Joue meme couleur quand on peut jouer meme valeur" << endl;
             changeIndiceCarteSpeciale();
-            joueCouleurSelonEntier(jeu, jeu.talon.back().getCouleur(), 0);
+            joueCouleurSelonEntier(jeu, jeu.talon.back().getCouleur(), -1);
         }
         else if (nbCarteCouleur == 2 && nbCarteValeur == 1)
         { // Si on a que 1 de différence mais la possibilité de finir la couleur on fini.
             changeIndiceCarteSpeciale();
-            joueCouleurSelonEntier(jeu, jeu.talon.back().getCouleur(), 0);
+            joueCouleurSelonEntier(jeu, jeu.talon.back().getCouleur(), -1);
         }
         else if (nbCarteValeur == 2 && nbCarteCouleur == 1)
         { // Si on a que 1 de différence mais la possibilité de finir la couleur on fini.
             changeIndiceCarteSpeciale();
-            joueCouleurSelonEntier(jeu, couleur, 0);
+            joueCouleurSelonEntier(jeu, couleur, -1);
         }
         else // On a plus de carte de la couleur de celle qui a la meme valeur que talon.
         {
@@ -433,6 +445,7 @@ void Bot::choixJeu(Jeu &jeu)
         cout << "On joue le joker car pas d'autres options avec indice : " << indCarteJoker << endl;
         joueCouleurSelonEntier(jeu, maxNbCouleur, indCarteJoker);
         indCarteJoker = -1;
+        cout << "suppression Joker" << endl;
     }
     else if ((nbCarteValeur == 0 && nbCarteCouleur == 0) && indCartePlus4 >= 0) // +4
     {
@@ -442,6 +455,7 @@ void Bot::choixJeu(Jeu &jeu)
         sleep(3);
         joueCouleurSelonEntier(jeu, maxNbCouleur, indCartePlus4);
         indCartePlus4 = -1;
+        cout << "suppression +4" << endl;
     }
     else
     {
@@ -488,14 +502,12 @@ void Bot::setCarteJaune()
 {
     nbCarteJaune++;
 }
-void Bot::setCarteJoker(unsigned int &indiceJoker)
+void Bot::setCarteJoker(int indiceJoker)
 {
-    assert(indiceJoker >= 0);
     indCarteJoker = indiceJoker;
 }
-void Bot::setCartePlus4(unsigned int &indicePlus4)
+void Bot::setCartePlus4(int indicePlus4)
 {
-    assert(indicePlus4 >= 0);
     indCartePlus4 = indicePlus4;
 }
 int Bot::getCarteRouge()
@@ -516,10 +528,12 @@ int Bot::getCarteJaune()
 }
 int Bot::getCarteJoker()
 {
+    //assert(indiceJoker >= 0);
     return indCarteJoker;
 }
 int Bot::getCartePlus4()
 {
+    //assert(indicePlus4 >= 0);
     return indCartePlus4;
 }
 

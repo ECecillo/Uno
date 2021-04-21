@@ -71,7 +71,7 @@ public:
       * Compte le nombre de Carte de la couleur de la carte qui a la même valeur que celle du Talon.
       * @param tab : tableau dans lequelle on met le nombre de carte par couleur.
       */
-    int carteMemeValeurTalon(const Jeu &, int &c, int &indiceCarte) const;
+    int carteMemeValeurTalon(const Jeu &, int &c, int &indiceCarte);
 
     /**
      * @brief 
@@ -104,8 +104,8 @@ public:
     void setCarteVert();
     void setCarteBleu();
     void setCarteJaune();
-    void setCarteJoker(unsigned int &i);
-    void setCartePlus4(unsigned int &i);
+    void setCarteJoker(int i);
+    void setCartePlus4(int i);
 
     int getCarteRouge();
     int getCarteVert();
