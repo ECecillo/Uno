@@ -60,6 +60,7 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
         Joueur joueur(i + 1);
         joueurs[i] = joueur;
     }
+
     // Initialisation du tableau de bots.
     for (unsigned int i = 0; i < nombreIA; i++)
     {
@@ -82,9 +83,6 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
         for (unsigned int j = 0; j < nombreJoueurs - 1; j++)
         {
             joueurs[i].insererCarteAdversairePositionJ(pos + 12 * j, joueurs[(i + 1 + j) % nombreJoueurs].numeroJoueur);
-            /*if (joueurs[(i + 1 + j) % nombreJoueurs].main.size()>=10)
-                joueurs[i].tableJoueur[4][pos + 12 * j + 4] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) / 10;
-            joueurs[i].tableJoueur[4][pos + 12 * j + 5] = (joueurs[(i + 1 + j) % nombreJoueurs].main.size()) % 10;*/
         }
     }
     modifAdversairesTxt();
@@ -336,7 +334,7 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
         cout << "La carte choisit a pour valeur : " << joueursBot[indexBot].main[indiceCarte].getValeur() << " et pour couleur " << joueursBot[indexBot].main[indiceCarte].getCouleur() << endl;
         if (carteValide(joueursBot[indexBot].main[indiceCarte]))
         {
-            
+
             //cout << "La carte du bot est valide" << endl;          // La carte qu'il veut poser est valide
             talon.push(joueursBot[indexBot].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
 
@@ -366,7 +364,7 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                     else if (joueurActif == 0 && sensJeu == 0)
                         joueurActif = nombreIA + nombreJoueurs - 1;
                     joueurActif++;
-                    
+
                     termineTour();
                     break;
                 case 12:
@@ -441,7 +439,7 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                     else if (joueurActif == 0 && sensJeu == 0)
                         joueurActif = nombreIA + nombreJoueurs - 1;
                     joueurActif++;
-                    
+
                     break;
                 case 12:
                     termineTour();
