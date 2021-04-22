@@ -96,7 +96,7 @@ public:
 
     void changeCouleurCarte(Jeu &jeu, const int );
 
-    void changeIndiceCarteSpeciale();
+    void changeIndiceCarteSpeciale(int indiceCarte);
 
     void testRegression(Jeu &);
 

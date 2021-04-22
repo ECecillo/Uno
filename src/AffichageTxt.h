@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <Jeu.h>
+#include <VarianteDoublon.h>
 
 using namespace std;
 
