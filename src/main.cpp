@@ -6,7 +6,8 @@ using namespace std;
 
 int main ( int argc, char** argv ) {
     termClear();
-	Jeu jeu(1,1);
+    VarianteDoublon jeu(1,1);
+	//Jeu jeu(1,1);
 	//jeu.testRegression();
     //jeu.joueursBot[0].choixJeu(jeu);
     //cout << "Le nombre de joueur est : " << jeu.nombreIA + jeu.nombreJoueurs << endl;

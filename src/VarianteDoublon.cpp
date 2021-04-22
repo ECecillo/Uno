@@ -25,6 +25,8 @@ void VarianteDoublon::poserCarte(unsigned int &indiceCarte, string &messageErreu
             joueursBot[indexBot].main.erase(joueursBot[indexBot].main.begin() + indiceCarte);
             // si le bot a le doublon de la carte qu'il vient de jouer, on lui propose de la jouer
             int indice = indiceDoublon(talon.back(), joueursBot[indexBot].main);
+            cout << indice << endl;
+            sleep(3);
             if (indice >= 0)
             {
                 talon.push(joueursBot[indexBot].main[indice]); // On pousse le doublon.
@@ -79,7 +81,7 @@ void VarianteDoublon::poserCarte(unsigned int &indiceCarte, string &messageErreu
 
                     for (unsigned int i = 0; i < 4; i++)
                         piocherCarte();
-                    termineTour();
+                    //termineTour();
 
                     break;
                 case 14:
@@ -105,12 +107,12 @@ void VarianteDoublon::poserCarte(unsigned int &indiceCarte, string &messageErreu
     }
     else
     {
-
         if (carteValide(joueurs[joueurActif].main[indiceCarte]))
         {                                                       // La carte qu'il veut poser est valide
             talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
             joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
             // si le joueur a le doublon de la carte qu'il vient de jouer, on lui propose de la jouer
+            cout << "Hello world ?" << endl;
             int indice = indiceDoublon(talon.back(), joueurs[joueurActif].main);
             if (indice >= 0)
             {
@@ -123,7 +125,8 @@ void VarianteDoublon::poserCarte(unsigned int &indiceCarte, string &messageErreu
                     joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indice);
                 }
             }
-
+            cout << indice << endl;
+            sleep(3);
             // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
             joueurs[joueurActif].modifMainTxt();
             // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
@@ -174,8 +177,12 @@ void VarianteDoublon::poserCarte(unsigned int &indiceCarte, string &messageErreu
 // retourne l'indice dans m du doublon de la carte c, -1 sinon
 int VarianteDoublon::indiceDoublon(Carte c, vector<Carte> m)
 {
+    cout << "Regarde Indice Doublon " << endl;
+    sleep(3);
     for (int i = 0; i < m.size(); i++)
     {
+        cout << "Boucle Regarde Indice Doublon " << endl;
+        sleep(1);
         if ((c.getValeur() == 13 && m[i].getValeur() == 13) || (c.getValeur() == 14 && m[i].getValeur() == 14)) //cas joker et +4, pas besoin de tester la couleur
         {
             return i;
