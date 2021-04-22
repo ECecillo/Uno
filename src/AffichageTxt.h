@@ -7,6 +7,7 @@
 #include <VarianteDoublon.h>
 #include <VarianteCumul.h>
 #include <VarianteSuite.h>
+#include <VarianteTourne.h>
 
 using namespace std;
 
