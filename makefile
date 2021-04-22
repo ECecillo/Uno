@@ -1,12 +1,12 @@
-CORE = Joueur.cpp Jeu.cpp Carte.cpp VarianteTourne.cpp VarianteDoublon.cpp VarianteEchange.cpp VarianteSuite.cpp VarianteCumul.cpp SalleAttente.cpp# Pacman.cpp core/Terrain.cpp core/Jeu.cpp core/Fantome.cpp
+CORE = Joueur.cpp Jeu.cpp Carte.cpp VarianteTourne.cpp VarianteDoublon.cpp VarianteEchange.cpp VarianteSuite.cpp VarianteCumul.cpp Bot.cpp# Pacman.cpp core/Terrain.cpp core/Jeu.cpp core/Fantome.cpp
 
-SRCS_TXT = $(CORE) AffichageTxt.cpp Fenetre.cpp main.cpp #txt/txtJeu.cpp txt/winTxt.cpp txt/main_txt.cpp
+SRCS_TXT = $(CORE) AffichageTxt.cpp Fenetre.cpp SalleAttente.cpp main.cpp #txt/txtJeu.cpp txt/winTxt.cpp txt/main_txt.cpp
 FINAL_TARGET_TXT = uno_txt
-#DEFINE_TXT = -DJEU_TXT
+DEFINE_TXT = -DJEU_TXT
 
-SRCS_SDL = $(CORE) sdl2/sdlJeu.cpp sdl2/main_sdl.cpp
+SRCS_SDL = $(CORE) AffichageSDL.cpp mainSDL.cpp
 FINAL_TARGET_SDL = uno_sdl
-#DEFINE_SDL = -DJEU_SDL
+DEFINE_SDL = -DJEU_SDL
 
 ifeq ($(OS),Windows_NT)
 	INCLUDE_DIR_SDL = 	-Iextern/SDL2_mingw-cb20/SDL2-2.0.12/x86_64-w64-mingw32/include/SDL2 \
@@ -49,8 +49,8 @@ endif
 $(BIN_DIR)/$(FINAL_TARGET_TXT): $(SRCS_TXT:%.cpp=$(OBJ_DIR)/%.o)
 	$(LD) $+ -o $@ $(LDFLAGS)
 
-#$(BIN_DIR)/$(FINAL_TARGET_SDL): $(SRCS_SDL:%.cpp=$(OBJ_DIR)/%.o)
-#	$(LD) $+ -o $@ $(LDFLAGS) $(LIBS_SDL)
+$(BIN_DIR)/$(FINAL_TARGET_SDL): $(SRCS_SDL:%.cpp=$(OBJ_DIR)/%.o)
+	$(LD) $+ -o $@ $(LDFLAGS) $(LIBS_SDL)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) -c $(CPPFLAGS) $(INCLUDE_DIR_SDL) $(INCLUDE_DIR) $< -o $@

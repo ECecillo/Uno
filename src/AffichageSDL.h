@@ -45,7 +45,7 @@ class sdlJeu {
 
 private :
 
-	Jeu jeu;
+
 
     SDL_Window * window;
     SDL_Renderer * renderer;
@@ -57,13 +57,7 @@ private :
 
     Image im_salleAttente;
     Image im_carte;
-/*	Image im_pacman; //? im_carte im_pioche im_talon im_passer im_uno im_contre_uno im_adversaire im_main
-    Image im_mur;	//?
-    Image im_pastille;	//?
-    Image im_fantome;	//?
 
-    bool souris;	//?
-    bool touche;	//?*/
 public :
 
 
@@ -71,9 +65,12 @@ public :
     sdlJeu ();
     ~sdlJeu ();
 void sdlAffSalleAttente();
-void sdlAffJoueurActif();
-    void sdlBoucleJeu ();
-    /*void sdlAff ();*/
+void sdlAffChoixJoueurs();
+void sdlAffChoixOrdinateurs();
+void sdlAffCarte(const Carte & c, int positionX, int positionY);
+void sdlAffJoueurActif(Jeu & jeu);
+    void sdlBoucleJeu (unsigned int variante, unsigned int nbJ, unsigned int nbB);
+    void sdlAffChoixJeu ();
 
 };
 
