@@ -5,6 +5,7 @@
 #include <string>
 #include <Jeu.h>
 #include <VarianteDoublon.h>
+#include <VarianteCumul.h>
 
 using namespace std;
 

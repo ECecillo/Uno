@@ -15,7 +15,7 @@ VarianteSuite::~VarianteSuite()
 }
 }
 
-void VarianteSuite::poserCarte(unsigned int &indiceCarte, string &messageErreur)
+void VarianteSuite::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
     if (carteValide(joueurs[joueurActif].main[indiceCarte]))
     {                                                       // La carte qu'il veut poser est valide

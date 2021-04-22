@@ -1,33 +1,31 @@
 #include "VarianteEchange.h"
 
-VarianteEchange::VarianteEchange():Jeu() {}
+VarianteEchange::VarianteEchange() : Jeu() {}
 
-VarianteEchange::VarianteEchange(const unsigned int nbjoueurs, const unsigned int nbIA = 0):Jeu(nbjoueurs, nbIA) {}
+VarianteEchange::VarianteEchange(const unsigned int nbjoueurs, const unsigned int nbIA = 0) : Jeu(nbjoueurs, nbIA) {}
 
-VarianteEchange::~VarianteEchange() 
+VarianteEchange::~VarianteEchange()
 {
-    {
     delete[] joueurs;
     joueurs = NULL;
     sensJeu = 1;
     joueurActif = 0;
     nombreJoueurs = 0;
 }
-}
 
-void VarianteEchange::poserCarte(unsigned int &indiceCarte, string &messageErreur)
+void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
     if (carteValide(joueurs[joueurActif].main[indiceCarte]))
     {                                                       // La carte qu'il veut poser est valide
         talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
         joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
         // si la carte posée est un 7, le joueur échange sa main avec un autre joueur
-        if (talon.back().getValeur()==7)
+        if (talon.back().getValeur() == 7)
         {
             unsigned int numJoueur;
             cout << "indique le numéro du joueur avec lequel tu veux échanger ta main: ";
             cin >> numJoueur;
-            joueurs[joueurActif].main.swap(joueurs[numJoueur-1].main);
+            joueurs[joueurActif].main.swap(joueurs[numJoueur - 1].main);
         }
         // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
         joueurs[joueurActif].modifMainTxt();
