@@ -48,7 +48,7 @@ public:
 		* @param
 		* main dans laquelle rechercher la suite
 		*/
-		bool testSuite(unsigned int indice, vector<Carte> main);
+		void testSuite(unsigned int indice, vector<Carte>);
 
 
 		/**
