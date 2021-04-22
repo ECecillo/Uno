@@ -15,7 +15,7 @@ VarianteTourne::~VarianteTourne()
 }
 }
 
-void VarianteTourne::poserCarte(unsigned int &indiceCarte, string &messageErreur)
+void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
     if (carteValide(joueurs[joueurActif].main[indiceCarte]))
     {                                                       // La carte qu'il veut poser est valide

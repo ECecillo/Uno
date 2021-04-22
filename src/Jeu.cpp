@@ -325,7 +325,6 @@ void Jeu::piocherCarte()
 void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
     assert(indiceCarte >= 0);
-    cout << "Pas variante Doublon" << endl;
     if (joueurActif >= nombreJoueurs) // alors on a affaire à un bot.
     {
         int indexBot = joueurActif - nombreJoueurs;

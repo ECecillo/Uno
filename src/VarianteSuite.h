@@ -60,7 +60,7 @@ public:
 		* @param messageErreur : 
 		* Message d'erreur à afficher avec l'interface Graphique.
 		*/
-		void poserCarte(unsigned int& indiceCarte, string &messageErreur);
+		void poserCarte(const unsigned int& indiceCarte, string &messageErreur) override;
 
 
 		

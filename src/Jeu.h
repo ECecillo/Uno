@@ -150,7 +150,7 @@ public:
 	* @return
 	* true si la carte est valide.
 	*/
-	bool carteValide(const Carte) const;
+	virtual bool carteValide(const Carte) const;
 
 	/**
 	* @brief 
@@ -167,7 +167,7 @@ public:
 	* @param 
 	* messageErreur : Message d'erreur à afficher avec l'interface Graphique.
 	*/
-	void poserCarte(const unsigned int& indiceCarte, string &messageErreur);
+	virtual void poserCarte(const unsigned int& indiceCarte, string &messageErreur);
 
 	/**
 	* @brief 
