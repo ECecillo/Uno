@@ -6,7 +6,7 @@ using namespace std;
 
 int main ( int argc, char** argv ) {
     termClear();
-    VarianteTourne jeu(1,1);
+    VarianteEchange jeu(2,1);
 	//Jeu jeu(1,1);
 	//jeu.testRegression();
     //jeu.joueursBot[0].choixJeu(jeu);
