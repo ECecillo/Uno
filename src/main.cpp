@@ -6,7 +6,7 @@ using namespace std;
 
 int main ( int argc, char** argv ) {
     termClear();
-	Jeu jeu(1,1);
+	Jeu jeu(2,2);
 	//jeu.testRegression();
     //jeu.joueursBot[0].choixJeu(jeu);
     //cout << "Le nombre de joueur est : " << jeu.nombreIA + jeu.nombreJoueurs << endl;
@@ -14,6 +14,6 @@ int main ( int argc, char** argv ) {
     //cout << "Le joueur actif est : " << jeu.joueurActif << endl;
     //jeu.joueursBot[0].testRegression(jeu);
     txtBoucle(jeu);
-    //termClear();
+    termClear();
 	return 0;
 }
