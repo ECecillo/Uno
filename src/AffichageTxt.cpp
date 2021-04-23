@@ -58,6 +58,7 @@ void txtAff(Fenetre &win, const Jeu &jeu)
 {
     if (jeu.joueurActif >= jeu.nombreJoueurs)
     {
+        cout << jeu.joueurActif << endl;
         return;
     }
     else
@@ -95,8 +96,8 @@ void txtBoucle(Jeu &jeu)
         usleep(100000);
 #endif // WIN32
         jeu.finTour = false;
-
-        jeu.joueurs[jeu.joueurActif].indiceEtoile = 0;
+        if(jeu.joueurActif < jeu.nombreJoueurs)
+            jeu.joueurs[jeu.joueurActif].indiceEtoile = 0;
         jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
         jeu.annonceGagnant(); // Annonce le gagnant de la partie.
         if(jeu.finPartie == true)
