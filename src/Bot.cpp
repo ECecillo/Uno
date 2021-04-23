@@ -71,14 +71,24 @@ int Bot::carteMemeCouleurTalon(const Jeu &jeu) const
 
 int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c, int &indiceCarte)
 {
-    cout << "Fonction Carte meme valeur talon " << endl;
+    //cout << "Fonction Carte meme valeur talon " << endl;
     // variable contenant le nombre de Carte avec la couleur de la carte qui a la meme valeur que celle du talon.
     int nbCarteMemeCouleur = 0;
     // On créer une nouvelle variable pour mettre le bonne indice du bot que l'on regarde.
     int indexBot = numeroBot - 1;
-    cout << " CARTE MEME VALEUR ########### L'actuel carte du talon est : " << jeu.talon.back().getValeur() << " et sa couleur est : " << (jeu.talon.back()).getCouleur() << endl;
+    //cout << " CARTE MEME VALEUR ########### L'actuel carte du talon est : " << jeu.talon.back().getValeur() << " et sa couleur est : " << (jeu.talon.back()).getCouleur() << endl;
     for (int i = 0; i < jeu.joueursBot[indexBot].main.size(); i++)
     {
+        if (jeu.joueursBot[indexBot].main[i].getValeur() == 13)
+        { // On regarde si la carte est un +4 et si on a pas déjà un autre +4 dans la main.
+            // edit : Si on a déjà un joker on en prend pas un autre.
+            indCartePlus4 = i;
+        }
+        else if (jeu.joueursBot[indexBot].main[i].getValeur() == 14)
+        { // On regarde si la carte est un Joker et si on a pas déjà un autre joker dans la main.
+            // edit : Si on a déjà un joker on en prend pas un autre.
+            indCarteJoker = i;
+        }
         if (jeu.joueursBot[indexBot].main[i].getValeur() == jeu.talon.back().getValeur() && jeu.joueursBot[indexBot].main[i].getCouleur() != jeu.talon.back().getCouleur())
         {
 
@@ -234,16 +244,6 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c, int &indiceCarte)
             default:
                 break;
             }
-        }
-        else if (jeu.joueursBot[indexBot].main[i].getValeur() == 13 && indCartePlus4 == -1)
-        { // On regarde si la carte est un +4 et si on a pas déjà un autre +4 dans la main.
-            // edit : Si on a déjà un joker on en prend pas un autre.
-            indCartePlus4 = i;
-        }
-        else if (jeu.joueursBot[indexBot].main[i].getValeur() == 14 && indCarteJoker == -1)
-        { // On regarde si la carte est un Joker et si on a pas déjà un autre joker dans la main.
-            // edit : Si on a déjà un joker on en prend pas un autre.
-            indCarteJoker = i;
         }
     }
     return nbCarteMemeCouleur;
@@ -595,6 +595,20 @@ int Bot::getCartePlus4()
 {
     //assert(indicePlus4 >= 0);
     return indCartePlus4;
+}
+void Bot::remetNbCarteZero()
+{
+    nbCarteRouge = 0;
+    nbCarteVert = 0;
+    nbCarteBleu = 0;
+    nbCarteJaune = 0;
+}
+void Bot::copieNbCarte(Bot &bot)
+{
+    nbCarteRouge = bot.nbCarteRouge;
+    nbCarteVert = bot.nbCarteVert;
+    nbCarteBleu = bot.nbCarteBleu;
+    nbCarteJaune = bot.nbCarteJaune;
 }
 
 void Bot::testRegression(Jeu &jeu)
