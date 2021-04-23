@@ -9,8 +9,6 @@ private:
 		
 		unsigned int cumulCarteAPiocher;
 
-	 
-
 public:
 		/**
 		* @brief

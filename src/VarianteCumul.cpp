@@ -354,6 +354,7 @@ void VarianteCumul::piocherCarte()
                 joueursBot[indexBot].trierMain();
                 return;
             }
+            cumulCarteAPiocher = 0;
         }
         else
         {

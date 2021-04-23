@@ -1,4 +1,4 @@
-CORE = Joueur.cpp Jeu.cpp VarianteEchange.cpp Bot.cpp Carte.cpp   # Pacman.cpp core/Terrain.cpp core/Jeu.cpp core/Fantome.cpp
+CORE = Joueur.cpp Jeu.cpp VarianteCumul.cpp Bot.cpp Carte.cpp   # Pacman.cpp core/Terrain.cpp core/Jeu.cpp core/Fantome.cpp
 
 SRCS_TXT = $(CORE) AffichageTxt.cpp Fenetre.cpp main.cpp #txt/txtJeu.cpp txt/winTxt.cpp txt/main_txt.cpp
 FINAL_TARGET_TXT = uno_txt
