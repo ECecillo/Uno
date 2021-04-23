@@ -396,7 +396,8 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 
                     break;
                 }
-                termineTour();
+                if (!carteSpeciale)
+                    termineTour();
                 if (joueursBot[indexBot].main.size() == 0)
                     annonceGagnant();
                 return;
