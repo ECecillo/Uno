@@ -8,6 +8,7 @@
 #include <VarianteCumul.h>
 #include <VarianteSuite.h>
 #include <VarianteTourne.h>
+#include <VarianteEchange.h>
 
 using namespace std;
 

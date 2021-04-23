@@ -95,124 +95,125 @@ void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &message
                 cout << messageErreur << endl;
             }
         }
+    }
+    else
+    {
+        if (carteValide(joueurs[joueurActif].main[indiceCarte]))
+        {                                                       // La carte qu'il veut poser est valide
+            talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
+            joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
+            // si la carte posée est 0, on fait tourner les mains
+            if (talon.back().getValeur() == 0)
+                tournerMains();
+            // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
+            joueurs[joueurActif].modifMainTxt();
+            // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
+            joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
+
+            // gestion des cartes spéciales
+            switch ((talon.back()).getValeur())
+            {
+            case 10:
+                cout << "Inverse" << endl;
+                if (sensJeu == 1)
+                    sensJeu = 0;
+                else
+                    sensJeu = 1;
+                break;
+            case 11:
+                if (joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
+                    joueurActif = 0;
+                joueurActif++;
+                break;
+            case 12:
+                termineTour();
+
+                piocherCarte();
+                piocherCarte();
+                break;
+            case 13:
+                termineTour();
+
+                for (unsigned int i = 0; i < 4; i++)
+                    piocherCarte();
+                break;
+            case 14:
+                break;
+            }
+            if (testUno() == false)
+                termineTour();
+        }
         else
         {
-            if (carteValide(joueurs[joueurActif].main[indiceCarte]))
-            {                                                       // La carte qu'il veut poser est valide
-                talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
-                joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
-                // si la carte posée est 0, on fait tourner les mains
-                if (talon.back().getValeur() == 0)
-                    tournerMains();
-                // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
-                joueurs[joueurActif].modifMainTxt();
-                // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
-                joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 
-                // gestion des cartes spéciales
-                switch ((talon.back()).getValeur())
-                {
-                case 10:
-                    cout << "Inverse" << endl;
-                    if (sensJeu == 1)
-                        sensJeu = 0;
-                    else
-                        sensJeu = 1;
-                    break;
-                case 11:
-                    if (joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
-                        joueurActif = 0;
-                    joueurActif++;
-                    break;
-                case 12:
-                    termineTour();
-
-                    piocherCarte();
-                    piocherCarte();
-                    break;
-                case 13:
-                    termineTour();
-
-                    for (unsigned int i = 0; i < 4; i++)
-                        piocherCarte();
-                    break;
-                case 14:
-                    break;
-                }
-                if (testUno() == false)
-                    termineTour();
-            }
-            else
-            {
-
-                messageErreur = "Cette carte ne peut pas être déposée.";
-                // Voir si on ajoute d'autre message.
-                cout << messageErreur << endl;
-            }
+            messageErreur = "Cette carte ne peut pas être déposée.";
+            // Voir si on ajoute d'autre message.
+            cout << messageErreur << endl;
         }
     }
+}
 
-    void VarianteTourne::tournerMains()
+void VarianteTourne::tournerMains()
+{
+    if (sensJeu == 1)
     {
-        if (sensJeu == 1)
+        for (int i = nombreJoueurs + nombreIA - 1; i > 0; i--)
         {
-            for (int i = nombreJoueurs + nombreIA - 1; i > 0; i--)
-            {
-                //cout << i << " I de tourneMain " << endl;
-                if (i > nombreJoueurs)
-                { // On échange les jeux entre les bots
+            //cout << i << " I de tourneMain " << endl;
+            if (i > nombreJoueurs)
+            { // On échange les jeux entre les bots
 
-                    // On copie les données du bot dans l'autre :
-                    joueursBot[i - nombreJoueurs].copieNbCarte(joueursBot[(i - nombreJoueurs) - 1]);
-                    // On échange les mains.
-                    joueursBot[i - nombreJoueurs].main.swap(joueursBot[(i - nombreJoueurs) - 1].main);
-                }
-                else if (i == nombreJoueurs)
-                { // On échange les jeux entre un bot et un joueur
-
-                    // On remet à 0 les données du bot.
-                    joueursBot[(i - nombreJoueurs)].remetNbCarteZero();
-                    // On met les nouveaux nombres de carte dans le joueursBot qui va recevoir les cartes du joueur.
-                    for (int j = 0; j < joueurs[i - 1].main.size(); j++)
-                    {
-                        definieCouleurBot(joueursBot[(i - nombreJoueurs)], joueurs[i - 1].main[j]);
-                    }
-                    // On peut échanger les mains.
-                    joueursBot[i - nombreJoueurs].main.swap(joueurs[i - 1].main);
-                }
-                else if (i < nombreJoueurs)
-                { // On échange les jeux entre Joueurs
-                    joueurs[i].main.swap(joueurs[i - 1].main);
-                }
+                // On copie les données du bot dans l'autre :
+                joueursBot[i - nombreJoueurs].copieNbCarte(joueursBot[(i - nombreJoueurs) - 1]);
+                // On échange les mains.
+                joueursBot[i - nombreJoueurs].main.swap(joueursBot[(i - nombreJoueurs) - 1].main);
             }
-        }
-        else // Sens du jeu = 0 donc on inverse vers la gauche.
-        {
-            for (int i = 0; i < nombreJoueurs + nombreIA - 2; i++)
-            {
-                if (i > nombreJoueurs - 1) // Si on passe sur un indice qui n'est plus valide pour joueurs
+            else if (i == nombreJoueurs)
+            { // On échange les jeux entre un bot et un joueur
+
+                // On remet à 0 les données du bot.
+                joueursBot[(i - nombreJoueurs)].remetNbCarteZero();
+                // On met les nouveaux nombres de carte dans le joueursBot qui va recevoir les cartes du joueur.
+                for (int j = 0; j < joueurs[i - 1].main.size(); j++)
                 {
-                    // On copie les données du bot dans l'autre :
-                    joueursBot[i - nombreJoueurs].copieNbCarte(joueursBot[(i - nombreJoueurs) + 1]);
-                    // On échange les mains.
-                    joueursBot[i - nombreJoueurs].main.swap(joueursBot[(i - nombreJoueurs) + 1].main);
+                    definieCouleurBot(joueursBot[(i - nombreJoueurs)], joueurs[i - 1].main[j]);
                 }
-                else if (i == nombreJoueurs - 1)
-                {
-                    // On remet à 0 les données du bot.
-                    joueursBot[(i - nombreJoueurs) + 1].remetNbCarteZero();
-                    // On met les nouveaux nombres de carte dans le joueursBot qui va recevoir les cartes du joueur.
-                    for (int j = 0; j < joueurs[i].main.size(); j++)
-                    {
-                        definieCouleurBot(joueursBot[(i - nombreJoueurs) + 1], joueurs[i].main[j]);
-                    }
-                    // On échange les mains entre joueur et Bot.
-                    joueurs[i].main.swap(joueursBot[(i - nombreJoueurs) + 1].main);
-                }
-                else if (i < nombreJoueurs)
-                {
-                    joueurs[i].main.swap(joueurs[i + 1].main);
-                }
+                // On peut échanger les mains.
+                joueursBot[i - nombreJoueurs].main.swap(joueurs[i - 1].main);
+            }
+            else if (i < nombreJoueurs)
+            { // On échange les jeux entre Joueurs
+                joueurs[i].main.swap(joueurs[i - 1].main);
             }
         }
     }
+    else // Sens du jeu = 0 donc on inverse vers la gauche.
+    {
+        for (int i = 0; i < nombreJoueurs + nombreIA - 2; i++)
+        {
+            if (i > nombreJoueurs - 1) // Si on passe sur un indice qui n'est plus valide pour joueurs
+            {
+                // On copie les données du bot dans l'autre :
+                joueursBot[i - nombreJoueurs].copieNbCarte(joueursBot[(i - nombreJoueurs) + 1]);
+                // On échange les mains.
+                joueursBot[i - nombreJoueurs].main.swap(joueursBot[(i - nombreJoueurs) + 1].main);
+            }
+            else if (i == nombreJoueurs - 1)
+            {
+                // On remet à 0 les données du bot.
+                joueursBot[(i - nombreJoueurs) + 1].remetNbCarteZero();
+                // On met les nouveaux nombres de carte dans le joueursBot qui va recevoir les cartes du joueur.
+                for (int j = 0; j < joueurs[i].main.size(); j++)
+                {
+                    definieCouleurBot(joueursBot[(i - nombreJoueurs) + 1], joueurs[i].main[j]);
+                }
+                // On échange les mains entre joueur et Bot.
+                joueurs[i].main.swap(joueursBot[(i - nombreJoueurs) + 1].main);
+            }
+            else if (i < nombreJoueurs)
+            {
+                joueurs[i].main.swap(joueurs[i + 1].main);
+            }
+        }
+    }
+}
