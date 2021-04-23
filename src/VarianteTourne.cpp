@@ -15,7 +15,7 @@ VarianteTourne::~VarianteTourne()
 
 void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
-    if (joueurActif>= nombreJoueurs)
+    if (joueurActif >= nombreJoueurs)
     {
         int indexBot = joueurActif - nombreJoueurs;
         if (carteValide(joueursBot[indexBot].main[indiceCarte]))
@@ -136,26 +136,26 @@ void VarianteTourne::tournerMains()
         {
             if (i > nombreJoueurs)
             {
-                joueursBot[i].main.swap(joueursBot[i - 1].main);
+                joueursBot[i - nombreJoueurs].main.swap(joueursBot[(i - nombreJoueurs) - 1].main);
             }
             else if (i == nombreJoueurs)
             {
-                joueursBot[i].main.swap(joueurs[i - 1].main);
+                joueursBot[i - nombreJoueurs].main.swap(joueurs[i - 1].main);
             }
             joueurs[i].main.swap(joueurs[i - 1].main);
         }
     }
-    else
+    else // Sens du jeu = 0 donc on inverse vers la gauche.
     {
         for (int i = 0; i < nombreJoueurs + nombreIA - 2; i++)
         {
-            if (i > nombreJoueurs)
+            if (i > nombreJoueurs - 1) // Si on passe sur un indice qui n'est plus valide pour joueurs
             {
-                joueursBot[i].main.swap(joueursBot[i + 1].main);
+                joueursBot[i - nombreJoueurs].main.swap(joueursBot[(i - nombreJoueurs) + 1].main);
             }
             else if (i == nombreJoueurs)
             {
-                joueursBot[i].main.swap(joueurs[i + 1].main);
+                joueursBot[i -].main.swap(joueurs[i + 1].main);
             }
             joueurs[i].main.swap(joueurs[i + 1].main);
         }
