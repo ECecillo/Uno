@@ -81,7 +81,7 @@ void termInit()      // configure la saisie : ne pas afficher les caracteres tap
 
 // Constructeur: construit le tableau 1D vide
 Fenetre::Fenetre (int dx, int dy) {
-    cout << dx << " " << dy << endl;
+    //cout << dx << " " << dy << endl;
     assert(dx>=0 && dx<=38);
     assert(dy>=0 && dy<=180);
     dimx = dx;
