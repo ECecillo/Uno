@@ -100,6 +100,19 @@ public:
 
     void testRegression(Jeu &);
 
+    /**
+     * @brief 
+     * Remet à 0 le nombre de carte Rouge, Vert, Rouge, Jaune .... utile quand on doit changer les jeux.
+     */
+    void remetNbCarteZero();
+    /**
+     * @brief 
+     * Procédure permettant de transférer les données nbCarte entre Bot.
+     * @param bot : Bot qui va transféré ces infos. 
+     */
+    void copieNbCarte(Bot& bot);
+    
+    // Mutateur
     void setCarteRouge();
     void setCarteVert();
     void setCarteBleu();
@@ -107,6 +120,7 @@ public:
     void setCarteJoker(int i);
     void setCartePlus4(int i);
 
+    // Accesseur
     int getCarteRouge();
     int getCarteVert();
     int getCarteBleu();

@@ -134,15 +134,32 @@ void VarianteTourne::tournerMains()
     {
         for (int i = nombreJoueurs + nombreIA - 1; i > 0; i--)
         {
+            //cout << i << " I de tourneMain " << endl;
             if (i > nombreJoueurs)
-            {
+            { // On échange les jeux entre les bots
+
+                // On copie les données du bot dans l'autre :
+                joueursBot[i - nombreJoueurs].copieNbCarte(joueursBot[(i - nombreJoueurs) - 1]);
+                // On échange les mains.
                 joueursBot[i - nombreJoueurs].main.swap(joueursBot[(i - nombreJoueurs) - 1].main);
             }
             else if (i == nombreJoueurs)
-            {
+            { // On échange les jeux entre un bot et un joueur
+
+                // On remet à 0 les données du bot.
+                joueursBot[(i - nombreJoueurs)].remetNbCarteZero();
+                // On met les nouveaux nombres de carte dans le joueursBot qui va recevoir les cartes du joueur.
+                for (int j = 0; j < joueurs[i - 1].main.size(); j++)
+                {
+                    definieCouleurBot(joueursBot[(i - nombreJoueurs)], joueurs[i - 1].main[j]);
+                }
+                // On peut échanger les mains.
                 joueursBot[i - nombreJoueurs].main.swap(joueurs[i - 1].main);
             }
-            joueurs[i].main.swap(joueurs[i - 1].main);
+            else if (i < nombreJoueurs)
+            { // On échange les jeux entre Joueurs
+                joueurs[i].main.swap(joueurs[i - 1].main);
+            }
         }
     }
     else // Sens du jeu = 0 donc on inverse vers la gauche.
@@ -151,13 +168,27 @@ void VarianteTourne::tournerMains()
         {
             if (i > nombreJoueurs - 1) // Si on passe sur un indice qui n'est plus valide pour joueurs
             {
+                // On copie les données du bot dans l'autre :
+                joueursBot[i - nombreJoueurs].copieNbCarte(joueursBot[(i - nombreJoueurs) + 1]);
+                // On échange les mains.
                 joueursBot[i - nombreJoueurs].main.swap(joueursBot[(i - nombreJoueurs) + 1].main);
             }
-            else if (i == nombreJoueurs)
+            else if (i == nombreJoueurs - 1)
             {
-                joueursBot[i -].main.swap(joueurs[i + 1].main);
+                // On remet à 0 les données du bot.
+                joueursBot[(i - nombreJoueurs) + 1].remetNbCarteZero();
+                // On met les nouveaux nombres de carte dans le joueursBot qui va recevoir les cartes du joueur.
+                for (int j = 0; j < joueurs[i].main.size(); j++)
+                {
+                    definieCouleurBot(joueursBot[(i - nombreJoueurs) + 1], joueurs[i].main[j]);
+                }
+                // On échange les mains entre joueur et Bot.
+                joueurs[i].main.swap(joueursBot[(i - nombreJoueurs) + 1].main);
             }
-            joueurs[i].main.swap(joueurs[i + 1].main);
+            else if (i < nombreJoueurs)
+            {
+                joueurs[i].main.swap(joueurs[i + 1].main);
+            }
         }
     }
 }

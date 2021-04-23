@@ -162,31 +162,35 @@ void Jeu::distribueCarte()
         {
             joueursBot[i].main.push_back(pioche.top());
             // On récupère le nombre de carte de chaque couleur à chaque ajout.
-            switch (pioche.top().getCouleur())
-            {
-            case 1:
-                joueursBot[i].setCarteRouge();
-
-                break;
-            case 2:
-                joueursBot[i].setCarteVert();
-
-                break;
-            case 3:
-                joueursBot[i].setCarteBleu();
-
-                break;
-            case 4:
-                joueursBot[i].setCarteJaune();
-
-                break;
-
-            default:
-                break;
-            }
+            definieCouleurBot(joueursBot[i], pioche.top());
             pioche.pop();
         }
         joueursBot[i].trierMain();
+    }
+}
+void Jeu::definieCouleurBot(Bot &tabJoueursBot, Carte &c)
+{
+    switch (c.getCouleur())
+    {
+    case 1:
+        tabJoueursBot.setCarteRouge();
+
+        break;
+    case 2:
+        tabJoueursBot.setCarteVert();
+
+        break;
+    case 3:
+        tabJoueursBot.setCarteBleu();
+
+        break;
+    case 4:
+        tabJoueursBot.setCarteJaune();
+
+        break;
+
+    default:
+        break;
     }
 }
 
