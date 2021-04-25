@@ -4,8 +4,14 @@
 #include <vector>
 #include <string>
 #include <Jeu.h>
+#include "SalleAttente.h"
 #include "Fenetre.h"
 #include "SalleAttente.h"
+#include "VarianteDoublon.h"
+#include "VarianteEchange.h"
+#include "VarianteTourne.h"
+#include "VarianteSuite.h"
+#include "VarianteCumul.h"
 
 using namespace std;
 

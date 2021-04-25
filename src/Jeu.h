@@ -4,12 +4,13 @@
 #include <stack> // Pour les piles.
 #include <queue>
 
-
 #include <Joueur.h>
 #include <Carte.h>
-
+#include <Bot.h>
 
 using namespace std;
+
+class Bot;
 
 /**
 * @brief 
@@ -37,6 +38,12 @@ public:
 	* Tableau de Joueurs.
 	*/
 	Joueur *joueurs;
+
+	/**
+	 * @brief 
+	 * Tableau de Joueurs.
+	 */
+	Bot *joueursBot;
 
 	/**
 	* @brief 
@@ -111,7 +118,7 @@ public:
 	* [in] entier naturel: nombre de joueurs 
 	*
 	*/
-	Jeu(const unsigned int nbjoueurs, const unsigned int nbIA); 
+	Jeu(const unsigned int nbjoueurs, const unsigned int nbIA);
 
 	/**
 	* @brief 
@@ -132,6 +139,13 @@ public:
 	void distribueCarte();
 
 	/**
+	 * @brief 
+	 * 
+	 * @param tabBot : Tableau qui servira à déréference le pointeur joueursBot 
+	 * @param c : Une carte que l'on regardera pour ajouter une carte rouge.
+	 */
+	void definieCouleurBot(Bot &tabBot, Carte &c);
+	/**
 	* @brief 
 	* Vérifie si la carte qui va être posée est valide ou non.
 	* 
@@ -141,7 +155,7 @@ public:
 	* @return
 	* true si la carte est valide.
 	*/
-	bool carteValide(const Carte) const;
+	virtual bool carteValide(const Carte) const;
 
 	/**
 	* @brief 
@@ -158,7 +172,7 @@ public:
 	* @param 
 	* messageErreur : Message d'erreur à afficher avec l'interface Graphique.
 	*/
-	void poserCarte(const unsigned int& indiceCarte, string &messageErreur);
+	virtual void poserCarte(const unsigned int &indiceCarte, string &messageErreur);
 
 	/**
 	* @brief 
@@ -182,7 +196,7 @@ public:
 	* Booléen: true si la pioche est vide, false sinon.
 	*
 	*/
-	bool piocheVide(); 
+	bool piocheVide();
 
 	/**
 	* @brief 
@@ -215,7 +229,7 @@ public:
 	*
 	*/
 	void contreUno();
-	
+
 	/**
 	* @brief 
 	* Change le joueur actif, et termine le tour.
@@ -223,7 +237,11 @@ public:
 	*/
 	void termineTour();
 
-	
+	/**
+	 * @brief 
+	 * Annonce le gagnant de la partie.
+	 */
+	void annonceGagnant();
 
 	/**
 	* @brief 
@@ -231,13 +249,12 @@ public:
 	* 
 	*/
 	void modifAdversairesTxt();
-		
 
 	/**
 	* @brief 
 	* Actualise la table du joueur actif au début de son tour. 
 	*
-	*/	
+	*/
 	void MaJTableJoueurActifDebutTour();
 
 	/**

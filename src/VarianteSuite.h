@@ -48,7 +48,7 @@ public:
 		* @param
 		* main dans laquelle rechercher la suite
 		*/
-		bool testSuite(unsigned int indice, vector<Carte> main);
+		void testSuite(unsigned int indice, vector<Carte>);
 
 
 		/**
@@ -60,7 +60,7 @@ public:
 		* @param messageErreur : 
 		* Message d'erreur à afficher avec l'interface Graphique.
 		*/
-		void poserCarte(unsigned int& indiceCarte, string &messageErreur);
+		void poserCarte(const unsigned int& indiceCarte, string &messageErreur) override;
 
 
 		
