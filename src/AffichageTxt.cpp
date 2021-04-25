@@ -4,13 +4,6 @@
 #else
 #include <unistd.h>
 #endif // WIN32
-#include "Fenetre.h"
-#include "SalleAttente.h"
-#include "VarianteDoublon.h"
-#include "VarianteEchange.h"
-#include "VarianteTourne.h"
-#include "VarianteSuite.h"
-#include "VarianteCumul.h"
 #include "AffichageTxt.h"
 
 #include "Jeu.h"
@@ -63,16 +56,24 @@ void changeCouleurCarte(Jeu &jeu, Fenetre win)
 
 void txtAff(Fenetre &win, const Jeu &jeu)
 {
-    const Joueur &ter = jeu.joueurs[jeu.joueurActif];
+    if (jeu.joueurActif >= jeu.nombreJoueurs)
+    {
+        cout << jeu.joueurActif << endl;
+        return;
+    }
+    else
+    {
+        const Joueur &ter = jeu.joueurs[jeu.joueurActif];
 
-    win.clear();
+        win.clear();
 
-    // Affichage de la pioche, talon, passer ...
-    for (unsigned int x = 0; x < ter.getHaut(); ++x)
-        for (unsigned int y = 0; y < ter.getLarg(); ++y)
-            win.prepaFenetre(x, y, ter.getXY(x, y));
+        // Affichage de la pioche, talon, passer ...
+        for (unsigned int x = 0; x < ter.getHaut(); ++x)
+            for (unsigned int y = 0; y < ter.getLarg(); ++y)
+                win.prepaFenetre(x, y, ter.getXY(x, y));
 
-    win.dessine();
+        win.dessine();
+    }
 }
 
 // affiche la salle d'attente sur le terminal
@@ -88,7 +89,7 @@ void txtAffSalleAttente(Fenetre &winSA, const SalleAttente &s)
 // boucle à partir de la salle d'attente
 void txtBoucleDebut(SalleAttente &s)
 {
-    Fenetre winSA(s.haut, s.larg);
+    Fenetre winSA(38, 180);
     // on affiche la salle d'attente
     txtAffSalleAttente(winSA, s);
     int c;
@@ -152,7 +153,6 @@ void txtBoucleDebut(SalleAttente &s)
                     {
                         Jeu jeu(s.nombreJoueurs, s.nombreIA);
                         txtBoucle(jeu);
-                        break;
                     }
                     case 2:
                     {
@@ -185,9 +185,11 @@ void txtBoucleDebut(SalleAttente &s)
                         break;
                     }
                     default:
+                        
                         break;
                         finPartie = true;
                     }
+
                 else
                     cout << "Pas assez de joueurs pour commencer la partie." << endl;
                 break;
@@ -199,53 +201,90 @@ void txtBoucleDebut(SalleAttente &s)
             break;
         }
     }
+    return;
 }
 
 // boucle de jeu
-void txtBoucle(Jeu &jeu)
+void txtBoucle(Jeu &jeu) // 
 {
 
     // Creation d'une nouvelle fenetre en mode texte
     // => fenetre de dimension et position (WIDTH,HEIGHT,STARTX,STARTY)
-    Fenetre win(jeu.joueurs[jeu.joueurActif].getHaut(), jeu.joueurs[jeu.joueurActif].getLarg());
-
+    //Fenetre win(jeu.joueurs[jeu.joueurActif].getHaut(), jeu.joueurs[jeu.joueurActif].getLarg());
+    Fenetre win(38,180);
     bool ok = true;
     int c;
-    //txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
+    // On affiche la salle d'attente.
+    //txtAffSalleAttente(win,)
+
+    txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
 
     do
     {
         txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
-        if (jeu.finPartie)
-            cout << "Fin partie = true ?" << endl;
 #ifdef _WIN32
         Sleep(100);
 #else
         usleep(100000);
 #endif // WIN32
         jeu.finTour = false;
-
-        while (jeu.finTour == false) // Tant que l'on a pas terminé le tour.
+        if (jeu.joueurActif < jeu.nombreJoueurs)
+            jeu.joueurs[jeu.joueurActif].indiceEtoile = 0;
+        jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
+        jeu.annonceGagnant();               // Annonce le gagnant de la partie.
+        if (jeu.finPartie == true)
+            return;
+        while (jeu.finTour == false || jeu.finPartie == false) // Tant que l'on a pas terminé le tour.
         {
+            //cout << "Joueur Actif " << jeu.joueurActif << endl;
             txtAff(win, jeu);                   // On initialise le jeu avec les éléments principaux.
             jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
             c = win.getCh();                    // On récupère le caractère de la touche appuyé et on le met dans c.
 
+            if (jeu.joueurActif >= jeu.nombreJoueurs)
+            {
+                sleep(1);
+                // Appelle choix joueur.
+                int indexBot = jeu.joueurActif - jeu.nombreJoueurs;
+                jeu.joueursBot[indexBot].choixJeu(jeu);
+            }
             if (jeu.statut_Uno)
             {
-                cout << "========== Un des joueurs peut jouer UNO !!! ==============="
-                     << "# Vous avez 2 secondes pour appuyer sur U ou C # " << endl;
-                jeu.Uno(c);
+                cout << "========== Un des joueurs peut jouer UNO !!! ===============" << endl;
+                sleep(1.0);
+                c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
+                while (jeu.statut_Uno)
+                {
+                    sleep(1);
+                    if (c == 'u' && jeu.joueurActif < jeu.nombreJoueurs)
+                    { // Si le joueur humain appuie sur U pour uno, avant le sleep alors il continue de jouer.
+                        jeu.actionJoueur('u');
+                    }
+                    else if (c == 'c' && jeu.joueurActif >= jeu.nombreJoueurs)
+                    { // Si le joueur Humain fait un contre Uno alors que le bot est en situation de Uno, le bot pioche.
+                        jeu.Uno(c);
+                    }
+                    else if (jeu.joueurActif >= jeu.nombreJoueurs && (c != 'c' || c != 'u'))
+                    {
+                        jeu.Uno('u');
+                    }
+                    // Si le joueur Humain n'appuie pas sur une des touches après le sleep alors l'ordi fait un contre uno.
+                    else if ((c != 'c' || c != 'u') && jeu.joueurActif < jeu.nombreJoueurs)
+                    {
+                        jeu.Uno('c');
+                    }
+                }
             }
             //c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
             switch (c)
             {
             case 'a':
-                cout << "Indice etoile : " << jeu.joueurs[jeu.joueurActif].indiceEtoile << endl;
+                cout << "Indice etoile " << jeu.joueurs[jeu.joueurActif].indiceEtoile << endl;
                 jeu.actionJoueur('a');
                 break;
             case 'd':
-                cout << "Indice etoile : " << jeu.joueurs[jeu.joueurActif].indiceEtoile << endl;
+                cout << "Indice etoile " << jeu.joueurs[jeu.joueurActif].indiceEtoile << endl;
+
                 jeu.actionJoueur('d');
                 break;
             case 'p':
@@ -269,6 +308,5 @@ void txtBoucle(Jeu &jeu)
             /* if(ok)
                 cout << "ok = true ?" << endl; */
         }
-
     } while (ok || !jeu.finPartie);
 }
