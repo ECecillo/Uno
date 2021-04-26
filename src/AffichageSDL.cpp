@@ -627,9 +627,10 @@ void sdlJeu::sdlAffJoueurActif (Jeu & jeu)
     SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
 
     // la main
-    for (int i=0; i<(jeu.joueurs[jeu.joueurActif].main).size(); i++)
+    unsigned int tailleMain = jeu.joueurs[jeu.joueurActif].main.size();
+    for (int i=0; i<tailleMain; i++)
     {
-        sdlAffCarte(jeu.joueurs[jeu.joueurActif].main[i],110*i,600);
+        sdlAffCarte(jeu.joueurs[jeu.joueurActif].main[i],110*(i%17),600+200*(i/17));
     }
     SDL_RenderPresent(renderer);
 }
@@ -671,7 +672,16 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                     {
                         jeu.piocherCarte();
                         sdlAffJoueurActif(jeu);
+                    }
+                    if (sourisX>0 && sourisX<1870 && sourisY>600 && sourisY<957) // clic sur la ligne "Jeu"
+                    {
+                        string messageErreur;
+                        unsigned int indiceCarte;
+                        if (sourisY<757) indiceCarte=sourisX/110;
+                        if (sourisY>800) indiceCarte = 17+sourisX/110;
                         
+                        jeu.poserCarte(indiceCarte, messageErreur);
+                        sdlAffJoueurActif(jeu);
                     }
             }
         }
