@@ -17,7 +17,7 @@ int main ( int argc, char** argv ) {
     
     sdlJeu partie;
     /*partie.sdlBoucleJeu(1,4,0);*/
-    partie.sdlAffSalleAttente();
+    partie.sdlUno();
 
     
 	return 0;

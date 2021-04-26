@@ -139,7 +139,7 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
     renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
 
     // IMAGES
-    im_salleAttente.loadFromFile("data/uno4.bmp",renderer);
+    im_salleAttente.loadFromFile("data/uno4.png",renderer);
 
     // FONTS
     font = TTF_OpenFont("data/DejaVuSansCondensed.ttf",1000);
@@ -309,7 +309,7 @@ void sdlJeu::sdlUno ()
                     {
                         SDL_DestroyRenderer(rendererParam);
                         SDL_DestroyWindow(param);
-                        sdlBoucleJeu(variante,nombreJoueurs,nombreIA);
+                        quit = true;
                         
                     }
                     break;
@@ -317,6 +317,28 @@ void sdlJeu::sdlUno ()
                     break;
             }
         }
+    }
+    switch (variante)
+    {
+        case 1: {Jeu jeu(nombreJoueurs,nombreIA);
+                sdlBoucleJeu (jeu);
+                break;}
+        case 2: {VarianteCumul jeu(nombreJoueurs,nombreIA);
+                sdlBoucleJeu (jeu);
+                break;}
+        case 3: {VarianteDoublon jeu(nombreJoueurs,nombreIA);
+                sdlBoucleJeu (jeu);
+                break;}
+        case 4: {VarianteEchange jeu(nombreJoueurs,nombreIA);
+                sdlBoucleJeu (jeu);
+                break;}
+        case 5: {VarianteSuite jeu(nombreJoueurs,nombreIA);
+                sdlBoucleJeu (jeu);
+                break;}
+        case 6: {VarianteTourne jeu(nombreJoueurs,nombreIA);
+                sdlBoucleJeu (jeu);
+                break;}
+        default: break;
     }
 }
 
@@ -513,12 +535,12 @@ void sdlJeu::sdlAffCarte (const Carte & c, int positionX, int positionY)
     char const * nomImage;
     if (c.getValeur()==13)
         {
-            im_carte.loadFromFile("data/+4.bmp",renderer);
+            im_carte.loadFromFile("data/+4.png",renderer);
             im_carte.draw(renderer,positionX,positionY,110,157);
         }
         if (c.getValeur()==14)
         {
-            im_carte.loadFromFile("data/joker.bmp",renderer);
+            im_carte.loadFromFile("data/joker.png",renderer);
             im_carte.draw(renderer,positionX,positionY,110,157);
         }
         if (c.getValeur()<=12)
@@ -528,7 +550,7 @@ void sdlJeu::sdlAffCarte (const Carte & c, int positionX, int positionY)
             nomImage = nomCarte.c_str();
             strcpy (nomFichier,"data/");
             strcat (nomFichier,nomImage);
-            strcat (nomFichier,".bmp");
+            strcat (nomFichier,".png");
             im_carte.loadFromFile(nomFichier,renderer);
             im_carte.draw(renderer,positionX,positionY,110,157);
         }     
@@ -553,7 +575,7 @@ void sdlJeu::sdlAffJoueurActif (Jeu & jeu)
         SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
 
         // carte adversaire
-        im_carte.loadFromFile("data/dosvide.bmp",renderer);
+        im_carte.loadFromFile("data/dosvide.png",renderer);
         im_carte.draw(renderer,positionCarte,50,110,157);
 
         // nombre de cartes adversaires
@@ -565,14 +587,14 @@ void sdlJeu::sdlAffJoueurActif (Jeu & jeu)
     
     // affiche le centre
     // pioche
-    im_carte.loadFromFile("data/dos.bmp",renderer);
+    im_carte.loadFromFile("data/dos.png",renderer);
     im_carte.draw(renderer,800,300,110,157);
 
     // talon
     sdlAffCarte(jeu.talon.back(),1090,300);
 
     // Uno
-    im_carte.loadFromFile("data/carteuno.bmp",renderer);
+    im_carte.loadFromFile("data/carteuno.png",renderer);
     im_carte.draw(renderer,573,323,157,110);
 
     texte.x = 626;texte.y = 353;texte.w = 50;texte.h = 50;
@@ -581,7 +603,7 @@ void sdlJeu::sdlAffJoueurActif (Jeu & jeu)
     SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
 
     // Contre Uno
-    im_carte.loadFromFile("data/cartecontreuno.bmp",renderer);
+    im_carte.loadFromFile("data/cartecontreuno.png",renderer);
     im_carte.draw(renderer,1270,323,157,110);
 
     texte.x = 1318;texte.y = 338;texte.w = 80;texte.h = 50;
@@ -612,44 +634,24 @@ void sdlJeu::sdlAffJoueurActif (Jeu & jeu)
 
 
 
-void sdlJeu::sdlBoucleJeu (unsigned int variante, unsigned int nbJ, unsigned int nbB) 
+void sdlJeu::sdlBoucleJeu (Jeu & jeu) 
 {
-    switch (variante)
-    {
-        case 1: {Jeu jeu(nbJ,nbB);
-                sdlAffJoueurActif (jeu);
-                break;}
-        case 2: {VarianteCumul jeu(nbJ,nbB);
-                sdlAffJoueurActif (jeu);
-                break;}
-        case 3: {VarianteDoublon jeu(nbJ,nbB);
-                sdlAffJoueurActif (jeu);
-                break;}
-        case 4: {VarianteEchange jeu(nbJ,nbB);
-                sdlAffJoueurActif (jeu);
-                break;}
-        case 5: {VarianteSuite jeu(nbJ,nbB);
-                sdlAffJoueurActif (jeu);
-                break;}
-        case 6: {VarianteTourne jeu(nbJ,nbB);
-                sdlAffJoueurActif (jeu);
-                break;}
-        default: break;
-    }
+     //Remplir l'écran de noir
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+
+    sdlAffJoueurActif(jeu);
 
     SDL_Event events;
 	bool quit = false;
 
-    /*Uint32 t = SDL_GetTicks(), nt;*/
-
 	// tant que ce n'est pas la fin ...
 	while (!quit) {
         
-        //Remplir l'écran de noir
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-    // affiche les cartes des adversaires
-   
+       
+    
+    
     
     
         
