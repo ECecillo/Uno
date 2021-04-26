@@ -256,6 +256,8 @@ void sdlJeu::sdlUno ()
     SDL_Event event;
 	bool quit = false;
 
+    /*Uint32 t = SDL_GetTicks(), nt;*/
+
     unsigned int variante=1; // entre 1 et 6
     unsigned int nombreJoueurs=2; // entre 1 et 9
     unsigned int nombreIA=0; //entre 0 et 2
@@ -643,76 +645,35 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
 
     sdlAffJoueurActif(jeu);
 
-    SDL_Event events;
+    SDL_Event event;
 	bool quit = false;
+    int sourisX;
+    int sourisY;
 
 	// tant que ce n'est pas la fin ...
 	while (!quit) {
         
        
-    
-    
-    
-    
-        
-        
-        
-    
-
-
-
-        while (SDL_PollEvent(&events))
+        while (SDL_PollEvent(&event))
         {
-            switch (events.type)
+            sourisX = event.button.x;
+            sourisY = event.button.y;
+            switch (event.type)
             {
                 case SDL_QUIT:     // Si l'utilisateur a clique sur la croix de fermeture
                     quit = true;
                     break;          
 			    case SDL_KEYDOWN:  // Si une touche est enfoncee
-                    if(events.key.keysym.scancode==SDL_SCANCODE_Q) quit = true;
+                    if(event.key.keysym.scancode==SDL_SCANCODE_Q) quit = true;
                     break;
+                case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est relevé
+                    if (sourisX>800 && sourisX<910 && sourisY>300 && sourisY<457) // clic sur la ligne "Jeu"
+                    {
+                        jeu.piocherCarte();
+                        sdlAffJoueurActif(jeu);
+                        
+                    }
             }
         }
     }
 }
-
-/*
-
-
-
-/*void sdlJeu::sdlBoucle () {
-    SDL_Event events;
-	bool quit = false;
-
-    Uint32 t = SDL_GetTicks(), nt;
-
-	// tant que ce n'est pas la fin ...
-	while (!quit) {
-
-		// tant qu'il y a des evenements à traiter (cette boucle n'est pas bloquante)
-		while (SDL_PollEvent(&events)) {
-			if (events.type == SDL_QUIT) quit = true;           // Si l'utilisateur a clique sur la croix de fermeture
-			else if (events.type == SDL_KEYDOWN) 
-            {              // Si une touche est enfoncee
-                bool mangePastille = false;
-				switch (events.key.keysym.scancode) 
-                {
-                    // case SDL_SCANCODE_UP:
-                    // 	mangePastille = jeu.actionClavier('b');    // car Y inverse
-                    // 	break;
-                    case SDL_SCANCODE_ESCAPE:
-                    case SDL_SCANCODE_Q:
-                        quit = true;
-                        break;
-                    default: break;
-				}
-			}
-		}
-
-		// on affiche le jeu sur le buffer cach�
-		sdlAff();
-
-		// on permute les deux buffers (cette fonction ne doit se faire qu'une seule fois dans la boucle)
-        SDL_RenderPresent(renderer);
-	}
-}*/
