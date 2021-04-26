@@ -20,12 +20,12 @@ private:
     bool has_changed;
 
 public:
-Image () ;
-    void loadFromFile (const char* filename, SDL_Renderer * renderer);
-    void loadFromCurrentSurface (SDL_Renderer * renderer);
-    void draw (SDL_Renderer * renderer, int x, int y, int w=-1, int h=-1);
-    SDL_Texture * getTexture() const;
-    void setSurface(SDL_Surface * surf);
+	Image () ;
+	void loadFromFile (const char* filename, SDL_Renderer * renderer);
+	void loadFromCurrentSurface (SDL_Renderer * renderer);
+	void draw (SDL_Renderer * renderer, int x, int y, int w=-1, int h=-1);
+	SDL_Texture * getTexture() const;
+	void setSurface(SDL_Surface * surf);
 
 
 		
@@ -50,6 +50,7 @@ private :
     SDL_Window * window;
     SDL_Renderer * renderer;
 
+	
     TTF_Font * font;
     Image font_im;
     SDL_Color font_color;
@@ -62,15 +63,16 @@ public :
 
 
 
-    sdlJeu ();
-    ~sdlJeu ();
-void sdlAffSalleAttente();
-void sdlAffChoixJoueurs();
-void sdlAffChoixOrdinateurs();
-void sdlAffCarte(const Carte & c, int positionX, int positionY);
-void sdlAffJoueurActif(Jeu & jeu);
-    void sdlBoucleJeu (unsigned int variante, unsigned int nbJ, unsigned int nbB);
-    void sdlAffChoixJeu ();
+	sdlJeu ();
+	~sdlJeu ();
+	void sdlAffSalleAttente(SDL_Window * param, SDL_Renderer * rendererParam, unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA);
+	void sdlUno();
+	unsigned int sdlAffChoixJoueurs();
+	unsigned int sdlAffChoixOrdinateurs();
+	void sdlAffCarte(const Carte & c, int positionX, int positionY);
+	void sdlAffJoueurActif(Jeu & jeu);
+	void sdlBoucleJeu (unsigned int variante, unsigned int nbJ, unsigned int nbB);
+	unsigned int sdlAffChoixJeu ();
 
 };
 
