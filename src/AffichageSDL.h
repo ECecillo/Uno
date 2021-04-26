@@ -71,6 +71,7 @@ public :
 	unsigned int sdlAffChoixOrdinateurs();
 	void sdlAffCarte(const Carte & c, int positionX, int positionY);
 	void sdlAffJoueurActif(Jeu & jeu);
+	unsigned int choixCouleur();
 	void sdlBoucleJeu (Jeu & jeu);
 	unsigned int sdlAffChoixJeu ();
 

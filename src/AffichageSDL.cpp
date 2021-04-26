@@ -634,7 +634,72 @@ void sdlJeu::sdlAffJoueurActif (Jeu & jeu)
     }
     SDL_RenderPresent(renderer);
 }
+unsigned int sdlJeu::choixCouleur()
+{
+    SDL_Window * choixCouleur = SDL_CreateWindow("Quelle couleur?", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 200, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (choixCouleur == NULL) {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
+        SDL_Quit(); 
+        exit(1);
+    }
 
+    SDL_Renderer * rendererCouleur = SDL_CreateRenderer(choixCouleur,-1,SDL_RENDERER_ACCELERATED);
+
+    Image im_choix;
+    im_choix.loadFromFile("data/questioncouleur.png",rendererCouleur);
+    im_choix.draw(rendererCouleur,50,21,110,157);
+
+    SDL_Rect texte;
+    texte.x = 210;texte.y = 75;texte.w = 100;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,"Rouge",jaune));
+    font_im.loadFromCurrentSurface(rendererCouleur);
+    SDL_RenderCopy(rendererCouleur,font_im.getTexture(),NULL,&texte);
+    
+    texte.x = 330;texte.y = 75;texte.w = 100;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,"Vert",jaune));
+    font_im.loadFromCurrentSurface(rendererCouleur);
+    SDL_RenderCopy(rendererCouleur,font_im.getTexture(),NULL,&texte);
+   
+    texte.x = 460;texte.y = 75;texte.w = 100;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,"Bleu",jaune));
+    font_im.loadFromCurrentSurface(rendererCouleur);
+    SDL_RenderCopy(rendererCouleur,font_im.getTexture(),NULL,&texte);
+    
+    texte.x = 590;texte.y = 75;texte.w = 100;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,"Jaune",jaune));
+    font_im.loadFromCurrentSurface(rendererCouleur);
+    SDL_RenderCopy(rendererCouleur,font_im.getTexture(),NULL,&texte);
+
+    SDL_RenderPresent(rendererCouleur);
+
+    SDL_Event eventCouleur;
+    bool choixFait=false;
+    int sourisX;
+    int sourisY;
+    unsigned int couleur;
+
+    while (!choixFait)
+    {
+        while (SDL_PollEvent(&eventCouleur) && eventCouleur.type == SDL_MOUSEBUTTONDOWN) 
+        {
+            sourisX = eventCouleur.button.x;
+            sourisY = eventCouleur.button.y;
+            cout << "choix joueurs " << sourisX << " " << sourisY << endl;
+            if(eventCouleur.type==SDL_MOUSEBUTTONDOWN)
+            {
+                if (sourisX>210 && sourisX<610 && sourisY>75 && sourisY<232) // clic sur une couleur
+                {
+                    couleur = (sourisX-210)/130+1;
+                    choixFait = true;
+                }
+            }
+        }
+    }
+    SDL_DestroyRenderer(rendererCouleur);
+    SDL_DestroyWindow(choixCouleur);
+    return couleur;    
+
+}
 
 
 void sdlJeu::sdlBoucleJeu (Jeu & jeu) 
@@ -650,11 +715,12 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
 	bool quit = false;
     int sourisX;
     int sourisY;
+    unsigned int couleur;
 
 	// tant que ce n'est pas la fin ...
 	while (!quit) {
         
-       
+        couleur = 0;
         while (SDL_PollEvent(&event))
         {
             sourisX = event.button.x;
@@ -681,7 +747,26 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                         if (sourisY>800) indiceCarte = 17+sourisX/110;
                         
                         jeu.poserCarte(indiceCarte, messageErreur);
+                        if (jeu.talon.back().getValeur()==13 ||jeu.talon.back().getValeur()==14)
+                        {
+                            couleur = choixCouleur();
+                        }
                         sdlAffJoueurActif(jeu);
+
+                        if (couleur != 0)
+                        {
+                            char nomFichier[20];
+                            string nomCouleur;
+                            char const * nomImage;
+                            nomCouleur = to_string(couleur);
+                            nomImage = nomCouleur.c_str();
+                            strcpy (nomFichier,"data/carte");
+                            strcat (nomFichier,nomImage);
+                            strcat (nomFichier,".png");
+                            im_carte.loadFromFile(nomFichier,renderer);
+                            im_carte.draw(renderer,1090,300,110,157);
+                            SDL_RenderPresent(renderer);
+                        }
                     }
             }
         }
