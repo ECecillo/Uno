@@ -129,7 +129,7 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
     }
 
     // Creation de la fenetre
-    window = SDL_CreateWindow("UNO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 2000/*dimx*/, 1000/*dimy*/, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("UNO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 2000, 1000, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (window == NULL) {
         cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
         SDL_Quit(); 
@@ -139,7 +139,7 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
     renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
 
     // IMAGES
-    im_salleAttente.loadFromFile("data/uno4.png",renderer);
+    im_salleAttente.loadFromFile("data/uno4.bmp",renderer);
 
     // FONTS
     font = TTF_OpenFont("data/DejaVuSansCondensed.ttf",1000);
@@ -164,266 +164,345 @@ sdlJeu::~sdlJeu () {
     SDL_Quit();
 }
 
-void sdlJeu::sdlAffSalleAttente () 
+void sdlJeu::sdlAffSalleAttente (SDL_Window * param, SDL_Renderer * rendererParam, unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA) 
 {
-    SDL_Event events;
-	bool quit = false;
+    SDL_SetRenderDrawColor(rendererParam, 0, 0, 0, 255);
+    SDL_RenderClear(rendererParam);
+    
+    // Texte "Jeu"
+    SDL_Rect texte;
+    texte.x = 100;texte.y = 50;texte.w = 100;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,"Jeu : ",jaune));
+    font_im.loadFromCurrentSurface(rendererParam);
+    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
 
-    Uint32 t = SDL_GetTicks(), nt;
+    texte.x = 220;texte.y = 50;texte.w = 200;texte.h = 50;
+    switch (variante)
+    {
+        case 1: 
+            font_im.setSurface(TTF_RenderText_Solid(font,"Jeu Classique",jaune));
+            break;
+        case 2:
+            font_im.setSurface(TTF_RenderText_Solid(font,"Variante Cumul",jaune));
+            break;
+        case 3:
+            font_im.setSurface(TTF_RenderText_Solid(font,"Variante Doublon",jaune));
+            break;
+        case 4:
+            font_im.setSurface(TTF_RenderText_Solid(font,"Variante Echange",jaune));
+            break;
+        case 5:
+            font_im.setSurface(TTF_RenderText_Solid(font,"Variante Suite",jaune));
+            break;
+        case 6:
+            font_im.setSurface(TTF_RenderText_Solid(font,"Variante Tourne",jaune));
+            break;
+        default:
+            break;
+    }
+    font_im.loadFromCurrentSurface(rendererParam);
+    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+
+    // Texte "Nombre de joueurs"
+    texte.x = 100;texte.y = 150;texte.w = 300;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,"Nombre de joueurs : ",jaune));
+    font_im.loadFromCurrentSurface(rendererParam);
+    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+
+    texte.x = 420;texte.y = 150;texte.w = 50;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,to_string(nombreJoueurs).c_str(),jaune));
+    font_im.loadFromCurrentSurface(rendererParam);
+    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+
+    // Texte "Nombre d'ordinateurs"
+    texte.x = 100;texte.y = 250;texte.w = 300;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,"Nombre d'ordinateurs : ",jaune));
+    font_im.loadFromCurrentSurface(rendererParam);
+    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+
+    texte.x = 420;texte.y = 250;texte.w = 50;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,to_string(nombreIA).c_str(),jaune));
+    font_im.loadFromCurrentSurface(rendererParam);
+    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+
+    // Texte "Lancer le jeu"
+    texte.x = 100;texte.y = 350;texte.w = 300;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,"Lancer le jeu",jaune));
+    font_im.loadFromCurrentSurface(rendererParam);
+    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+
+    SDL_RenderPresent(rendererParam);
+}
+            
+
+void sdlJeu::sdlUno () 
+{
+    //Remplir l'écran de noir
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    im_salleAttente.draw(renderer,0,0,2000,1000);
+    SDL_RenderPresent(renderer);
+
+    SDL_Window * param = SDL_CreateWindow("Paramètres du jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (param == NULL) {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
+        SDL_Quit(); 
+        exit(1);
+    }
+    SDL_Renderer * rendererParam = SDL_CreateRenderer(param,-1,SDL_RENDERER_ACCELERATED);
+    SDL_RenderClear(rendererParam);
+
+    SDL_Event event;
+	bool quit = false;
 
     unsigned int variante=1; // entre 1 et 6
     unsigned int nombreJoueurs=2; // entre 1 et 9
     unsigned int nombreIA=0; //entre 0 et 2
+    bool choix;
+    int sourisX;
+    int sourisY;
 
+    
 
+    sdlAffSalleAttente (param, rendererParam, variante, nombreJoueurs, nombreIA);
 	// tant que ce n'est pas la fin ...
-	while (!quit) {
-
-        //Remplir l'écran de noir
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-
-        im_salleAttente.draw(renderer,0,0,2000,1000);
-        // Rectangle noir par dessus
-        SDL_Rect param;
-        param.x = 500;param.y = 200;param.w = 1000;param.h = 500;
-        SDL_SetRenderDrawColor(renderer,0,0,0,255);
-        SDL_RenderFillRect(renderer,&param);
+	while (!quit) 
+    {
         
-        // Texte "Paramètres du jeu"
-        SDL_Rect titre;
-        titre.x = 700;titre.y = 200;titre.w = 600;titre.h = 50;
-        font_color.r = 0;font_color.g = 0;font_color.b = 255;
-        font_im.setSurface(TTF_RenderText_Solid(font,"Parametres du jeu",jaune));
-        font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&titre);
-
-        // Texte "Jeu"
-        SDL_Rect paramJeu;
-        paramJeu.x = 600;paramJeu.y = 300;paramJeu.w = 100;paramJeu.h = 50;
-        font_im.setSurface(TTF_RenderText_Solid(font,"Jeu : ",jaune));
-        font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&paramJeu);
-
-        paramJeu.x = 720;paramJeu.y = 300;paramJeu.w = 100;paramJeu.h = 50;
-        switch (variante)
+        // attend un évènement à traiter
+        while (SDL_PollEvent(&event)) 
         {
-            case 1: 
-                font_im.setSurface(TTF_RenderText_Solid(font,"Classique",jaune));
-                break;
-            case 2:
-                font_im.setSurface(TTF_RenderText_Solid(font,"Variante Cumul",jaune));
-                break;
-            case 3:
-                font_im.setSurface(TTF_RenderText_Solid(font,"Variante Doublon",jaune));
-                break;
-            case 4:
-                font_im.setSurface(TTF_RenderText_Solid(font,"Variante Echange",jaune));
-                break;
-            case 5:
-                font_im.setSurface(TTF_RenderText_Solid(font,"Variante Suite",jaune));
-                break;
-            case 6:
-                font_im.setSurface(TTF_RenderText_Solid(font,"Variante Tourne",jaune));
-                break;
-            default:
-                break;
-        }
-        font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&paramJeu);
-
-        // Texte "Nombre de joueurs"
-        SDL_Rect paramJoueurs;
-        paramJoueurs.x = 600;paramJoueurs.y = 400;paramJoueurs.w = 300;paramJoueurs.h = 50;
-        font_im.setSurface(TTF_RenderText_Solid(font,"Nombre de joueurs : ",jaune));
-        font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&paramJoueurs);
-
-        paramJoueurs.x = 920;paramJoueurs.y = 400;paramJoueurs.w = 50;paramJoueurs.h = 50;
-        font_im.setSurface(TTF_RenderText_Solid(font,to_string(nombreJoueurs).c_str(),jaune));
-        font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&paramJoueurs);
-
-        // Texte "Nombre d'ordinateurs"
-        SDL_Rect paramBot;
-        paramBot.x = 600;paramBot.y = 500;paramBot.w = 300;paramBot.h = 50;
-        font_im.setSurface(TTF_RenderText_Solid(font,"Nombre d'ordinateurs : ",jaune));
-        font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&paramBot);
-
-        paramBot.x = 920;paramBot.y = 500;paramBot.w = 50;paramBot.h = 50;
-        font_im.setSurface(TTF_RenderText_Solid(font,to_string(nombreIA).c_str(),jaune));
-        font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&paramBot);
-
-        // Texte "Lancer le jeu"
-        SDL_Rect paramDemarrer;
-        paramDemarrer.x = 600;paramDemarrer.y = 600;paramDemarrer.w = 300;paramDemarrer.h = 50;
-        font_im.setSurface(TTF_RenderText_Solid(font,"Lancer le jeu",jaune));
-        font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&paramDemarrer);
-        
-        // tant qu'il y a des evenements à traiter (cette boucle n'est pas bloquante)
-        while (SDL_PollEvent(&events))
-        {
-            switch (events.type)
+            sourisX = event.button.x;
+            sourisY = event.button.y;
+            cout << sourisX << " " << sourisY << endl;
+            cout << "debut while Uno" << endl;
+            switch (event.type)
             {
                 case SDL_QUIT:     // Si l'utilisateur a clique sur la croix de fermeture
                     quit = true;
                     break;          
-			    case SDL_KEYDOWN:  // Si une touche est enfoncee
-                    if(events.key.keysym.scancode==SDL_SCANCODE_Q) quit = true;
+                case SDL_KEYDOWN:  // Si une touche est enfoncee
+                    if(event.key.keysym.scancode==SDL_SCANCODE_Q) quit = true;
                     break;
-                case SDL_MOUSEBUTTONUP: // Si le bouton de la souris est relevé
-                    if (events.button.x>600 && events.button.x<700 && events.button.y>300 && events.button.y<350) // clic sur la ligne "Jeu"
+                case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est relevé
+                    cout << "case" << endl;
+                    if (sourisX>100 && sourisX<320 && sourisY>50 && sourisY<100) // clic sur la ligne "Jeu"
                     {
-                        bool choix = false;
-                        while (!choix)
-                        {
-                            sdlAffChoixJeu();
-                            while (SDL_PollEvent(&events))
-                            {
-                                if(events.type==SDL_MOUSEBUTTONUP)
-                                {
-                                    if (events.button.x>545 && events.button.x<645 && events.button.y>250 && events.button.y<670) // clic sur une variante
-                                    {
-                                        variante = (events.button.y-250)/70;
-                                        choix = true;
-                                    }
-                                }
-
-                            }
-                        }
+                        variante = sdlAffChoixJeu();
+                        sdlAffSalleAttente (param, rendererParam, variante, nombreJoueurs, nombreIA);
+                        cout << "variante=" << variante << endl;
                     }
-                    if (events.button.x>600 && events.button.x<900 && events.button.y>400 && events.button.y<450) // clic sur la ligne "Nombre de joueurs"
+                    if (sourisX>100 && sourisX<470 && sourisY>150 && sourisY<200) // clic sur la ligne "Nombre de joueurs"
                     {
-                        bool choix = false;
-                        while (!choix)
-                        {
-                            sdlAffChoixJoueurs();
-                            while (SDL_PollEvent(&events))
-                            {
-                                if(events.type==SDL_MOUSEBUTTONUP)
-                                {
-                                    if (events.button.x>600 && events.button.x<900 && events.button.y>400 && events.button.y<450) // clic sur la ligne avec les nombres
-                                    {
-                                        nombreJoueurs = (events.button.x-445)/100;
-                                        choix = true;
-                                    }
-                                }
-
-                            }
-                        }
+                        nombreJoueurs = sdlAffChoixJoueurs();
+                        cout << "nombre joueurs " << nombreJoueurs << endl;
+                        sdlAffSalleAttente (param, rendererParam, variante, nombreJoueurs, nombreIA);
                     }
-                    if (events.button.x>600 && events.button.x<900 && events.button.y>500 && events.button.y<550) // clic sur la ligne "Nombre d'ordinateurs"
+                    if (event.button.x>100 && event.button.x<470 && event.button.y>250 && event.button.y<300) // clic sur la ligne "Nombre d'ordinateurs"
                     {
-                        bool choix = false;
-                        while (!choix)
-                        {
-                            sdlAffChoixOrdinateurs();
-                            while (SDL_PollEvent(&events))
-                            {
-                                if(events.type==SDL_MOUSEBUTTONUP)
-                                {
-                                    if (events.button.x>600 && events.button.x<900 && events.button.y>500 && events.button.y<550) // clic sur la ligne avec les nombres
-                                    {
-                                        nombreIA = (events.button.x-545)/100;
-                                        choix = true;
-                                    }
-                                }
-
-                            }
-                        }
+                        nombreIA = sdlAffChoixOrdinateurs();
+                        cout << "nombre bots " << nombreIA << endl;
+                        sdlAffSalleAttente (param, rendererParam, variante, nombreJoueurs, nombreIA);
                     }
-                    /*if (events.button.x>600 && events.button.x<900 && events.button.y>600 && events.button.y<650) // clic sur la ligne "Lancer le jeu"
+                    if (event.button.x>100 && event.button.x<400 && event.button.y>350 && event.button.y<400) // clic sur la ligne "Lancer le jeu"
                     {
-                        sdlBoucleJeu();
-                    }*/
+                        SDL_DestroyRenderer(rendererParam);
+                        SDL_DestroyWindow(param);
+                        sdlBoucleJeu(variante,nombreJoueurs,nombreIA);
+                        
+                    }
                     break;
-			}
-		}
-        // on permute les deux buffers (cette fonction ne doit se faire qu'une seule fois dans la boucle)
-        SDL_RenderPresent(renderer);
-        cout << "nombre joueurs " << nombreJoueurs << endl;
+                default: 
+                    break;
+            }
+        }
     }
 }
 
-void sdlJeu::sdlAffChoixJeu()
+unsigned int sdlJeu::sdlAffChoixJeu()
 {
-    SDL_Rect choix;
-    choix.x = 500;choix.y = 200;choix.w = 1000;choix.h = 500;
-    SDL_SetRenderDrawColor(renderer,0,0,0,255);
-    SDL_RenderFillRect(renderer,&choix);
+    unsigned int choixVariante;
+    SDL_Window * choixJeu = SDL_CreateWindow("Choix du jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (choixJeu == NULL) {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
+        SDL_Quit(); 
+        exit(1);
+    }
+
+    SDL_Renderer * rendererJeu = SDL_CreateRenderer(choixJeu,-1,SDL_RENDERER_ACCELERATED);
 
     SDL_Rect variante;
-    variante.x = 545;variante.y = 250;variante.w = 300;variante.h = 50;
+    variante.x = 50;variante.y = 50;variante.w = 300;variante.h = 50;
     font_color.r = 0;font_color.g = 0;font_color.b = 255;
     font_im.setSurface(TTF_RenderText_Solid(font,"Classique",jaune));
-    font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&variante);
+    font_im.loadFromCurrentSurface(rendererJeu);
+    SDL_RenderCopy(rendererJeu,font_im.getTexture(),NULL,&variante);
 
-    variante.x = 545;variante.y = 320;variante.w = 300;variante.h = 50;
+    variante.x = 50;variante.y = 120;variante.w = 300;variante.h = 50;
     font_color.r = 0;font_color.g = 0;font_color.b = 255;
     font_im.setSurface(TTF_RenderText_Solid(font,"Variante Cumul",jaune));
-    font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&variante);
+    font_im.loadFromCurrentSurface(rendererJeu);
+    SDL_RenderCopy(rendererJeu,font_im.getTexture(),NULL,&variante);
 
-    variante.x = 545;variante.y = 390;variante.w = 300;variante.h = 50;
+    variante.x = 50;variante.y = 190;variante.w = 300;variante.h = 50;
     font_color.r = 0;font_color.g = 0;font_color.b = 255;
     font_im.setSurface(TTF_RenderText_Solid(font,"Variante Doublon",jaune));
-    font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&variante);
+    font_im.loadFromCurrentSurface(rendererJeu);
+    SDL_RenderCopy(rendererJeu,font_im.getTexture(),NULL,&variante);
 
-    variante.x = 545;variante.y = 460;variante.w = 300;variante.h = 50;
+    variante.x = 50;variante.y = 260;variante.w = 300;variante.h = 50;
     font_color.r = 0;font_color.g = 0;font_color.b = 255;
     font_im.setSurface(TTF_RenderText_Solid(font,"Variante Echange",jaune));
-    font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&variante);
+    font_im.loadFromCurrentSurface(rendererJeu);
+    SDL_RenderCopy(rendererJeu,font_im.getTexture(),NULL,&variante);
 
-    variante.x = 545;variante.y = 530;variante.w = 300;variante.h = 50;
+    variante.x = 50;variante.y = 330;variante.w = 300;variante.h = 50;
     font_color.r = 0;font_color.g = 0;font_color.b = 255;
     font_im.setSurface(TTF_RenderText_Solid(font,"Variante Suite",jaune));
-    font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&variante);
+    font_im.loadFromCurrentSurface(rendererJeu);
+    SDL_RenderCopy(rendererJeu,font_im.getTexture(),NULL,&variante);
 
-    variante.x = 545;variante.y = 600;variante.w = 300;variante.h = 50;
+    variante.x = 50;variante.y = 400;variante.w = 300;variante.h = 50;
     font_color.r = 0;font_color.g = 0;font_color.b = 255;
     font_im.setSurface(TTF_RenderText_Solid(font,"Variante Tourne",jaune));
-    font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&variante);
+    font_im.loadFromCurrentSurface(rendererJeu);
+    SDL_RenderCopy(rendererJeu,font_im.getTexture(),NULL,&variante);
+
+    SDL_RenderPresent(rendererJeu);
+
+    SDL_Event eventJeu;
+    bool choixFait=false;
+    int sourisX;
+    int sourisY;
+
+    while (!choixFait)
+    {
+        while (SDL_PollEvent(&eventJeu) && eventJeu.type == SDL_MOUSEBUTTONDOWN) 
+        {
+            sourisX = eventJeu.button.x;
+            sourisY = eventJeu.button.y;
+            cout << "choix variante " << sourisX << " " << sourisY << endl;
+            if(eventJeu.type==SDL_MOUSEBUTTONDOWN)
+            {
+                if (sourisX>50 && sourisX<350 && sourisY>50 && sourisY<450) // clic sur une variante
+                {
+                    choixVariante = (sourisY-50)/70+1;
+                    choixFait = true;
+                }
+            }
+        }
+    }
+    SDL_DestroyRenderer(rendererJeu);
+    SDL_DestroyWindow(choixJeu);
+    return choixVariante;
 }
 
-
-void sdlJeu::sdlAffChoixJoueurs()
+unsigned int sdlJeu::sdlAffChoixJoueurs()
 {
+    unsigned int Joueurs;
+    SDL_Window * choixJoueurs = SDL_CreateWindow("Choix du nombre de joueurs", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (choixJoueurs == NULL) {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
+        SDL_Quit(); 
+        exit(1);
+    }
+
+    SDL_Renderer * rendererJoueurs = SDL_CreateRenderer(choixJoueurs,-1,SDL_RENDERER_ACCELERATED);
+    
     SDL_Rect choix;
-    choix.x = 500;choix.y = 200;choix.w = 1000;choix.h = 500;
-    SDL_SetRenderDrawColor(renderer,0,0,0,255);
-    SDL_RenderFillRect(renderer,&choix);
-    for (int i=1; i<10; i++)
+    choix.x = 50;choix.y = 200;choix.w = 1000;choix.h = 500;
+    SDL_SetRenderDrawColor(rendererJoueurs,0,0,0,255);
+    SDL_RenderFillRect(rendererJoueurs,&choix);
+    for (int i=0; i<9; i++)
     {
         SDL_Rect paramJoueurs;
-        paramJoueurs.x = 445+100*i;paramJoueurs.y = 400;paramJoueurs.w = 50;paramJoueurs.h = 50;
-        font_im.setSurface(TTF_RenderText_Solid(font,to_string(i).c_str(),jaune));
-        font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&paramJoueurs);
+        paramJoueurs.x = 50+100*i;paramJoueurs.y = 200;paramJoueurs.w = 50;paramJoueurs.h = 50;
+        font_im.setSurface(TTF_RenderText_Solid(font,to_string(i+1).c_str(),jaune));
+        font_im.loadFromCurrentSurface(rendererJoueurs);
+        SDL_RenderCopy(rendererJoueurs,font_im.getTexture(),NULL,&paramJoueurs);
     }
+    SDL_RenderPresent(rendererJoueurs);
+
+    SDL_Event eventJoueurs;
+    bool choixFait=false;
+    int sourisX;
+    int sourisY;
+
+    while (!choixFait)
+    {
+        while (SDL_PollEvent(&eventJoueurs) && eventJoueurs.type == SDL_MOUSEBUTTONDOWN) 
+        {
+            sourisX = eventJoueurs.button.x;
+            sourisY = eventJoueurs.button.y;
+            cout << "choix joueurs " << sourisX << " " << sourisY << endl;
+            if(eventJoueurs.type==SDL_MOUSEBUTTONDOWN)
+            {
+                if (sourisX>50 && sourisX<900 && sourisY>200 && sourisY<250) // clic sur une variante
+                {
+                    Joueurs = (sourisX-50)/100+1;
+                    choixFait = true;
+                }
+            }
+        }
+    }
+    SDL_DestroyRenderer(rendererJoueurs);
+    SDL_DestroyWindow(choixJoueurs);
+    return Joueurs;
+
 }
 
-void sdlJeu::sdlAffChoixOrdinateurs()
+unsigned int sdlJeu::sdlAffChoixOrdinateurs()
 {
+    unsigned int nombreIA;
+    SDL_Window * choixBots = SDL_CreateWindow("Choix du nombre d'ordinateurs", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (choixBots == NULL) {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
+        SDL_Quit(); 
+        exit(1);
+    }
+
+    SDL_Renderer * rendererBots = SDL_CreateRenderer(choixBots,-1,SDL_RENDERER_ACCELERATED);
+    
     SDL_Rect choix;
     choix.x = 500;choix.y = 200;choix.w = 1000;choix.h = 500;
     SDL_SetRenderDrawColor(renderer,0,0,0,255);
     SDL_RenderFillRect(renderer,&choix);
     for (int i=0; i<3; i++)
     {
-        SDL_Rect paramJoueurs;
-        paramJoueurs.x = 545+100*i;paramJoueurs.y = 500;paramJoueurs.w = 50;paramJoueurs.h = 50;
+        SDL_Rect paramBots;
+        paramBots.x = 150+100*i;paramBots.y = 200;paramBots.w = 50;paramBots.h = 50;
         font_im.setSurface(TTF_RenderText_Solid(font,to_string(i).c_str(),jaune));
-        font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&paramJoueurs);
+        font_im.loadFromCurrentSurface(rendererBots);
+        SDL_RenderCopy(rendererBots,font_im.getTexture(),NULL,&paramBots);
     }
+    SDL_RenderPresent(rendererBots);
+
+    SDL_Event eventBots;
+    bool choixFait=false;
+    int sourisX;
+    int sourisY;
+
+    while (!choixFait)
+    {
+        while (SDL_PollEvent(&eventBots) && eventBots.type == SDL_MOUSEBUTTONDOWN) 
+        {
+            sourisX = eventBots.button.x;
+            sourisY = eventBots.button.y;
+            cout << "choix bots " << sourisX << " " << sourisY << endl;
+            if(eventBots.type==SDL_MOUSEBUTTONDOWN)
+            {
+                if (sourisX>50 && sourisX<450 && sourisY>200 && sourisY<250) // clic sur une variante
+                {
+                    nombreIA = (sourisX-150)/100;
+                    choixFait = true;
+                }
+            }
+        }
+    }
+    SDL_DestroyRenderer(rendererBots);
+    SDL_DestroyWindow(choixBots);
+    return nombreIA;
 }
 
 void sdlJeu::sdlAffCarte (const Carte & c, int positionX, int positionY)
@@ -434,12 +513,12 @@ void sdlJeu::sdlAffCarte (const Carte & c, int positionX, int positionY)
     char const * nomImage;
     if (c.getValeur()==13)
         {
-            im_carte.loadFromFile("data/+4.png",renderer);
+            im_carte.loadFromFile("data/+4.bmp",renderer);
             im_carte.draw(renderer,positionX,positionY,110,157);
         }
         if (c.getValeur()==14)
         {
-            im_carte.loadFromFile("data/joker.png",renderer);
+            im_carte.loadFromFile("data/joker.bmp",renderer);
             im_carte.draw(renderer,positionX,positionY,110,157);
         }
         if (c.getValeur()<=12)
@@ -449,7 +528,7 @@ void sdlJeu::sdlAffCarte (const Carte & c, int positionX, int positionY)
             nomImage = nomCarte.c_str();
             strcpy (nomFichier,"data/");
             strcat (nomFichier,nomImage);
-            strcat (nomFichier,".png");
+            strcat (nomFichier,".bmp");
             im_carte.loadFromFile(nomFichier,renderer);
             im_carte.draw(renderer,positionX,positionY,110,157);
         }     
@@ -460,8 +539,7 @@ void sdlJeu::sdlAffJoueurActif (Jeu & jeu)
     //Remplir l'écran de noir
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    SDL_Rect joueur;
-    SDL_Rect nombreCartes;
+    SDL_Rect texte;
 
     // affiche les adversaires
     for (unsigned int i=0; i<jeu.nombreJoueurs+jeu.nombreIA-1; i++)
@@ -469,60 +547,60 @@ void sdlJeu::sdlAffJoueurActif (Jeu & jeu)
         int positionCarte=(2000 - (130*(jeu.nombreJoueurs+jeu.nombreIA-1)-20))/2 + 130*i;
 
         // nom adversaire
-        joueur.x = positionCarte;joueur.y = 0;joueur.w = 110;joueur.h = 50;
+        texte.x = positionCarte;texte.y = 0;texte.w = 110;texte.h = 50;
         font_im.setSurface(TTF_RenderText_Solid(font,jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs+jeu.nombreIA)].nom.c_str(),jaune));
         font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&joueur);
+        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
 
         // carte adversaire
-        im_carte.loadFromFile("data/dosvide.png",renderer);
+        im_carte.loadFromFile("data/dosvide.bmp",renderer);
         im_carte.draw(renderer,positionCarte,50,110,157);
 
         // nombre de cartes adversaires
-        nombreCartes.x = positionCarte+40;nombreCartes.y = 113;nombreCartes.w = 30;nombreCartes.h = 30;
+        texte.x = positionCarte+40;texte.y = 113;texte.w = 30;texte.h = 30;
         font_im.setSurface(TTF_RenderText_Solid(font,to_string(jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs+jeu.nombreIA)].main.size()).c_str(),jaune));
         font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&nombreCartes);
+        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
     }
     
     // affiche le centre
     // pioche
-    im_carte.loadFromFile("data/dos.png",renderer);
+    im_carte.loadFromFile("data/dos.bmp",renderer);
     im_carte.draw(renderer,800,300,110,157);
 
     // talon
     sdlAffCarte(jeu.talon.back(),1090,300);
 
     // Uno
-    im_carte.loadFromFile("data/carteuno.png",renderer);
+    im_carte.loadFromFile("data/carteuno.bmp",renderer);
     im_carte.draw(renderer,573,323,157,110);
 
-    nombreCartes.x = 626;nombreCartes.y = 353;nombreCartes.w = 50;nombreCartes.h = 50;
+    texte.x = 626;texte.y = 353;texte.w = 50;texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font,"Uno",noir));
     font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&nombreCartes);
+    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
 
     // Contre Uno
-    im_carte.loadFromFile("data/cartecontreuno.png",renderer);
+    im_carte.loadFromFile("data/cartecontreuno.bmp",renderer);
     im_carte.draw(renderer,1270,323,157,110);
 
-    nombreCartes.x = 1318;nombreCartes.y = 338;nombreCartes.w = 80;nombreCartes.h = 50;
+    texte.x = 1318;texte.y = 338;texte.w = 80;texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font,"Contre",noir));
     font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&nombreCartes);
-    nombreCartes.x = 1313;nombreCartes.y = 373;nombreCartes.w = 50;nombreCartes.h = 50;
+    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
+    texte.x = 1313;texte.y = 373;texte.w = 50;texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font,"Uno",noir));
     font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&nombreCartes);
+    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
     
 
     // affiche le nom et la main du joueur actif
 
     // le nom
-    joueur.x = 0;joueur.y = 550;joueur.w = 110;joueur.h = 50;
+    texte.x = 0;texte.y = 550;texte.w = 110;texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font,jeu.joueurs[jeu.joueurActif].nom.c_str(),jaune));
     font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&joueur);
+    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
 
     // la main
     for (int i=0; i<(jeu.joueurs[jeu.joueurActif].main).size(); i++)
@@ -562,7 +640,7 @@ void sdlJeu::sdlBoucleJeu (unsigned int variante, unsigned int nbJ, unsigned int
     SDL_Event events;
 	bool quit = false;
 
-    Uint32 t = SDL_GetTicks(), nt;
+    /*Uint32 t = SDL_GetTicks(), nt;*/
 
 	// tant que ce n'est pas la fin ...
 	while (!quit) {
