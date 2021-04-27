@@ -157,7 +157,10 @@ char Fenetre::getCh() { // lire un caractere si une touche a ete pressee
     }
 #else
     if (kbhit())
+    {
         touche = fgetc(stdin);
+        //printf(&touche, ter[180]);
+    }
 #endif
     return touche;
 }
