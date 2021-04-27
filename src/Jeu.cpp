@@ -229,12 +229,10 @@ void Jeu::actionJoueur(const char action, const int x = 0, const int y = 0) // F
     {
     case 'r':
         //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
-        cout << "Hello" << endl;
         (talon.back()).setCouleur(1);
         break;
     case 'v':
         //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
-
         (talon.back()).setCouleur(2);
         break;
     case 'b':
