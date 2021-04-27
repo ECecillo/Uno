@@ -733,20 +733,36 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
 			    case SDL_KEYDOWN:  // Si une touche est enfoncee
                     if(event.key.keysym.scancode==SDL_SCANCODE_Q) quit = true;
                     break;
-                case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est relevé
+                case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est appuyéé
                     if (sourisX>800 && sourisX<910 && sourisY>300 && sourisY<457) // clic sur la ligne "Jeu"
                     {
                         jeu.piocherCarte();
                         jeu.termineTour();
                         sdlAffJoueurActif(jeu);
+
+                        if (couleur != 0)
+                        {
+                            char nomFichier[20];
+                            string nomCouleur;
+                            char const * nomImage;
+                            nomCouleur = to_string(couleur);
+                            nomImage = nomCouleur.c_str();
+                            strcpy (nomFichier,"data/carte");
+                            strcat (nomFichier,nomImage);
+                            strcat (nomFichier,".png");
+                            im_carte.loadFromFile(nomFichier,renderer);
+                            im_carte.draw(renderer,1090,300,110,157);
+                            SDL_RenderPresent(renderer);
+                        }
                     }
-                    if (sourisX>0 && sourisX<1870 && sourisY>600 && sourisY<957) // clic sur la ligne "Jeu"
+                    if (sourisX>0 && sourisX<1870 && sourisY>600 && sourisY<957) // clic sur 
                     {
+                        couleur = 0;
                         string messageErreur;
                         unsigned int indiceCarte;
                         if (sourisY<757) indiceCarte=sourisX/110;
                         if (sourisY>800) indiceCarte = 17+sourisX/110;
-                        if (jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur()==13 ||jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur()==14)
+                        if (jeu.carteValide(jeu.joueurs[jeu.joueurActif].main[indiceCarte]) && (jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur()==13 ||jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur()==14))
                         {
                             couleur = choixCouleur();
                             jeu.joueurs[jeu.joueurActif].main[indiceCarte].setCouleur(couleur);
@@ -774,4 +790,5 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
             }
         }
     }
+
 }
