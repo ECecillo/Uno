@@ -11,152 +11,158 @@
 #include "AffichageSDL.h"
 #include <iostream>
 
-
-
-
 const int TAILLE_SPRITE = 32;
 
-const SDL_Color noir={0,0,0};
-const SDL_Color bleu={0,0,255};
-const SDL_Color jaune={255,255,0};
+const SDL_Color noir = {0, 0, 0};
+const SDL_Color bleu = {0, 0, 255};
+const SDL_Color jaune = {255, 255, 0};
 
-
-float temps () {
-    return float(SDL_GetTicks()) / CLOCKS_PER_SEC;  // conversion des ms en secondes en divisant par 1000
+float temps()
+{
+    return float(SDL_GetTicks()) / CLOCKS_PER_SEC; // conversion des ms en secondes en divisant par 1000
 }
-
 
 // ============= CLASS IMAGE =============== //
 //! \brief Pour gérer une image avec SDL2
 
-
-
-Image::Image () {
+Image::Image()
+{
     surface = NULL;
     texture = NULL;
     has_changed = false;
 }
 
-
-void Image::loadFromFile (const char* filename, SDL_Renderer * renderer) {
+void Image::loadFromFile(const char *filename, SDL_Renderer *renderer)
+{
     surface = IMG_Load(filename);
-    if (surface == NULL) {
+    if (surface == NULL)
+    {
         string nfn = string("../") + filename;
-        cout << "Error: cannot load "<< filename <<". Trying "<<nfn<<endl;
+        cout << "Error: cannot load " << filename << ". Trying " << nfn << endl;
         surface = IMG_Load(nfn.c_str());
-        if (surface == NULL) {
+        if (surface == NULL)
+        {
             nfn = string("../") + nfn;
             surface = IMG_Load(nfn.c_str());
         }
     }
-    if (surface == NULL) {
-        cout<<"Error: cannot load "<< filename <<endl;
+    if (surface == NULL)
+    {
+        cout << "Error: cannot load " << filename << endl;
         SDL_Quit();
         exit(1);
     }
 
-    SDL_Surface * surfaceCorrectPixelFormat = SDL_ConvertSurfaceFormat(surface,SDL_PIXELFORMAT_ARGB8888,0);
+    SDL_Surface *surfaceCorrectPixelFormat = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ARGB8888, 0);
     SDL_FreeSurface(surface);
     surface = surfaceCorrectPixelFormat;
 
-    texture = SDL_CreateTextureFromSurface(renderer,surfaceCorrectPixelFormat);
-    if (texture == NULL) {
-        cout << "Error: problem to create the texture of "<< filename<< endl;
+    texture = SDL_CreateTextureFromSurface(renderer, surfaceCorrectPixelFormat);
+    if (texture == NULL)
+    {
+        cout << "Error: problem to create the texture of " << filename << endl;
         SDL_Quit();
         exit(1);
     }
 }
 
-void Image::loadFromCurrentSurface (SDL_Renderer * renderer) {
-    texture = SDL_CreateTextureFromSurface(renderer,surface);
-    if (texture == NULL) {
+void Image::loadFromCurrentSurface(SDL_Renderer *renderer)
+{
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture == NULL)
+    {
         cout << "Error: problem to create the texture from surface " << endl;
         SDL_Quit();
         exit(1);
     }
 }
 
-void Image::draw (SDL_Renderer * renderer, int x, int y, int w, int h) {
+void Image::draw(SDL_Renderer *renderer, int x, int y, int w, int h)
+{
     int ok;
     SDL_Rect r;
     r.x = x;
     r.y = y;
-    r.w = (w<0)?surface->w:w;
-    r.h = (h<0)?surface->h:h;
+    r.w = (w < 0) ? surface->w : w;
+    r.h = (h < 0) ? surface->h : h;
 
-    if (has_changed) {
-        ok = SDL_UpdateTexture(texture,NULL,surface->pixels,surface->pitch);
+    if (has_changed)
+    {
+        ok = SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
         assert(ok == 0);
         has_changed = false;
     }
 
-    ok = SDL_RenderCopy(renderer,texture,NULL,&r);
+    ok = SDL_RenderCopy(renderer, texture, NULL, &r);
     assert(ok == 0);
 }
 
-SDL_Texture * Image::getTexture() const {return texture;}
+SDL_Texture *Image::getTexture() const { return texture; }
 
-void Image::setSurface(SDL_Surface * surf) {surface = surf;}
-
-
-
-
-
-
+void Image::setSurface(SDL_Surface *surf) { surface = surf; }
 
 // ============= CLASS SDLJEU =============== //
-
 
 /**
     La classe g�rant le jeu avec un affichage SDL
 */
 
-
 sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
 {
     // Initialisation de la SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        cout << "Erreur lors de l'initialisation de la SDL : " << SDL_GetError() << endl;SDL_Quit();exit(1);
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        cout << "Erreur lors de l'initialisation de la SDL : " << SDL_GetError() << endl;
+        SDL_Quit();
+        exit(1);
     }
 
-    if (TTF_Init() != 0) {
-        cout << "Erreur lors de l'initialisation de la SDL_ttf : " << TTF_GetError() << endl;SDL_Quit();exit(1);
+    if (TTF_Init() != 0)
+    {
+        cout << "Erreur lors de l'initialisation de la SDL_ttf : " << TTF_GetError() << endl;
+        SDL_Quit();
+        exit(1);
     }
 
     int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
-    if( !(IMG_Init(imgFlags) & imgFlags)) {
-        cout << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << endl;SDL_Quit();exit(1);
+    if (!(IMG_Init(imgFlags) & imgFlags))
+    {
+        cout << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << endl;
+        SDL_Quit();
+        exit(1);
     }
 
     // Creation de la fenetre
     window = SDL_CreateWindow("UNO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 2000, 1000, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (window == NULL) {
-        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
-        SDL_Quit(); 
+    if (window == NULL)
+    {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
+        SDL_Quit();
         exit(1);
     }
 
-    renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     // IMAGES
-    im_salleAttente.loadFromFile("data/uno4.png",renderer);
+    im_salleAttente.loadFromFile("data/uno4.png", renderer);
 
     // FONTS
-    font = TTF_OpenFont("data/DejaVuSansCondensed.ttf",1000);
+    font = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 1000);
     if (font == NULL)
-        font = TTF_OpenFont("../data/DejaVuSansCondensed.ttf",1000);
-    if (font == NULL) {
-            cout << "Failed to load DejaVuSansCondensed.ttf! SDL_TTF Error: " << TTF_GetError() << endl; 
-            SDL_Quit(); 
-            exit(1);
-	}
-	
+        font = TTF_OpenFont("../data/DejaVuSansCondensed.ttf", 1000);
+    if (font == NULL)
+    {
+        cout << "Failed to load DejaVuSansCondensed.ttf! SDL_TTF Error: " << TTF_GetError() << endl;
+        SDL_Quit();
+        exit(1);
+    }
+
     // JEU
     Jeu jeu;
-
 }
-    
-sdlJeu::~sdlJeu () {
+
+sdlJeu::~sdlJeu()
+{
     TTF_CloseFont(font);
     TTF_Quit();
     SDL_DestroyRenderer(renderer);
@@ -164,116 +170,135 @@ sdlJeu::~sdlJeu () {
     SDL_Quit();
 }
 
-void sdlJeu::sdlAffSalleAttente (SDL_Window * param, SDL_Renderer * rendererParam, unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA) 
+void sdlJeu::sdlAffSalleAttente(SDL_Window *param, SDL_Renderer *rendererParam, unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA)
 {
     SDL_SetRenderDrawColor(rendererParam, 0, 0, 0, 255);
     SDL_RenderClear(rendererParam);
-    
+
     // Texte "Jeu"
     SDL_Rect texte;
-    texte.x = 100;texte.y = 50;texte.w = 100;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Jeu : ",jaune));
+    texte.x = 100;
+    texte.y = 50;
+    texte.w = 100;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Jeu : ", jaune));
     font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
 
-    texte.x = 220;texte.y = 50;texte.w = 200;texte.h = 50;
+    texte.x = 220;
+    texte.y = 50;
+    texte.w = 200;
+    texte.h = 50;
     switch (variante)
     {
-        case 1: 
-            font_im.setSurface(TTF_RenderText_Solid(font,"Jeu Classique",jaune));
-            break;
-        case 2:
-            font_im.setSurface(TTF_RenderText_Solid(font,"Variante Cumul",jaune));
-            break;
-        case 3:
-            font_im.setSurface(TTF_RenderText_Solid(font,"Variante Doublon",jaune));
-            break;
-        case 4:
-            font_im.setSurface(TTF_RenderText_Solid(font,"Variante Echange",jaune));
-            break;
-        case 5:
-            font_im.setSurface(TTF_RenderText_Solid(font,"Variante Suite",jaune));
-            break;
-        case 6:
-            font_im.setSurface(TTF_RenderText_Solid(font,"Variante Tourne",jaune));
-            break;
-        default:
-            break;
+    case 1:
+        font_im.setSurface(TTF_RenderText_Solid(font, "Jeu Classique", jaune));
+        break;
+    case 2:
+        font_im.setSurface(TTF_RenderText_Solid(font, "Variante Cumul", jaune));
+        break;
+    case 3:
+        font_im.setSurface(TTF_RenderText_Solid(font, "Variante Doublon", jaune));
+        break;
+    case 4:
+        font_im.setSurface(TTF_RenderText_Solid(font, "Variante Echange", jaune));
+        break;
+    case 5:
+        font_im.setSurface(TTF_RenderText_Solid(font, "Variante Suite", jaune));
+        break;
+    case 6:
+        font_im.setSurface(TTF_RenderText_Solid(font, "Variante Tourne", jaune));
+        break;
+    default:
+        break;
     }
     font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
 
     // Texte "Nombre de joueurs"
-    texte.x = 100;texte.y = 150;texte.w = 300;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Nombre de joueurs : ",jaune));
+    texte.x = 100;
+    texte.y = 150;
+    texte.w = 300;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Nombre de joueurs : ", jaune));
     font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
 
-    texte.x = 420;texte.y = 150;texte.w = 50;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,to_string(nombreJoueurs).c_str(),jaune));
+    texte.x = 420;
+    texte.y = 150;
+    texte.w = 50;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, to_string(nombreJoueurs).c_str(), jaune));
     font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
 
     // Texte "Nombre d'ordinateurs"
-    texte.x = 100;texte.y = 250;texte.w = 300;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Nombre d'ordinateurs : ",jaune));
+    texte.x = 100;
+    texte.y = 250;
+    texte.w = 300;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Nombre d'ordinateurs : ", jaune));
     font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
 
-    texte.x = 420;texte.y = 250;texte.w = 50;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,to_string(nombreIA).c_str(),jaune));
+    texte.x = 420;
+    texte.y = 250;
+    texte.w = 50;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, to_string(nombreIA).c_str(), jaune));
     font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
 
     // Texte "Lancer le jeu"
-    texte.x = 100;texte.y = 350;texte.w = 300;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Lancer le jeu",jaune));
+    texte.x = 100;
+    texte.y = 350;
+    texte.w = 300;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Lancer le jeu", jaune));
     font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam,font_im.getTexture(),NULL,&texte);
+    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
 
     SDL_RenderPresent(rendererParam);
 }
-            
 
-void sdlJeu::sdlUno () 
+void sdlJeu::sdlUno()
 {
     //Remplir l'écran de noir
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    im_salleAttente.draw(renderer,0,0,2000,1000);
+    im_salleAttente.draw(renderer, 0, 0, 2000, 1000);
     SDL_RenderPresent(renderer);
 
-    SDL_Window * param = SDL_CreateWindow("Paramètres du jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (param == NULL) {
-        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
-        SDL_Quit(); 
+    SDL_Window *param = SDL_CreateWindow("Paramètres du jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (param == NULL)
+    {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
+        SDL_Quit();
         exit(1);
     }
-    SDL_Renderer * rendererParam = SDL_CreateRenderer(param,-1,SDL_RENDERER_ACCELERATED);
+    SDL_Renderer *rendererParam = SDL_CreateRenderer(param, -1, SDL_RENDERER_ACCELERATED);
     SDL_RenderClear(rendererParam);
 
     SDL_Event event;
-	bool quit = false;
+    bool quit = false;
 
     /*Uint32 t = SDL_GetTicks(), nt;*/
 
-    unsigned int variante=1; // entre 1 et 6
-    unsigned int nombreJoueurs=2; // entre 1 et 9
-    unsigned int nombreIA=0; //entre 0 et 2
+    unsigned int variante = 1;      // entre 1 et 6
+    unsigned int nombreJoueurs = 2; // entre 1 et 9
+    unsigned int nombreIA = 0;      //entre 0 et 2
     bool choix;
     int sourisX;
     int sourisY;
 
-    
-
-    sdlAffSalleAttente (param, rendererParam, variante, nombreJoueurs, nombreIA);
-	// tant que ce n'est pas la fin ...
-	while (!quit) 
+    sdlAffSalleAttente(param, rendererParam, variante, nombreJoueurs, nombreIA);
+    // tant que ce n'est pas la fin ...
+    while (!quit)
     {
-        
+
         // attend un évènement à traiter
-        while (SDL_PollEvent(&event)) 
+        while (SDL_PollEvent(&event))
         {
             sourisX = event.button.x;
             sourisY = event.button.y;
@@ -281,137 +306,190 @@ void sdlJeu::sdlUno ()
             cout << "debut while Uno" << endl;
             switch (event.type)
             {
-                case SDL_QUIT:     // Si l'utilisateur a clique sur la croix de fermeture
+            case SDL_WINDOWEVENT: // On clique sur la croix pour fermer une des fenêtres.
+                if (event.window.event == SDL_WINDOWEVENT_CLOSE)
+                    return; // On arrête le Jeu.
+                break;
+            case SDL_KEYDOWN: // Si une touche est enfoncee
+                if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+                    return;
+                break;
+            case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est relevé
+                cout << "case" << endl;
+                if (sourisX > 100 && sourisX < 320 && sourisY > 50 && sourisY < 100) // clic sur la ligne "Jeu"
+                {
+                    variante = sdlAffChoixJeu();
+                    sdlAffSalleAttente(param, rendererParam, variante, nombreJoueurs, nombreIA);
+                    cout << "variante=" << variante << endl;
+                }
+                if (sourisX > 100 && sourisX < 470 && sourisY > 150 && sourisY < 200) // clic sur la ligne "Nombre de joueurs"
+                {
+                    nombreJoueurs = sdlAffChoixJoueurs();
+                    cout << "nombre joueurs " << nombreJoueurs << endl;
+                    sdlAffSalleAttente(param, rendererParam, variante, nombreJoueurs, nombreIA);
+                }
+                if (event.button.x > 100 && event.button.x < 470 && event.button.y > 250 && event.button.y < 300) // clic sur la ligne "Nombre d'ordinateurs"
+                {
+                    nombreIA = sdlAffChoixOrdinateurs();
+                    cout << "nombre bots " << nombreIA << endl;
+                    sdlAffSalleAttente(param, rendererParam, variante, nombreJoueurs, nombreIA);
+                }
+                if (event.button.x > 100 && event.button.x < 400 && event.button.y > 350 && event.button.y < 400) // clic sur la ligne "Lancer le jeu"
+                {
+                    SDL_DestroyRenderer(rendererParam);
+                    SDL_DestroyWindow(param);
                     quit = true;
-                    break;          
-                case SDL_KEYDOWN:  // Si une touche est enfoncee
-                    if(event.key.keysym.scancode==SDL_SCANCODE_Q) quit = true;
-                    break;
-                case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est relevé
-                    cout << "case" << endl;
-                    if (sourisX>100 && sourisX<320 && sourisY>50 && sourisY<100) // clic sur la ligne "Jeu"
-                    {
-                        variante = sdlAffChoixJeu();
-                        sdlAffSalleAttente (param, rendererParam, variante, nombreJoueurs, nombreIA);
-                        cout << "variante=" << variante << endl;
-                    }
-                    if (sourisX>100 && sourisX<470 && sourisY>150 && sourisY<200) // clic sur la ligne "Nombre de joueurs"
-                    {
-                        nombreJoueurs = sdlAffChoixJoueurs();
-                        cout << "nombre joueurs " << nombreJoueurs << endl;
-                        sdlAffSalleAttente (param, rendererParam, variante, nombreJoueurs, nombreIA);
-                    }
-                    if (event.button.x>100 && event.button.x<470 && event.button.y>250 && event.button.y<300) // clic sur la ligne "Nombre d'ordinateurs"
-                    {
-                        nombreIA = sdlAffChoixOrdinateurs();
-                        cout << "nombre bots " << nombreIA << endl;
-                        sdlAffSalleAttente (param, rendererParam, variante, nombreJoueurs, nombreIA);
-                    }
-                    if (event.button.x>100 && event.button.x<400 && event.button.y>350 && event.button.y<400) // clic sur la ligne "Lancer le jeu"
-                    {
-                        SDL_DestroyRenderer(rendererParam);
-                        SDL_DestroyWindow(param);
-                        quit = true;
-                        
-                    }
-                    break;
-                default: 
-                    break;
+                }
+
+                break;
+                break;
+            default:
+                break;
             }
         }
     }
     switch (variante)
     {
-        case 1: {Jeu jeu(nombreJoueurs,nombreIA);
-                sdlBoucleJeu (jeu);
-                break;}
-        case 2: {VarianteCumul jeu(nombreJoueurs,nombreIA);
-                sdlBoucleJeu (jeu);
-                break;}
-        case 3: {VarianteDoublon jeu(nombreJoueurs,nombreIA);
-                sdlBoucleJeu (jeu);
-                break;}
-        case 4: {VarianteEchange jeu(nombreJoueurs,nombreIA);
-                sdlBoucleJeu (jeu);
-                break;}
-        case 5: {VarianteSuite jeu(nombreJoueurs,nombreIA);
-                sdlBoucleJeu (jeu);
-                break;}
-        case 6: {VarianteTourne jeu(nombreJoueurs,nombreIA);
-                sdlBoucleJeu (jeu);
-                break;}
-        default: break;
+    case 1:
+    {
+        Jeu jeu(nombreJoueurs, nombreIA);
+        sdlBoucleJeu(jeu);
+        break;
+    }
+    case 2:
+    {
+        VarianteCumul jeu(nombreJoueurs, nombreIA);
+        sdlBoucleJeu(jeu);
+        break;
+    }
+    case 3:
+    {
+        VarianteDoublon jeu(nombreJoueurs, nombreIA);
+        sdlBoucleJeu(jeu);
+        break;
+    }
+    case 4:
+    {
+        VarianteEchange jeu(nombreJoueurs, nombreIA);
+        sdlBoucleJeu(jeu);
+        break;
+    }
+    case 5:
+    {
+        VarianteSuite jeu(nombreJoueurs, nombreIA);
+        sdlBoucleJeu(jeu);
+        break;
+    }
+    case 6:
+    {
+        VarianteTourne jeu(nombreJoueurs, nombreIA);
+        sdlBoucleJeu(jeu);
+        break;
+    }
+    default:
+        break;
     }
 }
 
 unsigned int sdlJeu::sdlAffChoixJeu()
 {
     unsigned int choixVariante;
-    SDL_Window * choixJeu = SDL_CreateWindow("Choix du jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (choixJeu == NULL) {
-        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
-        SDL_Quit(); 
+    SDL_Window *choixJeu = SDL_CreateWindow("Choix du jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (choixJeu == NULL)
+    {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
+        SDL_Quit();
         exit(1);
     }
 
-    SDL_Renderer * rendererJeu = SDL_CreateRenderer(choixJeu,-1,SDL_RENDERER_ACCELERATED);
+    SDL_Renderer *rendererJeu = SDL_CreateRenderer(choixJeu, -1, SDL_RENDERER_ACCELERATED);
 
     SDL_Rect variante;
-    variante.x = 50;variante.y = 50;variante.w = 300;variante.h = 50;
-    font_color.r = 0;font_color.g = 0;font_color.b = 255;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Classique",jaune));
+    variante.x = 50;
+    variante.y = 50;
+    variante.w = 300;
+    variante.h = 50;
+    font_color.r = 0;
+    font_color.g = 0;
+    font_color.b = 255;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Classique", jaune));
     font_im.loadFromCurrentSurface(rendererJeu);
-    SDL_RenderCopy(rendererJeu,font_im.getTexture(),NULL,&variante);
+    SDL_RenderCopy(rendererJeu, font_im.getTexture(), NULL, &variante);
 
-    variante.x = 50;variante.y = 120;variante.w = 300;variante.h = 50;
-    font_color.r = 0;font_color.g = 0;font_color.b = 255;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Variante Cumul",jaune));
+    variante.x = 50;
+    variante.y = 120;
+    variante.w = 300;
+    variante.h = 50;
+    font_color.r = 0;
+    font_color.g = 0;
+    font_color.b = 255;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Variante Cumul", jaune));
     font_im.loadFromCurrentSurface(rendererJeu);
-    SDL_RenderCopy(rendererJeu,font_im.getTexture(),NULL,&variante);
+    SDL_RenderCopy(rendererJeu, font_im.getTexture(), NULL, &variante);
 
-    variante.x = 50;variante.y = 190;variante.w = 300;variante.h = 50;
-    font_color.r = 0;font_color.g = 0;font_color.b = 255;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Variante Doublon",jaune));
+    variante.x = 50;
+    variante.y = 190;
+    variante.w = 300;
+    variante.h = 50;
+    font_color.r = 0;
+    font_color.g = 0;
+    font_color.b = 255;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Variante Doublon", jaune));
     font_im.loadFromCurrentSurface(rendererJeu);
-    SDL_RenderCopy(rendererJeu,font_im.getTexture(),NULL,&variante);
+    SDL_RenderCopy(rendererJeu, font_im.getTexture(), NULL, &variante);
 
-    variante.x = 50;variante.y = 260;variante.w = 300;variante.h = 50;
-    font_color.r = 0;font_color.g = 0;font_color.b = 255;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Variante Echange",jaune));
+    variante.x = 50;
+    variante.y = 260;
+    variante.w = 300;
+    variante.h = 50;
+    font_color.r = 0;
+    font_color.g = 0;
+    font_color.b = 255;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Variante Echange", jaune));
     font_im.loadFromCurrentSurface(rendererJeu);
-    SDL_RenderCopy(rendererJeu,font_im.getTexture(),NULL,&variante);
+    SDL_RenderCopy(rendererJeu, font_im.getTexture(), NULL, &variante);
 
-    variante.x = 50;variante.y = 330;variante.w = 300;variante.h = 50;
-    font_color.r = 0;font_color.g = 0;font_color.b = 255;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Variante Suite",jaune));
+    variante.x = 50;
+    variante.y = 330;
+    variante.w = 300;
+    variante.h = 50;
+    font_color.r = 0;
+    font_color.g = 0;
+    font_color.b = 255;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Variante Suite", jaune));
     font_im.loadFromCurrentSurface(rendererJeu);
-    SDL_RenderCopy(rendererJeu,font_im.getTexture(),NULL,&variante);
+    SDL_RenderCopy(rendererJeu, font_im.getTexture(), NULL, &variante);
 
-    variante.x = 50;variante.y = 400;variante.w = 300;variante.h = 50;
-    font_color.r = 0;font_color.g = 0;font_color.b = 255;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Variante Tourne",jaune));
+    variante.x = 50;
+    variante.y = 400;
+    variante.w = 300;
+    variante.h = 50;
+    font_color.r = 0;
+    font_color.g = 0;
+    font_color.b = 255;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Variante Tourne", jaune));
     font_im.loadFromCurrentSurface(rendererJeu);
-    SDL_RenderCopy(rendererJeu,font_im.getTexture(),NULL,&variante);
+    SDL_RenderCopy(rendererJeu, font_im.getTexture(), NULL, &variante);
 
     SDL_RenderPresent(rendererJeu);
 
     SDL_Event eventJeu;
-    bool choixFait=false;
+    bool choixFait = false;
     int sourisX;
     int sourisY;
 
     while (!choixFait)
     {
-        while (SDL_PollEvent(&eventJeu) && eventJeu.type == SDL_MOUSEBUTTONDOWN) 
+        while (SDL_PollEvent(&eventJeu) && eventJeu.type == SDL_MOUSEBUTTONDOWN)
         {
             sourisX = eventJeu.button.x;
             sourisY = eventJeu.button.y;
             cout << "choix variante " << sourisX << " " << sourisY << endl;
-            if(eventJeu.type==SDL_MOUSEBUTTONDOWN)
+            if (eventJeu.type == SDL_MOUSEBUTTONDOWN)
             {
-                if (sourisX>50 && sourisX<350 && sourisY>50 && sourisY<450) // clic sur une variante
+                if (sourisX > 50 && sourisX < 350 && sourisY > 50 && sourisY < 450) // clic sur une variante
                 {
-                    choixVariante = (sourisY-50)/70+1;
+                    choixVariante = (sourisY - 50) / 70 + 1;
                     choixFait = true;
                 }
             }
@@ -425,46 +503,53 @@ unsigned int sdlJeu::sdlAffChoixJeu()
 unsigned int sdlJeu::sdlAffChoixJoueurs()
 {
     unsigned int Joueurs;
-    SDL_Window * choixJoueurs = SDL_CreateWindow("Choix du nombre de joueurs", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (choixJoueurs == NULL) {
-        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
-        SDL_Quit(); 
+    SDL_Window *choixJoueurs = SDL_CreateWindow("Choix du nombre de joueurs", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (choixJoueurs == NULL)
+    {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
+        SDL_Quit();
         exit(1);
     }
 
-    SDL_Renderer * rendererJoueurs = SDL_CreateRenderer(choixJoueurs,-1,SDL_RENDERER_ACCELERATED);
-    
+    SDL_Renderer *rendererJoueurs = SDL_CreateRenderer(choixJoueurs, -1, SDL_RENDERER_ACCELERATED);
+
     SDL_Rect choix;
-    choix.x = 50;choix.y = 200;choix.w = 1000;choix.h = 500;
-    SDL_SetRenderDrawColor(rendererJoueurs,0,0,0,255);
-    SDL_RenderFillRect(rendererJoueurs,&choix);
-    for (int i=0; i<9; i++)
+    choix.x = 50;
+    choix.y = 200;
+    choix.w = 1000;
+    choix.h = 500;
+    SDL_SetRenderDrawColor(rendererJoueurs, 0, 0, 0, 255);
+    SDL_RenderFillRect(rendererJoueurs, &choix);
+    for (int i = 0; i < 9; i++)
     {
         SDL_Rect paramJoueurs;
-        paramJoueurs.x = 50+100*i;paramJoueurs.y = 200;paramJoueurs.w = 50;paramJoueurs.h = 50;
-        font_im.setSurface(TTF_RenderText_Solid(font,to_string(i+1).c_str(),jaune));
+        paramJoueurs.x = 50 + 100 * i;
+        paramJoueurs.y = 200;
+        paramJoueurs.w = 50;
+        paramJoueurs.h = 50;
+        font_im.setSurface(TTF_RenderText_Solid(font, to_string(i + 1).c_str(), jaune));
         font_im.loadFromCurrentSurface(rendererJoueurs);
-        SDL_RenderCopy(rendererJoueurs,font_im.getTexture(),NULL,&paramJoueurs);
+        SDL_RenderCopy(rendererJoueurs, font_im.getTexture(), NULL, &paramJoueurs);
     }
     SDL_RenderPresent(rendererJoueurs);
 
     SDL_Event eventJoueurs;
-    bool choixFait=false;
+    bool choixFait = false;
     int sourisX;
     int sourisY;
 
     while (!choixFait)
     {
-        while (SDL_PollEvent(&eventJoueurs) && eventJoueurs.type == SDL_MOUSEBUTTONDOWN) 
+        while (SDL_PollEvent(&eventJoueurs) && eventJoueurs.type == SDL_MOUSEBUTTONDOWN)
         {
             sourisX = eventJoueurs.button.x;
             sourisY = eventJoueurs.button.y;
             cout << "choix joueurs " << sourisX << " " << sourisY << endl;
-            if(eventJoueurs.type==SDL_MOUSEBUTTONDOWN)
+            if (eventJoueurs.type == SDL_MOUSEBUTTONDOWN)
             {
-                if (sourisX>50 && sourisX<900 && sourisY>200 && sourisY<250) // clic sur une variante
+                if (sourisX > 50 && sourisX < 900 && sourisY > 200 && sourisY < 250) // clic sur une variante
                 {
-                    Joueurs = (sourisX-50)/100+1;
+                    Joueurs = (sourisX - 50) / 100 + 1;
                     choixFait = true;
                 }
             }
@@ -473,52 +558,58 @@ unsigned int sdlJeu::sdlAffChoixJoueurs()
     SDL_DestroyRenderer(rendererJoueurs);
     SDL_DestroyWindow(choixJoueurs);
     return Joueurs;
-
 }
 
 unsigned int sdlJeu::sdlAffChoixOrdinateurs()
 {
     unsigned int nombreIA;
-    SDL_Window * choixBots = SDL_CreateWindow("Choix du nombre d'ordinateurs", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (choixBots == NULL) {
-        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
-        SDL_Quit(); 
+    SDL_Window *choixBots = SDL_CreateWindow("Choix du nombre d'ordinateurs", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (choixBots == NULL)
+    {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
+        SDL_Quit();
         exit(1);
     }
 
-    SDL_Renderer * rendererBots = SDL_CreateRenderer(choixBots,-1,SDL_RENDERER_ACCELERATED);
-    
+    SDL_Renderer *rendererBots = SDL_CreateRenderer(choixBots, -1, SDL_RENDERER_ACCELERATED);
+
     SDL_Rect choix;
-    choix.x = 500;choix.y = 200;choix.w = 1000;choix.h = 500;
-    SDL_SetRenderDrawColor(renderer,0,0,0,255);
-    SDL_RenderFillRect(renderer,&choix);
-    for (int i=0; i<3; i++)
+    choix.x = 500;
+    choix.y = 200;
+    choix.w = 1000;
+    choix.h = 500;
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderFillRect(renderer, &choix);
+    for (int i = 0; i < 3; i++)
     {
         SDL_Rect paramBots;
-        paramBots.x = 150+100*i;paramBots.y = 200;paramBots.w = 50;paramBots.h = 50;
-        font_im.setSurface(TTF_RenderText_Solid(font,to_string(i).c_str(),jaune));
+        paramBots.x = 150 + 100 * i;
+        paramBots.y = 200;
+        paramBots.w = 50;
+        paramBots.h = 50;
+        font_im.setSurface(TTF_RenderText_Solid(font, to_string(i).c_str(), jaune));
         font_im.loadFromCurrentSurface(rendererBots);
-        SDL_RenderCopy(rendererBots,font_im.getTexture(),NULL,&paramBots);
+        SDL_RenderCopy(rendererBots, font_im.getTexture(), NULL, &paramBots);
     }
     SDL_RenderPresent(rendererBots);
 
     SDL_Event eventBots;
-    bool choixFait=false;
+    bool choixFait = false;
     int sourisX;
     int sourisY;
 
     while (!choixFait)
     {
-        while (SDL_PollEvent(&eventBots) && eventBots.type == SDL_MOUSEBUTTONDOWN) 
+        while (SDL_PollEvent(&eventBots) && eventBots.type == SDL_MOUSEBUTTONDOWN)
         {
             sourisX = eventBots.button.x;
             sourisY = eventBots.button.y;
             cout << "choix bots " << sourisX << " " << sourisY << endl;
-            if(eventBots.type==SDL_MOUSEBUTTONDOWN)
+            if (eventBots.type == SDL_MOUSEBUTTONDOWN)
             {
-                if (sourisX>50 && sourisX<450 && sourisY>200 && sourisY<250) // clic sur une variante
+                if (sourisX > 50 && sourisX < 450 && sourisY > 200 && sourisY < 250) // clic sur une variante
                 {
-                    nombreIA = (sourisX-150)/100;
+                    nombreIA = (sourisX - 150) / 100;
                     choixFait = true;
                 }
             }
@@ -529,36 +620,36 @@ unsigned int sdlJeu::sdlAffChoixOrdinateurs()
     return nombreIA;
 }
 
-void sdlJeu::sdlAffCarte (const Carte & c, int positionX, int positionY)
+void sdlJeu::sdlAffCarte(const Carte &c, int positionX, int positionY)
 {
     int carteEntier;
     char nomFichier[20];
     string nomCarte;
-    char const * nomImage;
-    if (c.getValeur()==13)
-        {
-            im_carte.loadFromFile("data/+4.png",renderer);
-            im_carte.draw(renderer,positionX,positionY,110,157);
-        }
-        if (c.getValeur()==14)
-        {
-            im_carte.loadFromFile("data/joker.png",renderer);
-            im_carte.draw(renderer,positionX,positionY,110,157);
-        }
-        if (c.getValeur()<=12)
-        {
-            carteEntier = 10 * c.getValeur() + c.getCouleur();
-            nomCarte = to_string(carteEntier);
-            nomImage = nomCarte.c_str();
-            strcpy (nomFichier,"data/");
-            strcat (nomFichier,nomImage);
-            strcat (nomFichier,".png");
-            im_carte.loadFromFile(nomFichier,renderer);
-            im_carte.draw(renderer,positionX,positionY,110,157);
-        }     
+    char const *nomImage;
+    if (c.getValeur() == 13)
+    {
+        im_carte.loadFromFile("data/+4.png", renderer);
+        im_carte.draw(renderer, positionX, positionY, 110, 157);
+    }
+    if (c.getValeur() == 14)
+    {
+        im_carte.loadFromFile("data/joker.png", renderer);
+        im_carte.draw(renderer, positionX, positionY, 110, 157);
+    }
+    if (c.getValeur() <= 12)
+    {
+        carteEntier = 10 * c.getValeur() + c.getCouleur();
+        nomCarte = to_string(carteEntier);
+        nomImage = nomCarte.c_str();
+        strcpy(nomFichier, "data/");
+        strcat(nomFichier, nomImage);
+        strcat(nomFichier, ".png");
+        im_carte.loadFromFile(nomFichier, renderer);
+        im_carte.draw(renderer, positionX, positionY, 110, 157);
+    }
 }
 
-void sdlJeu::sdlAffJoueurActif (Jeu & jeu)
+void sdlJeu::sdlAffJoueurActif(Jeu &jeu)
 {
     //Remplir l'écran de noir
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -566,130 +657,160 @@ void sdlJeu::sdlAffJoueurActif (Jeu & jeu)
     SDL_Rect texte;
 
     // affiche les adversaires
-    for (unsigned int i=0; i<jeu.nombreJoueurs+jeu.nombreIA-1; i++)
+    for (unsigned int i = 0; i < jeu.nombreJoueurs + jeu.nombreIA - 1; i++)
     {
-        int positionCarte=(2000 - (130*(jeu.nombreJoueurs+jeu.nombreIA-1)-20))/2 + 130*i;
+        int positionCarte = (2000 - (130 * (jeu.nombreJoueurs + jeu.nombreIA - 1) - 20)) / 2 + 130 * i;
 
         // nom adversaire
-        texte.x = positionCarte;texte.y = 0;texte.w = 110;texte.h = 50;
-        font_im.setSurface(TTF_RenderText_Solid(font,jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs+jeu.nombreIA)].nom.c_str(),jaune));
+        texte.x = positionCarte;
+        texte.y = 0;
+        texte.w = 110;
+        texte.h = 50;
+        font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs + jeu.nombreIA)].nom.c_str(), jaune));
         font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
+        SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
         // carte adversaire
-        im_carte.loadFromFile("data/dosvide.png",renderer);
-        im_carte.draw(renderer,positionCarte,50,110,157);
+        im_carte.loadFromFile("data/dosvide.png", renderer);
+        im_carte.draw(renderer, positionCarte, 50, 110, 157);
 
         // nombre de cartes adversaires
-        texte.x = positionCarte+40;texte.y = 113;texte.w = 30;texte.h = 30;
-        font_im.setSurface(TTF_RenderText_Solid(font,to_string(jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs+jeu.nombreIA)].main.size()).c_str(),jaune));
+        texte.x = positionCarte + 40;
+        texte.y = 113;
+        texte.w = 30;
+        texte.h = 30;
+        font_im.setSurface(TTF_RenderText_Solid(font, to_string(jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs + jeu.nombreIA)].main.size()).c_str(), jaune));
         font_im.loadFromCurrentSurface(renderer);
-        SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
+        SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
     }
-    
+
     // affiche le centre
     // pioche
-    im_carte.loadFromFile("data/dos.png",renderer);
-    im_carte.draw(renderer,800,300,110,157);
+    im_carte.loadFromFile("data/dos.png", renderer);
+    im_carte.draw(renderer, 800, 300, 110, 157);
 
     // talon
-    sdlAffCarte(jeu.talon.back(),1090,300);
+    sdlAffCarte(jeu.talon.back(), 1090, 300);
 
     // Uno
-    im_carte.loadFromFile("data/carteuno.png",renderer);
-    im_carte.draw(renderer,573,323,157,110);
+    im_carte.loadFromFile("data/carteuno.png", renderer);
+    im_carte.draw(renderer, 573, 323, 157, 110);
 
-    texte.x = 626;texte.y = 353;texte.w = 50;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Uno",noir));
+    texte.x = 626;
+    texte.y = 353;
+    texte.w = 50;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Uno", noir));
     font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
+    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
     // Contre Uno
-    im_carte.loadFromFile("data/cartecontreuno.png",renderer);
-    im_carte.draw(renderer,1270,323,157,110);
+    im_carte.loadFromFile("data/cartecontreuno.png", renderer);
+    im_carte.draw(renderer, 1270, 323, 157, 110);
 
-    texte.x = 1318;texte.y = 338;texte.w = 80;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Contre",noir));
+    texte.x = 1318;
+    texte.y = 338;
+    texte.w = 80;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Contre", noir));
     font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
-    texte.x = 1313;texte.y = 373;texte.w = 50;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Uno",noir));
+    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
+    texte.x = 1313;
+    texte.y = 373;
+    texte.w = 50;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Uno", noir));
     font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
-    
+    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
     // affiche le nom et la main du joueur actif
 
     // le nom
-    texte.x = 0;texte.y = 550;texte.w = 110;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,jeu.joueurs[jeu.joueurActif].nom.c_str(),jaune));
+    texte.x = 0;
+    texte.y = 550;
+    texte.w = 110;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[jeu.joueurActif].nom.c_str(), jaune));
     font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
+    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
     // la main
     unsigned int tailleMain = jeu.joueurs[jeu.joueurActif].main.size();
-    for (int i=0; i<tailleMain; i++)
+    for (int i = 0; i < tailleMain; i++)
     {
-        sdlAffCarte(jeu.joueurs[jeu.joueurActif].main[i],110*(i%17),600+200*(i/17));
+        sdlAffCarte(jeu.joueurs[jeu.joueurActif].main[i], 110 * (i % 17), 600 + 200 * (i / 17));
     }
     SDL_RenderPresent(renderer);
 }
 unsigned int sdlJeu::choixCouleur()
 {
-    SDL_Window * choixCouleur = SDL_CreateWindow("Quelle couleur?", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 200, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (choixCouleur == NULL) {
-        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
-        SDL_Quit(); 
+    SDL_Window *choixCouleur = SDL_CreateWindow("Quelle couleur?", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 200, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (choixCouleur == NULL)
+    {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
+        SDL_Quit();
         exit(1);
     }
 
-    SDL_Renderer * rendererCouleur = SDL_CreateRenderer(choixCouleur,-1,SDL_RENDERER_ACCELERATED);
+    SDL_Renderer *rendererCouleur = SDL_CreateRenderer(choixCouleur, -1, SDL_RENDERER_ACCELERATED);
 
     Image im_choix;
-    im_choix.loadFromFile("data/questioncouleur.png",rendererCouleur);
-    im_choix.draw(rendererCouleur,50,21,110,157);
+    im_choix.loadFromFile("data/questioncouleur.png", rendererCouleur);
+    im_choix.draw(rendererCouleur, 50, 21, 110, 157);
 
     SDL_Rect texte;
-    texte.x = 210;texte.y = 75;texte.w = 100;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Rouge",jaune));
+    texte.x = 210;
+    texte.y = 75;
+    texte.w = 100;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Rouge", jaune));
     font_im.loadFromCurrentSurface(rendererCouleur);
-    SDL_RenderCopy(rendererCouleur,font_im.getTexture(),NULL,&texte);
-    
-    texte.x = 330;texte.y = 75;texte.w = 100;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Vert",jaune));
+    SDL_RenderCopy(rendererCouleur, font_im.getTexture(), NULL, &texte);
+
+    texte.x = 330;
+    texte.y = 75;
+    texte.w = 100;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Vert", jaune));
     font_im.loadFromCurrentSurface(rendererCouleur);
-    SDL_RenderCopy(rendererCouleur,font_im.getTexture(),NULL,&texte);
-   
-    texte.x = 460;texte.y = 75;texte.w = 100;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Bleu",jaune));
+    SDL_RenderCopy(rendererCouleur, font_im.getTexture(), NULL, &texte);
+
+    texte.x = 460;
+    texte.y = 75;
+    texte.w = 100;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Bleu", jaune));
     font_im.loadFromCurrentSurface(rendererCouleur);
-    SDL_RenderCopy(rendererCouleur,font_im.getTexture(),NULL,&texte);
-    
-    texte.x = 590;texte.y = 75;texte.w = 100;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,"Jaune",jaune));
+    SDL_RenderCopy(rendererCouleur, font_im.getTexture(), NULL, &texte);
+
+    texte.x = 590;
+    texte.y = 75;
+    texte.w = 100;
+    texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font, "Jaune", jaune));
     font_im.loadFromCurrentSurface(rendererCouleur);
-    SDL_RenderCopy(rendererCouleur,font_im.getTexture(),NULL,&texte);
+    SDL_RenderCopy(rendererCouleur, font_im.getTexture(), NULL, &texte);
 
     SDL_RenderPresent(rendererCouleur);
 
     SDL_Event eventCouleur;
-    bool choixFait=false;
+    bool choixFait = false;
     int sourisX;
     int sourisY;
     unsigned int couleur;
 
     while (!choixFait)
     {
-        while (SDL_PollEvent(&eventCouleur) && eventCouleur.type == SDL_MOUSEBUTTONDOWN) 
+        while (SDL_PollEvent(&eventCouleur) && eventCouleur.type == SDL_MOUSEBUTTONDOWN)
         {
             sourisX = eventCouleur.button.x;
             sourisY = eventCouleur.button.y;
             cout << "choix joueurs " << sourisX << " " << sourisY << endl;
-            if(eventCouleur.type==SDL_MOUSEBUTTONDOWN)
+            if (eventCouleur.type == SDL_MOUSEBUTTONDOWN)
             {
-                if (sourisX>210 && sourisX<610 && sourisY>75 && sourisY<232) // clic sur une couleur
+                if (sourisX > 210 && sourisX < 610 && sourisY > 75 && sourisY < 232) // clic sur une couleur
                 {
-                    couleur = (sourisX-210)/130+1;
+                    couleur = (sourisX - 210) / 130 + 1;
                     choixFait = true;
                 }
             }
@@ -697,14 +818,12 @@ unsigned int sdlJeu::choixCouleur()
     }
     SDL_DestroyRenderer(rendererCouleur);
     SDL_DestroyWindow(choixCouleur);
-    return couleur;    
-
+    return couleur;
 }
 
-
-void sdlJeu::sdlBoucleJeu (Jeu & jeu) 
+void sdlJeu::sdlBoucleJeu(Jeu &jeu)
 {
-     //Remplir l'écran de noir
+    //Remplir l'écran de noir
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
@@ -712,14 +831,15 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
     sdlAffJoueurActif(jeu);
 
     SDL_Event event;
-	bool quit = false;
+    bool quit = false;
     int sourisX;
     int sourisY;
     unsigned int couleur;
 
-	// tant que ce n'est pas la fin ...
-	while (!quit) {
-        
+    // tant que ce n'est pas la fin ...
+    while (!quit)
+    {
+
         couleur = 0;
         while (SDL_PollEvent(&event))
         {
@@ -727,47 +847,53 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
             sourisY = event.button.y;
             switch (event.type)
             {
-                case SDL_QUIT:     // Si l'utilisateur a clique sur la croix de fermeture
+            case SDL_QUIT: // Si l'utilisateur a clique sur la croix de fermeture
+                quit = true;
+                break;
+            case SDL_KEYDOWN: // Si une touche est enfoncee
+                if (event.key.keysym.scancode == SDL_SCANCODE_Q)
                     quit = true;
-                    break;          
-			    case SDL_KEYDOWN:  // Si une touche est enfoncee
-                    if(event.key.keysym.scancode==SDL_SCANCODE_Q) quit = true;
-                    break;
-                case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est relevé
-                    if (sourisX>800 && sourisX<910 && sourisY>300 && sourisY<457) // clic sur la ligne "Jeu"
-                    {
-                        jeu.piocherCarte();
-                        sdlAffJoueurActif(jeu);
-                    }
-                    if (sourisX>0 && sourisX<1870 && sourisY>600 && sourisY<957) // clic sur la ligne "Jeu"
-                    {
-                        string messageErreur;
-                        unsigned int indiceCarte;
-                        if (sourisY<757) indiceCarte=sourisX/110;
-                        if (sourisY>800) indiceCarte = 17+sourisX/110;
-                        
-                        jeu.poserCarte(indiceCarte, messageErreur);
-                        if (jeu.talon.back().getValeur()==13 ||jeu.talon.back().getValeur()==14)
-                        {
-                            couleur = choixCouleur();
-                        }
-                        sdlAffJoueurActif(jeu);
+                break;
+            case SDL_MOUSEBUTTONDOWN:                                                 // Si le bouton de la souris est relevé
+                if (sourisX > 800 && sourisX < 910 && sourisY > 300 && sourisY < 457) // clic sur la ligne "Jeu"
+                {
+                    jeu.piocherCarte();
+                    sdlAffJoueurActif(jeu);
+                }
+                if (sourisX > 0 && sourisX < 1870 && sourisY > 600 && sourisY < 957) // clic sur la ligne "Jeu"
+                {
+                    string messageErreur;
+                    unsigned int indiceCarte;
+                    if (sourisY < 757)
+                        indiceCarte = sourisX / 110;
+                    if (sourisY > 800)
+                        indiceCarte = 17 + sourisX / 110;
 
-                        if (couleur != 0)
-                        {
-                            char nomFichier[20];
-                            string nomCouleur;
-                            char const * nomImage;
-                            nomCouleur = to_string(couleur);
-                            nomImage = nomCouleur.c_str();
-                            strcpy (nomFichier,"data/carte");
-                            strcat (nomFichier,nomImage);
-                            strcat (nomFichier,".png");
-                            im_carte.loadFromFile(nomFichier,renderer);
-                            im_carte.draw(renderer,1090,300,110,157);
-                            SDL_RenderPresent(renderer);
-                        }
+                    jeu.poserCarte(indiceCarte, messageErreur);
+                    if (jeu.talon.back().getValeur() == 13 || jeu.talon.back().getValeur() == 14)
+                    {
+                        couleur = choixCouleur();
                     }
+                    sdlAffJoueurActif(jeu);
+
+                    if (couleur != 0)
+                    {
+                        char nomFichier[20];
+                        string nomCouleur;
+                        char const *nomImage;
+                        nomCouleur = to_string(couleur);
+                        nomImage = nomCouleur.c_str();
+                        strcpy(nomFichier, "data/carte");
+                        strcat(nomFichier, nomImage);
+                        strcat(nomFichier, ".png");
+                        im_carte.loadFromFile(nomFichier, renderer);
+                        im_carte.draw(renderer, 1090, 300, 110, 157);
+                        SDL_RenderPresent(renderer);
+                    }
+                }
+            case SDL_WINDOWEVENT:
+                if (event.window.event == SDL_WINDOWEVENT_CLOSE)
+                    quit = true;
             }
         }
     }
