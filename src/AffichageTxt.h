@@ -34,7 +34,7 @@ using namespace std;
 		* Boucle à partir de la salle d'attente.
 		*
 		*/
-		void txtBoucleDebut(SalleAttente & s);
+		int txtBoucleDebut(SalleAttente & s);
 
 
 		/**
