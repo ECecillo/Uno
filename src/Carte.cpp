@@ -133,3 +133,12 @@ bool Carte::operator==(const Carte &c)
 {
     return (couleur == c.getCouleur()) && (valeur == c.getValeur());
 }
+void Carte::afficher(ostream &flux) const
+{
+    flux << "La valeur de la carte est "<< valeur << " de couleur " << couleur << endl;
+}
+ostream &operator<<( ostream &flux, Carte const& c)
+{
+    c.afficher(flux) ;
+    return flux;
+}

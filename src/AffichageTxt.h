@@ -4,8 +4,14 @@
 #include <vector>
 #include <string>
 #include <Jeu.h>
+#include "SalleAttente.h"
 #include "Fenetre.h"
 #include "SalleAttente.h"
+#include "VarianteDoublon.h"
+#include "VarianteEchange.h"
+#include "VarianteTourne.h"
+#include "VarianteSuite.h"
+#include "VarianteCumul.h"
 
 using namespace std;
 
@@ -28,7 +34,7 @@ using namespace std;
 		* Boucle à partir de la salle d'attente.
 		*
 		*/
-		void txtBoucleDebut(SalleAttente & s);
+		int txtBoucleDebut(SalleAttente & s);
 
 
 		/**
