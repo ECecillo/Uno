@@ -110,16 +110,6 @@ void Jeu::initCarte()
             // 13 : carte +4.
             jeuCarte.push_back(Carte(j, i));
 
-    /*     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(jeuCarte.begin(), jeuCarte.end(), std::default_random_engine(seed));
-
-    unsigned int l = 0;
-    do
-    {
-        pioche.push(jeuCarte[l]);
-        l++;
-    } while (l <=jeuCarte.size()); 
-*/
     srand((unsigned int)time(NULL));
     int Ind;
     set<int>::iterator it;
@@ -213,7 +203,7 @@ bool Jeu::carteValide(const Carte c) const
     return (c.getValeur() == talon.back().getValeur()) ||
            (c.getCouleur() == talon.back().getCouleur()) ||
            (c.getValeur() == 14) ||
-           (c.getValeur() == 13); // On compare la carte que l'on a passé en paramètre à celle qui est actuellement retourné sur le talon.
+           (c.getValeur() == 13 && !chercheCouleur); // On compare la carte que l'on a passé en paramètre à celle qui est actuellement retourné sur le talon.
 }
 
 // Met une carte de la pioche dans la main du joueur
@@ -433,15 +423,7 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                         sensJeu = 1;
                     break;
                 case 11:
-                    if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
-                        joueurActif = 0;
-                    else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
-                    {
-                        joueurActif--;
-                    }
-                    else if (joueurActif == 0 && sensJeu == 0)
-                        joueurActif = nombreIA + nombreJoueurs - 1;
-                    joueurActif++;
+                    termineTour();
 
                     break;
                 case 12:
