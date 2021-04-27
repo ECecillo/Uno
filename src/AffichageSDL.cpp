@@ -655,17 +655,17 @@ unsigned int sdlJeu::choixCouleur()
     font_im.loadFromCurrentSurface(rendererCouleur);
     SDL_RenderCopy(rendererCouleur,font_im.getTexture(),NULL,&texte);
     
-    texte.x = 330;texte.y = 75;texte.w = 100;texte.h = 50;
+    texte.x = 340;texte.y = 75;texte.w = 100;texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font,"Vert",jaune));
     font_im.loadFromCurrentSurface(rendererCouleur);
     SDL_RenderCopy(rendererCouleur,font_im.getTexture(),NULL,&texte);
    
-    texte.x = 460;texte.y = 75;texte.w = 100;texte.h = 50;
+    texte.x = 470;texte.y = 75;texte.w = 100;texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font,"Bleu",jaune));
     font_im.loadFromCurrentSurface(rendererCouleur);
     SDL_RenderCopy(rendererCouleur,font_im.getTexture(),NULL,&texte);
     
-    texte.x = 590;texte.y = 75;texte.w = 100;texte.h = 50;
+    texte.x = 600;texte.y = 75;texte.w = 100;texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font,"Jaune",jaune));
     font_im.loadFromCurrentSurface(rendererCouleur);
     SDL_RenderCopy(rendererCouleur,font_im.getTexture(),NULL,&texte);
@@ -687,7 +687,7 @@ unsigned int sdlJeu::choixCouleur()
             cout << "choix joueurs " << sourisX << " " << sourisY << endl;
             if(eventCouleur.type==SDL_MOUSEBUTTONDOWN)
             {
-                if (sourisX>210 && sourisX<610 && sourisY>75 && sourisY<232) // clic sur une couleur
+                if (sourisX>210 && sourisX<700 && sourisY>75 && sourisY<232) // clic sur une couleur
                 {
                     couleur = (sourisX-210)/130+1;
                     choixFait = true;
@@ -737,6 +737,7 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                     if (sourisX>800 && sourisX<910 && sourisY>300 && sourisY<457) // clic sur la ligne "Jeu"
                     {
                         jeu.piocherCarte();
+                        jeu.termineTour();
                         sdlAffJoueurActif(jeu);
                     }
                     if (sourisX>0 && sourisX<1870 && sourisY>600 && sourisY<957) // clic sur la ligne "Jeu"
@@ -745,13 +746,12 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                         unsigned int indiceCarte;
                         if (sourisY<757) indiceCarte=sourisX/110;
                         if (sourisY>800) indiceCarte = 17+sourisX/110;
-                        
-                        jeu.poserCarte(indiceCarte, messageErreur);
-                        if (jeu.talon.back().getValeur()==13 ||jeu.talon.back().getValeur()==14)
+                        if (jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur()==13 ||jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur()==14)
                         {
                             couleur = choixCouleur();
-                            jeu.talon.back().setCouleur(couleur);
+                            jeu.joueurs[jeu.joueurActif].main[indiceCarte].setCouleur(couleur);
                         }
+                        jeu.poserCarte(indiceCarte, messageErreur);
                         sdlAffJoueurActif(jeu);
 
                         if (couleur != 0)
@@ -770,6 +770,7 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                         }
                         
                     }
+                    break;
             }
         }
     }
