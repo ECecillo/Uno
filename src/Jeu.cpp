@@ -427,7 +427,6 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                 switch ((talon.back()).getValeur())
                 {
                 case 10:
-                    cout << "Inverse" << endl;
                     if (sensJeu == 1)
                         sensJeu = 0;
                     else
@@ -454,12 +453,20 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                     break;
                 case 13:
                     carteSpeciale = true;
-
-                    termineTour();
+                    if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
+                        joueurActif = 0;
+                    else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
+                    {
+                        joueurActif--;
+                    }
+                    else if (joueurActif == 0 && sensJeu == 0)
+                        joueurActif = nombreIA + nombreJoueurs - 1;
+                    joueurActif++;
+                    //termineTour();
 
                     for (unsigned int i = 0; i < 4; i++)
                         piocherCarte();
-                    //termineTour();
+                    termineTour();
                     break;
                 case 14:
                     termineTour();

@@ -750,6 +750,7 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                         if (jeu.talon.back().getValeur()==13 ||jeu.talon.back().getValeur()==14)
                         {
                             couleur = choixCouleur();
+                            jeu.talon.back().setCouleur(couleur);
                         }
                         sdlAffJoueurActif(jeu);
 
@@ -767,6 +768,7 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                             im_carte.draw(renderer,1090,300,110,157);
                             SDL_RenderPresent(renderer);
                         }
+                        
                     }
             }
         }
