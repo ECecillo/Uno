@@ -11,6 +11,12 @@
 #include "AffichageSDL.h"
 #include <iostream>
 
+template <typename T>
+constexpr T LARGEUR_ECRAN{1920};
+
+template <typename T>
+constexpr T HAUTEUR_ECRAN{1080};
+
 const int TAILLE_SPRITE = 32;
 
 const SDL_Color noir = {0, 0, 0};
@@ -133,7 +139,7 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
     }
 
     // Creation de la fenetre
-    window = SDL_CreateWindow("UNO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 2000, 1000, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("UNO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LARGEUR_ECRAN<unsigned int>, HAUTEUR_ECRAN<unsigned int>, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (window == NULL)
     {
         cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
@@ -147,18 +153,20 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
     im_salleAttente.loadFromFile("data/uno4.png", renderer);
 
     // FONTS
-    font = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 1000);
+    font = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 100);
     if (font == NULL)
-        font = TTF_OpenFont("../data/DejaVuSansCondensed.ttf", 1000);
+        font = TTF_OpenFont("../data/DejaVuSansCondensed.ttf", 100);
     if (font == NULL)
     {
         cout << "Failed to load DejaVuSansCondensed.ttf! SDL_TTF Error: " << TTF_GetError() << endl;
         SDL_Quit();
         exit(1);
     }
+    SDL_SetRenderDrawColor(renderer, 168, 230, 255, 255);
+    SDL_RenderClear(renderer);
 
     // JEU
-    Jeu jeu;
+    //Jeu jeu;
 }
 
 sdlJeu::~sdlJeu()
@@ -224,6 +232,7 @@ void sdlJeu::sdlAffSalleAttente(SDL_Window *param, SDL_Renderer *rendererParam, 
     font_im.loadFromCurrentSurface(rendererParam);
     SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
 
+    // Texte qui récupère la variable nombreJoueur et affiche le numéro.
     texte.x = 420;
     texte.y = 150;
     texte.w = 50;
@@ -241,6 +250,7 @@ void sdlJeu::sdlAffSalleAttente(SDL_Window *param, SDL_Renderer *rendererParam, 
     font_im.loadFromCurrentSurface(rendererParam);
     SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
 
+    // Texte qui récupère la variable nombreIA et affiche le numéro.
     texte.x = 420;
     texte.y = 250;
     texte.w = 50;
@@ -264,7 +274,7 @@ void sdlJeu::sdlAffSalleAttente(SDL_Window *param, SDL_Renderer *rendererParam, 
 void sdlJeu::sdlUno()
 {
     //Remplir l'écran de noir
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255);
     SDL_RenderClear(renderer);
 
     im_salleAttente.draw(renderer, 0, 0, 2000, 1000);
@@ -306,12 +316,12 @@ void sdlJeu::sdlUno()
             cout << "debut while Uno" << endl;
             switch (event.type)
             {
-            case SDL_WINDOWEVENT: // On clique sur la croix pour fermer une des fenêtres.
-                if (event.window.event == SDL_WINDOWEVENT_CLOSE)
-                    return; // On arrête le Jeu.
+            case SDL_WINDOWEVENT:                                // On clique sur la fenêtre.
+                if (event.window.event == SDL_WINDOWEVENT_CLOSE) // On appuie sur la croix pour fermer le Jeu.
+                    return;                                      // On arrête le Jeu.
                 break;
-            case SDL_KEYDOWN: // Si une touche est enfoncee
-                if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+            case SDL_KEYDOWN:                                         // Si une touche est enfoncee
+                if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) // Si la touche est ESC on ferme le Jeu.
                     return;
                 break;
             case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est relevé
@@ -821,10 +831,51 @@ unsigned int sdlJeu::choixCouleur()
     return couleur;
 }
 
+void sdlJeu::sdlMenu()
+{
+    SDL_Event events;
+    bool isOpen{true};
+
+    SDL_Surface *text = TTF_RenderText_Blended(font, "Uno", SDL_Color{255, 0, 0, 255});
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, text); // Crée la texture qu'on va afficher a partir de la surface
+    SDL_Rect position;
+
+    SDL_QueryTexture(texture, nullptr, nullptr, &position.w, &position.h); // Récupere la dimension de la texture
+    // Centre la texture sur l'écran
+    position.x = LARGEUR_ECRAN<unsigned int> / 2 - position.w / 2;
+    position.y = HAUTEUR_ECRAN<unsigned int> / 2 - position.h - HAUTEUR_ECRAN<unsigned int> / 3;
+    SDL_SetRenderDrawColor(renderer, 168, 230, 255, 255);
+    SDL_RenderClear(renderer);
+
+    SDL_FreeSurface(text);
+    // On récupère les événements.
+    while (isOpen)
+    {
+        while (SDL_PollEvent(&events))
+        {
+            switch (events.type)
+            {
+            case SDL_QUIT:
+                isOpen = false;
+                break;
+            }
+        }
+        // On met à jour l'affichage.
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_RenderCopy(renderer, texture, nullptr, &position);
+
+        SDL_RenderPresent(renderer);
+    }
+    //this->~sdlJeu();
+}
+
 void sdlJeu::sdlBoucleJeu(Jeu &jeu)
 {
     //Remplir l'écran de noir
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255);
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
 
