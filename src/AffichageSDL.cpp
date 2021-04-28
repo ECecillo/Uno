@@ -726,6 +726,43 @@ void sdlJeu::sdlAffCouleurChoisie(unsigned int couleur)
     SDL_RenderPresent(renderer);
 }
 
+void sdlJeu::situationUno(Jeu & jeu)
+{
+    jeu.statut_Uno = true;
+    bool attendre = true;
+    SDL_Event event;
+    int temps0 = SDL_GetTicks();
+    while (attendre)
+    {
+        if (SDL_GetTicks() - temps0 < 2000) // temps inférieur à 2000 ms pour cliquer sur Uno
+        {
+            while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN) 
+            {
+                int sourisX = event.button.x;
+                int sourisY = event.button.y;
+                if (sourisX>573 && sourisX<730 && sourisY>323 && sourisY<433) // clic sur Uno
+                {
+                    jeu.statut_Uno = false;
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                    SDL_RenderClear(renderer);
+                    SDL_Rect texte;
+                    texte.x = 400;texte.y = 300;texte.w = 1200;texte.h = 400;
+                    font_im.setSurface(TTF_RenderText_Solid(font,"UNOoooooo",jaune));
+                    font_im.loadFromCurrentSurface(renderer);
+                    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
+                    SDL_RenderPresent(renderer);
+                    SDL_Delay(1000);
+                    attendre = false;
+                }
+            }
+        }
+        else
+        {
+            attendre = false;
+        }
+    }
+}
+
 void sdlJeu::sdlBoucleJeu (Jeu & jeu) 
 {
      //Remplir l'écran de noir
@@ -797,12 +834,17 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                         jeu.poserCarte(indiceCarte, messageErreur);
                         sdlAffJoueur(jeu, indiceJoueur);
                         if (couleur != 0 && couleurChangee) sdlAffCouleurChoisie(couleur);
+                        if (jeu.joueurs[indiceJoueur].main.size() == 1)
+                        {
+                           situationUno(jeu); 
+                        }    
                     }
                     break;
                 default: break;
             }
         }
         SDL_Delay(500);
+
         if (jeu.joueurs[indiceJoueur].gagnant()) 
         {
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
