@@ -740,14 +740,19 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
     int sourisX;
     int sourisY;
     unsigned int couleur=0;
+    bool couleurChangee = false;
+    bool joueurChange = true;
     unsigned int indiceJoueur;
 
 	// tant que ce n'est pas la fin ...
 	while (!quit) {
-        
-        indiceJoueur = jeu.joueurActif;
-        sdlAffJoueur(jeu, indiceJoueur);
-        if (couleur != 0) sdlAffCouleurChoisie(couleur);
+        if (joueurChange)
+        {
+            indiceJoueur = jeu.joueurActif;
+            sdlAffJoueur(jeu, indiceJoueur);
+            if (couleur != 0 && couleurChangee) sdlAffCouleurChoisie(couleur);
+            joueurChange = false;
+        }
         
         while (SDL_PollEvent(&event))
         {
@@ -762,13 +767,14 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                     if(event.key.keysym.scancode==SDL_SCANCODE_Q) quit = true;
                     break;
                 case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est appuyé
+                    joueurChange = true;
                     if (sourisX>800 && sourisX<910 && sourisY>300 && sourisY<457) // clic sur la pioche
                     {
                         jeu.piocherCarte();
                         jeu.termineTour();
                         sdlAffJoueur(jeu, indiceJoueur);
 
-                        if (couleur != 0) sdlAffCouleurChoisie(couleur);
+                        if (couleur != 0 && couleurChangee) sdlAffCouleurChoisie(couleur);
                     }
                     if (sourisX>0 && sourisX<1870 && sourisY>600 && sourisY<957) // clic sur une carte de la main
                     {
@@ -777,21 +783,43 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                         unsigned int indiceCarte;
                         if (sourisY<757) indiceCarte=sourisX/110;
                         if (sourisY>800) indiceCarte = 17+sourisX/110;
-                        if (jeu.carteValide(jeu.joueurs[jeu.joueurActif].main[indiceCarte]) && (jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur()==13 ||jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur()==14))
+                        
+                        if (jeu.carteValide(jeu.joueurs[jeu.joueurActif].main[indiceCarte])) 
                         {
-                            couleur = choixCouleur();
-                            jeu.joueurs[jeu.joueurActif].main[indiceCarte].setCouleur(couleur);
+                            couleurChangee = false;
+                            if (jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur()==13 ||jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur()==14)
+                            {
+                                couleur = choixCouleur();
+                                couleurChangee = true;
+                                jeu.joueurs[jeu.joueurActif].main[indiceCarte].setCouleur(couleur);
+                            }
                         }
                         jeu.poserCarte(indiceCarte, messageErreur);
                         sdlAffJoueur(jeu, indiceJoueur);
-                        
-
-                        if (couleur != 0) sdlAffCouleurChoisie(couleur);
+                        if (couleur != 0 && couleurChangee) sdlAffCouleurChoisie(couleur);
                     }
                     break;
+                default: break;
             }
         }
         SDL_Delay(500);
+        if (jeu.joueurs[indiceJoueur].gagnant()) 
+        {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderClear(renderer);
+            SDL_Rect texte;
+            texte.x = 400;texte.y = 100;texte.w = 1200;texte.h = 400;
+            font_im.setSurface(TTF_RenderText_Solid(font,"Good Game",jaune));
+            font_im.loadFromCurrentSurface(renderer);
+            SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
+            texte.x = 500;texte.y = 500;texte.w = 800;texte.h = 400;
+            font_im.setSurface(TTF_RenderText_Solid(font,jeu.joueurs[indiceJoueur].nom.c_str(),jaune));
+            font_im.loadFromCurrentSurface(renderer);
+            SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
+            SDL_RenderPresent(renderer);
+            SDL_Delay(2000);
+            quit=true;
+        }
     }
 
 }
