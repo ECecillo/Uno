@@ -164,6 +164,7 @@ sdlJeu::~sdlJeu () {
     SDL_Quit();
 }
 
+// Affiche la salle d'attente
 void sdlJeu::sdlAffSalleAttente (SDL_Window * param, SDL_Renderer * rendererParam, unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA) 
 {
     SDL_SetRenderDrawColor(rendererParam, 0, 0, 0, 255);
@@ -234,7 +235,7 @@ void sdlJeu::sdlAffSalleAttente (SDL_Window * param, SDL_Renderer * rendererPara
     SDL_RenderPresent(rendererParam);
 }
             
-
+// Préparation de la partie
 void sdlJeu::sdlUno () 
 {
     //Remplir l'écran de noir
@@ -344,6 +345,7 @@ void sdlJeu::sdlUno ()
     }
 }
 
+// Fait choisir la variante
 unsigned int sdlJeu::sdlAffChoixJeu()
 {
     unsigned int choixVariante;
@@ -422,6 +424,7 @@ unsigned int sdlJeu::sdlAffChoixJeu()
     return choixVariante;
 }
 
+// Fait choisir le nombre de joueurs
 unsigned int sdlJeu::sdlAffChoixJoueurs()
 {
     unsigned int Joueurs;
@@ -476,6 +479,7 @@ unsigned int sdlJeu::sdlAffChoixJoueurs()
 
 }
 
+// Fait choisir le nombre de bots
 unsigned int sdlJeu::sdlAffChoixOrdinateurs()
 {
     unsigned int nombreIA;
@@ -529,6 +533,7 @@ unsigned int sdlJeu::sdlAffChoixOrdinateurs()
     return nombreIA;
 }
 
+// Affiche une carte à une certaine position
 void sdlJeu::sdlAffCarte (const Carte & c, int positionX, int positionY)
 {
     int carteEntier;
@@ -558,7 +563,8 @@ void sdlJeu::sdlAffCarte (const Carte & c, int positionX, int positionY)
         }     
 }
 
-void sdlJeu::sdlAffJoueurActif (Jeu & jeu)
+// Affiche la table du joueur, indiceJoueur est l'indice dans le tableau jeu.joueurs
+void sdlJeu::sdlAffJoueur (Jeu & jeu, unsigned int indiceJoueur)
 {
     //Remplir l'écran de noir
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -622,18 +628,21 @@ void sdlJeu::sdlAffJoueurActif (Jeu & jeu)
 
     // le nom
     texte.x = 0;texte.y = 550;texte.w = 110;texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font,jeu.joueurs[jeu.joueurActif].nom.c_str(),jaune));
+    font_im.setSurface(TTF_RenderText_Solid(font,jeu.joueurs[indiceJoueur].nom.c_str(),jaune));
     font_im.loadFromCurrentSurface(renderer);
     SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
 
     // la main
-    unsigned int tailleMain = jeu.joueurs[jeu.joueurActif].main.size();
+    unsigned int tailleMain = jeu.joueurs[indiceJoueur].main.size();
     for (int i=0; i<tailleMain; i++)
     {
-        sdlAffCarte(jeu.joueurs[jeu.joueurActif].main[i],110*(i%17),600+200*(i/17));
+        sdlAffCarte(jeu.joueurs[indiceJoueur].main[i],110*(i%17),600+200*(i/17));
     }
     SDL_RenderPresent(renderer);
 }
+
+
+// Fait choisir la couleur à jouer (après joker et +4)
 unsigned int sdlJeu::choixCouleur()
 {
     SDL_Window * choixCouleur = SDL_CreateWindow("Quelle couleur?", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 200, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
@@ -701,6 +710,21 @@ unsigned int sdlJeu::choixCouleur()
 
 }
 
+// affiche une carte de la couleur qui a été choisie
+void sdlJeu::sdlAffCouleurChoisie(unsigned int couleur)
+{
+    char nomFichier[20];
+    string nomCouleur;
+    char const * nomImage;
+    nomCouleur = to_string(couleur);
+    nomImage = nomCouleur.c_str();
+    strcpy (nomFichier,"data/carte");
+    strcat (nomFichier,nomImage);
+    strcat (nomFichier,".png");
+    im_carte.loadFromFile(nomFichier,renderer);
+    im_carte.draw(renderer,1090,300,110,157);
+    SDL_RenderPresent(renderer);
+}
 
 void sdlJeu::sdlBoucleJeu (Jeu & jeu) 
 {
@@ -709,53 +733,44 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
 
-    sdlAffJoueurActif(jeu);
+    //sdlAffJoueurActif(jeu);
 
     SDL_Event event;
 	bool quit = false;
     int sourisX;
     int sourisY;
-    unsigned int couleur;
+    unsigned int couleur=0;
+    unsigned int indiceJoueur;
 
 	// tant que ce n'est pas la fin ...
 	while (!quit) {
         
-        couleur = 0;
+        indiceJoueur = jeu.joueurActif;
+        sdlAffJoueur(jeu, indiceJoueur);
+        if (couleur != 0) sdlAffCouleurChoisie(couleur);
+        
         while (SDL_PollEvent(&event))
         {
             sourisX = event.button.x;
             sourisY = event.button.y;
             switch (event.type)
             {
-                case SDL_QUIT:     // Si l'utilisateur a clique sur la croix de fermeture
+                case SDL_QUIT:     // Si l'utilisateur a cliqué sur la croix de fermeture
                     quit = true;
                     break;          
-			    case SDL_KEYDOWN:  // Si une touche est enfoncee
+			    case SDL_KEYDOWN:  // Si une touche est enfoncée
                     if(event.key.keysym.scancode==SDL_SCANCODE_Q) quit = true;
                     break;
-                case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est appuyéé
-                    if (sourisX>800 && sourisX<910 && sourisY>300 && sourisY<457) // clic sur la ligne "Jeu"
+                case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est appuyé
+                    if (sourisX>800 && sourisX<910 && sourisY>300 && sourisY<457) // clic sur la pioche
                     {
                         jeu.piocherCarte();
                         jeu.termineTour();
-                        sdlAffJoueurActif(jeu);
+                        sdlAffJoueur(jeu, indiceJoueur);
 
-                        if (couleur != 0)
-                        {
-                            char nomFichier[20];
-                            string nomCouleur;
-                            char const * nomImage;
-                            nomCouleur = to_string(couleur);
-                            nomImage = nomCouleur.c_str();
-                            strcpy (nomFichier,"data/carte");
-                            strcat (nomFichier,nomImage);
-                            strcat (nomFichier,".png");
-                            im_carte.loadFromFile(nomFichier,renderer);
-                            im_carte.draw(renderer,1090,300,110,157);
-                            SDL_RenderPresent(renderer);
-                        }
+                        if (couleur != 0) sdlAffCouleurChoisie(couleur);
                     }
-                    if (sourisX>0 && sourisX<1870 && sourisY>600 && sourisY<957) // clic sur 
+                    if (sourisX>0 && sourisX<1870 && sourisY>600 && sourisY<957) // clic sur une carte de la main
                     {
                         couleur = 0;
                         string messageErreur;
@@ -768,27 +783,15 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                             jeu.joueurs[jeu.joueurActif].main[indiceCarte].setCouleur(couleur);
                         }
                         jeu.poserCarte(indiceCarte, messageErreur);
-                        sdlAffJoueurActif(jeu);
-
-                        if (couleur != 0)
-                        {
-                            char nomFichier[20];
-                            string nomCouleur;
-                            char const * nomImage;
-                            nomCouleur = to_string(couleur);
-                            nomImage = nomCouleur.c_str();
-                            strcpy (nomFichier,"data/carte");
-                            strcat (nomFichier,nomImage);
-                            strcat (nomFichier,".png");
-                            im_carte.loadFromFile(nomFichier,renderer);
-                            im_carte.draw(renderer,1090,300,110,157);
-                            SDL_RenderPresent(renderer);
-                        }
+                        sdlAffJoueur(jeu, indiceJoueur);
                         
+
+                        if (couleur != 0) sdlAffCouleurChoisie(couleur);
                     }
                     break;
             }
         }
+        SDL_Delay(500);
     }
 
 }
