@@ -6,6 +6,7 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
+//#include <cstring>
 
 #include "Jeu.h"
 
@@ -32,7 +33,6 @@ class sdlJeu
 {
 
 private:
-
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 
@@ -52,8 +52,10 @@ public:
 	unsigned int sdlAffChoixJoueurs();
 	unsigned int sdlAffChoixOrdinateurs();
 	void sdlAffCarte(const Carte &c, int positionX, int positionY);
-	void sdlAffJoueurActif(Jeu &jeu);
+	void sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur);
 	unsigned int choixCouleur();
+	void sdlAffCouleurChoisie(unsigned int couleur);
+	void situationUno(Jeu &jeu);
 	void sdlBoucleJeu(Jeu &jeu);
 	unsigned int sdlAffChoixJeu();
 };

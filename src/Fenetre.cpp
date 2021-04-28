@@ -15,7 +15,6 @@
 #include <unistd.h>
 #include <termios.h>
 #include <unistd.h>
-#include <ncurses.h>
 
 #endif
 
@@ -82,6 +81,7 @@ void termInit()      // configure la saisie : ne pas afficher les caracteres tap
 
 // Constructeur: construit le tableau 1D vide
 Fenetre::Fenetre (int dx, int dy) {
+    //cout << dx << " " << dy << endl;
     assert(dx>=0 && dx<=38);
     assert(dy>=0 && dy<=180);
     dimx = dx;
@@ -153,43 +153,14 @@ char Fenetre::getCh() { // lire un caractere si une touche a ete pressee
         GetConsoleMode(consoleI, &mode);
         SetConsoleMode(consoleI, mode & ~ENABLE_LINE_INPUT & ~ENABLE_ECHO_INPUT);
         ReadConsole(consoleI, &touche, 1, &n, NULL);
-    
-        /* for (i = 0; i < n; i++)
-        {
-            switch (touche[i].EventType)
-            {
-            case MOUSE_EVENT:                                          // mouse input
-                MOUSE_EVENT_RECORD mer = touche[i].Event.MouseEvent;   // Les infos sur le clique.
-                if (mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) // Le joueur a appuyé sur clique gauche.
-                {
-                    COORD pos = mer.dwMousePosition;
-                    if ((pos.X >= (5 / 16 * dimx) && pos.Y >= (3 / 8 * dimy)) &&
-                        (pos.X <= (7 / 16 * dimx) && pos.Y <= (5 / 8 * dimy)))
-                    { // On clique sur la pioche.
-                        piocherCarte();
-                    }
-                    if ((pos.X >= (13 / 16 * dimx) && pos.Y >= (dimy * 7 / 16)) &&
-                        (pos.X <= 15 / 16 * dimx) && (pos.Y <= (9 / 16 * dimy)))
-                    { // On clique sur passer.
 
-                    }
-                    if ((pos.X >= (1 / 32 * dimx) && pos.Y >= (dimy * 1 / 32)) &&
-                        (pos.X <= (1 / 4 * dimx) && (pos.Y <= (1 / 6 * dimy))))
-                    { // On clique sur Paramètres.
-
-                    }
-                   
-                }
-                break;
-            default:
-                ErrorExit("Unknown event type");
-                break;
-            }
-        } */
     }
 #else
     if (kbhit())
+    {
         touche = fgetc(stdin);
+        //printf(&touche, ter[180]);
+    }
 #endif
     return touche;
 }

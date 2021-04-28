@@ -178,6 +178,7 @@ sdlJeu::~sdlJeu()
     SDL_Quit();
 }
 
+// Affiche la salle d'attente
 void sdlJeu::sdlAffSalleAttente(SDL_Window *param, SDL_Renderer *rendererParam, unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA)
 {
     SDL_SetRenderDrawColor(rendererParam, 0, 0, 0, 255);
@@ -271,6 +272,7 @@ void sdlJeu::sdlAffSalleAttente(SDL_Window *param, SDL_Renderer *rendererParam, 
     SDL_RenderPresent(rendererParam);
 }
 
+// Préparation de la partie
 void sdlJeu::sdlUno()
 {
     //Remplir l'écran de noir
@@ -401,6 +403,7 @@ void sdlJeu::sdlUno()
     }
 }
 
+// Fait choisir la variante
 unsigned int sdlJeu::sdlAffChoixJeu()
 {
     unsigned int choixVariante;
@@ -510,6 +513,7 @@ unsigned int sdlJeu::sdlAffChoixJeu()
     return choixVariante;
 }
 
+// Fait choisir le nombre de joueurs
 unsigned int sdlJeu::sdlAffChoixJoueurs()
 {
     unsigned int Joueurs;
@@ -570,6 +574,7 @@ unsigned int sdlJeu::sdlAffChoixJoueurs()
     return Joueurs;
 }
 
+// Fait choisir le nombre de bots
 unsigned int sdlJeu::sdlAffChoixOrdinateurs()
 {
     unsigned int nombreIA;
@@ -630,6 +635,7 @@ unsigned int sdlJeu::sdlAffChoixOrdinateurs()
     return nombreIA;
 }
 
+// Affiche une carte à une certaine position
 void sdlJeu::sdlAffCarte(const Carte &c, int positionX, int positionY)
 {
     int carteEntier;
@@ -659,7 +665,8 @@ void sdlJeu::sdlAffCarte(const Carte &c, int positionX, int positionY)
     }
 }
 
-void sdlJeu::sdlAffJoueurActif(Jeu &jeu)
+// Affiche la table du joueur, indiceJoueur est l'indice dans le tableau jeu.joueurs
+void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
 {
     //Remplir l'écran de noir
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -740,18 +747,20 @@ void sdlJeu::sdlAffJoueurActif(Jeu &jeu)
     texte.y = 550;
     texte.w = 110;
     texte.h = 50;
-    font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[jeu.joueurActif].nom.c_str(), jaune));
+    font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[indiceJoueur].nom.c_str(), jaune));
     font_im.loadFromCurrentSurface(renderer);
     SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
     // la main
-    unsigned int tailleMain = jeu.joueurs[jeu.joueurActif].main.size();
+    unsigned int tailleMain = jeu.joueurs[indiceJoueur].main.size();
     for (int i = 0; i < tailleMain; i++)
     {
-        sdlAffCarte(jeu.joueurs[jeu.joueurActif].main[i], 110 * (i % 17), 600 + 200 * (i / 17));
+        sdlAffCarte(jeu.joueurs[indiceJoueur].main[i], 110 * (i % 17), 600 + 200 * (i / 17));
     }
     SDL_RenderPresent(renderer);
 }
+
+// Fait choisir la couleur à jouer (après joker et +4)
 unsigned int sdlJeu::choixCouleur()
 {
     SDL_Window *choixCouleur = SDL_CreateWindow("Quelle couleur?", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 200, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
@@ -777,7 +786,7 @@ unsigned int sdlJeu::choixCouleur()
     font_im.loadFromCurrentSurface(rendererCouleur);
     SDL_RenderCopy(rendererCouleur, font_im.getTexture(), NULL, &texte);
 
-    texte.x = 330;
+    texte.x = 340;
     texte.y = 75;
     texte.w = 100;
     texte.h = 50;
@@ -785,7 +794,7 @@ unsigned int sdlJeu::choixCouleur()
     font_im.loadFromCurrentSurface(rendererCouleur);
     SDL_RenderCopy(rendererCouleur, font_im.getTexture(), NULL, &texte);
 
-    texte.x = 460;
+    texte.x = 470;
     texte.y = 75;
     texte.w = 100;
     texte.h = 50;
@@ -793,7 +802,7 @@ unsigned int sdlJeu::choixCouleur()
     font_im.loadFromCurrentSurface(rendererCouleur);
     SDL_RenderCopy(rendererCouleur, font_im.getTexture(), NULL, &texte);
 
-    texte.x = 590;
+    texte.x = 600;
     texte.y = 75;
     texte.w = 100;
     texte.h = 50;
@@ -818,7 +827,7 @@ unsigned int sdlJeu::choixCouleur()
             cout << "choix joueurs " << sourisX << " " << sourisY << endl;
             if (eventCouleur.type == SDL_MOUSEBUTTONDOWN)
             {
-                if (sourisX > 210 && sourisX < 610 && sourisY > 75 && sourisY < 232) // clic sur une couleur
+                if (sourisX > 210 && sourisX < 700 && sourisY > 75 && sourisY < 232) // clic sur une couleur
                 {
                     couleur = (sourisX - 210) / 130 + 1;
                     choixFait = true;
@@ -830,11 +839,69 @@ unsigned int sdlJeu::choixCouleur()
     SDL_DestroyWindow(choixCouleur);
     return couleur;
 }
+// affiche une carte de la couleur qui a été choisie
+void sdlJeu::sdlAffCouleurChoisie(unsigned int couleur)
+{
+    char nomFichier[20];
+    string nomCouleur;
+    char const *nomImage;
+    nomCouleur = to_string(couleur);
+    nomImage = nomCouleur.c_str();
+    strcpy(nomFichier, "data/carte");
+    strcat(nomFichier, nomImage);
+    strcat(nomFichier, ".png");
+    im_carte.loadFromFile(nomFichier, renderer);
+    im_carte.draw(renderer, 1090, 300, 110, 157);
+    SDL_RenderPresent(renderer);
+}
+
+void sdlJeu::situationUno(Jeu &jeu)
+{
+    jeu.statut_Uno = true;
+    bool attendre = true;
+    SDL_Event event;
+    int temps0 = SDL_GetTicks();
+    while (attendre)
+    {
+        if (SDL_GetTicks() - temps0 < 2000) // temps inférieur à 2000 ms pour cliquer sur Uno
+        {
+            while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                int sourisX = event.button.x;
+                int sourisY = event.button.y;
+                if (sourisX > 573 && sourisX < 730 && sourisY > 323 && sourisY < 433) // clic sur Uno
+                {
+                    jeu.statut_Uno = false;
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                    SDL_RenderClear(renderer);
+                    SDL_Rect texte;
+                    texte.x = 400;
+                    texte.y = 300;
+                    texte.w = 1200;
+                    texte.h = 400;
+                    font_im.setSurface(TTF_RenderText_Solid(font, "UNOoooooo", jaune));
+                    font_im.loadFromCurrentSurface(renderer);
+                    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
+                    SDL_RenderPresent(renderer);
+                    SDL_Delay(1000);
+                    attendre = false;
+                }
+            }
+        }
+        else
+        {
+            attendre = false;
+        }
+    }
+}
 
 void sdlJeu::sdlMenu()
 {
     SDL_Event events;
     bool isOpen{true};
+
+    //TTF_Font* font = TTF_OpenFont("", 18);
+
 
     SDL_Surface *text = TTF_RenderText_Blended(font, "Uno", SDL_Color{255, 0, 0, 255});
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, text); // Crée la texture qu'on va afficher a partir de la surface
@@ -842,15 +909,50 @@ void sdlJeu::sdlMenu()
 
     SDL_QueryTexture(texture, nullptr, nullptr, &position.w, &position.h); // Récupere la dimension de la texture
     // Centre la texture sur l'écran
-    position.x = LARGEUR_ECRAN<unsigned int> / 2 - position.w / 2;
+    position.x = (LARGEUR_ECRAN<unsigned int> / 2 - position.w / 2);
     position.y = HAUTEUR_ECRAN<unsigned int> / 2 - position.h - HAUTEUR_ECRAN<unsigned int> / 3;
-    SDL_SetRenderDrawColor(renderer, 168, 230, 255, 255);
-    SDL_RenderClear(renderer);
 
     SDL_FreeSurface(text);
+    //char const *nomImage;
+    string nomImageBase = "data/UnoAnim/76061103e5c846bf867d0ee82f9fcbbd42WnmC6xmFteZPZe-";
+    string imageACharger;
+
+    SDL_Surface *image[15];
+    SDL_Texture *textImage[15]; // On créer un tableau de Texture pour chaque image.
+
+    for (int i = 0; i < 15; i++)
+    { // On charge les 15 images pour faire le gif.
+        imageACharger = nomImageBase + to_string(i) + ".bmp";
+        image[i] = IMG_Load(imageACharger.c_str());
+        if (image == NULL) // On regarde si on a réussi à charger les images.
+        {
+            cout << "Error: cannot load " << imageACharger << endl;
+            SDL_Quit();
+            exit(EXIT_FAILURE);
+        }
+        textImage[i] = SDL_CreateTextureFromSurface(renderer, image[i]);
+        SDL_FreeSurface(image[i]); // On libère l'espace.
+    }
+
+    int k = 0;
     // On récupère les événements.
     while (isOpen)
     {
+        /* SDL_Rect srcrect = {, 0, 320, 640};
+        SDL_Rect dstrect = {(LARGEUR_ECRAN<unsigned int> / 2 - position.w / 2), 
+        HAUTEUR_ECRAN<unsigned int> / 2 - position.h - HAUTEUR_ECRAN<unsigned int> / 3,
+         320, 640}; */
+
+        SDL_Rect srcrect =
+            {(LARGEUR_ECRAN<unsigned int> / 2 - position.w / 2),
+             HAUTEUR_ECRAN<unsigned int> / 2 - position.h - HAUTEUR_ECRAN<unsigned int> / 3,
+             320, 640};
+        SDL_Rect dstrect = {200, 200, 200, 200};
+
+        Uint32 temps = SDL_GetTicks();      // Récupère le temps.
+        Uint32 sprite = (temps / 600) % 15; // On divise par le nombre de sprite ici 15.
+        srcrect.x = sprite + 60;
+
         while (SDL_PollEvent(&events))
         {
             switch (events.type)
@@ -860,15 +962,24 @@ void sdlJeu::sdlMenu()
                 break;
             }
         }
+
         // On met à jour l'affichage.
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255);
         SDL_RenderClear(renderer);
 
+        SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderCopy(renderer, texture, nullptr, &position);
+        SDL_RenderCopy(renderer, texture, nullptr, &position); // Affichage du texte.
+
+        SDL_RenderCopy(renderer, textImage[k], &srcrect, &dstrect); // Affichage Image.
+        k++;
+        SDL_Delay(50);
+        if (k == 14)
+            k = 0;
 
         SDL_RenderPresent(renderer);
     }
+    SDL_DestroyTexture(texture);
     //this->~sdlJeu();
 }
 
@@ -879,40 +990,56 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
 
-    sdlAffJoueurActif(jeu);
+    //sdlAffJoueurActif(jeu);
 
     SDL_Event event;
     bool quit = false;
     int sourisX;
     int sourisY;
-    unsigned int couleur;
+    unsigned int couleur = 0;
+    bool couleurChangee = false;
+    bool joueurChange = true;
+    unsigned int indiceJoueur;
 
     // tant que ce n'est pas la fin ...
     while (!quit)
     {
+        if (joueurChange)
+        {
+            indiceJoueur = jeu.joueurActif;
+            sdlAffJoueur(jeu, indiceJoueur);
+            if (couleur != 0 && couleurChangee)
+                sdlAffCouleurChoisie(couleur);
+            joueurChange = false;
+        }
 
-        couleur = 0;
         while (SDL_PollEvent(&event))
         {
             sourisX = event.button.x;
             sourisY = event.button.y;
             switch (event.type)
             {
-            case SDL_QUIT: // Si l'utilisateur a clique sur la croix de fermeture
+            case SDL_QUIT: // Si l'utilisateur a cliqué sur la croix de fermeture
                 quit = true;
                 break;
-            case SDL_KEYDOWN: // Si une touche est enfoncee
+            case SDL_KEYDOWN: // Si une touche est enfoncée
                 if (event.key.keysym.scancode == SDL_SCANCODE_Q)
                     quit = true;
                 break;
-            case SDL_MOUSEBUTTONDOWN:                                                 // Si le bouton de la souris est relevé
-                if (sourisX > 800 && sourisX < 910 && sourisY > 300 && sourisY < 457) // clic sur la ligne "Jeu"
+            case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est appuyé
+                joueurChange = true;
+                if (sourisX > 800 && sourisX < 910 && sourisY > 300 && sourisY < 457) // clic sur la pioche
                 {
                     jeu.piocherCarte();
-                    sdlAffJoueurActif(jeu);
+                    jeu.termineTour();
+                    sdlAffJoueur(jeu, indiceJoueur);
+
+                    if (couleur != 0 && couleurChangee)
+                        sdlAffCouleurChoisie(couleur);
                 }
-                if (sourisX > 0 && sourisX < 1870 && sourisY > 600 && sourisY < 957) // clic sur la ligne "Jeu"
+                if (sourisX > 0 && sourisX < 1870 && sourisY > 600 && sourisY < 957) // clic sur une carte de la main
                 {
+                    couleur = 0;
                     string messageErreur;
                     unsigned int indiceCarte;
                     if (sourisY < 757)
@@ -920,32 +1047,54 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                     if (sourisY > 800)
                         indiceCarte = 17 + sourisX / 110;
 
-                    jeu.poserCarte(indiceCarte, messageErreur);
-                    if (jeu.talon.back().getValeur() == 13 || jeu.talon.back().getValeur() == 14)
+                    if (jeu.carteValide(jeu.joueurs[jeu.joueurActif].main[indiceCarte]))
                     {
-                        couleur = choixCouleur();
+                        couleurChangee = false;
+                        if (jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 13 || jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 14)
+                        {
+                            couleur = choixCouleur();
+                            couleurChangee = true;
+                            jeu.joueurs[jeu.joueurActif].main[indiceCarte].setCouleur(couleur);
+                        }
                     }
-                    sdlAffJoueurActif(jeu);
-
-                    if (couleur != 0)
+                    jeu.poserCarte(indiceCarte, messageErreur);
+                    sdlAffJoueur(jeu, indiceJoueur);
+                    if (couleur != 0 && couleurChangee)
+                        sdlAffCouleurChoisie(couleur);
+                    if (jeu.joueurs[indiceJoueur].main.size() == 1)
                     {
-                        char nomFichier[20];
-                        string nomCouleur;
-                        char const *nomImage;
-                        nomCouleur = to_string(couleur);
-                        nomImage = nomCouleur.c_str();
-                        strcpy(nomFichier, "data/carte");
-                        strcat(nomFichier, nomImage);
-                        strcat(nomFichier, ".png");
-                        im_carte.loadFromFile(nomFichier, renderer);
-                        im_carte.draw(renderer, 1090, 300, 110, 157);
-                        SDL_RenderPresent(renderer);
+                        situationUno(jeu);
                     }
                 }
-            case SDL_WINDOWEVENT:
-                if (event.window.event == SDL_WINDOWEVENT_CLOSE)
-                    quit = true;
+                break;
+            default:
+                break;
             }
+        }
+        SDL_Delay(500);
+
+        if (jeu.joueurs[indiceJoueur].gagnant())
+        {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderClear(renderer);
+            SDL_Rect texte;
+            texte.x = 400;
+            texte.y = 100;
+            texte.w = 1200;
+            texte.h = 400;
+            font_im.setSurface(TTF_RenderText_Solid(font, "Good Game", jaune));
+            font_im.loadFromCurrentSurface(renderer);
+            SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
+            texte.x = 500;
+            texte.y = 500;
+            texte.w = 800;
+            texte.h = 400;
+            font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[indiceJoueur].nom.c_str(), jaune));
+            font_im.loadFromCurrentSurface(renderer);
+            SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
+            SDL_RenderPresent(renderer);
+            SDL_Delay(2000);
+            quit = true;
         }
     }
 }
