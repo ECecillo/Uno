@@ -11,60 +11,51 @@
 
 using namespace std;
 
-class Image {
+class Image
+{
+
+private:
+	SDL_Surface *surface;
+	SDL_Texture *texture;
+	bool has_changed;
+
+public:
+	Image();
+	void loadFromFile(const char *filename, SDL_Renderer *renderer);
+	void loadFromCurrentSurface(SDL_Renderer *renderer);
+	void draw(SDL_Renderer *renderer, int x, int y, int w = -1, int h = -1);
+	SDL_Texture *getTexture() const;
+	void setSurface(SDL_Surface *surf);
+};
+
+class sdlJeu
+{
 
 private:
 
-    SDL_Surface * surface;
-    SDL_Texture * texture;
-    bool has_changed;
+	SDL_Window *window;
+	SDL_Renderer *renderer;
+
+	TTF_Font *font;
+	Image font_im;
+	SDL_Color font_color;
+
+	Image im_salleAttente;
+	Image im_carte;
 
 public:
-	Image () ;
-	void loadFromFile (const char* filename, SDL_Renderer * renderer);
-	void loadFromCurrentSurface (SDL_Renderer * renderer);
-	void draw (SDL_Renderer * renderer, int x, int y, int w=-1, int h=-1);
-	SDL_Texture * getTexture() const;
-	void setSurface(SDL_Surface * surf);		
-				
-};
-
-
-
-class sdlJeu {
-
-private :
-
-
-
-    SDL_Window * window;
-    SDL_Renderer * renderer;
-
-	
-    TTF_Font * font;
-    Image font_im;
-    SDL_Color font_color;
-
-
-    Image im_salleAttente;
-    Image im_carte;
-
-public :
-
-
-
-	sdlJeu ();
-	~sdlJeu ();
-	void sdlAffSalleAttente(SDL_Window * param, SDL_Renderer * rendererParam, unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA);
+	sdlJeu();
+	~sdlJeu();
+	void sdlMenu();
+	void sdlAffSalleAttente(SDL_Window *param, SDL_Renderer *rendererParam, unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA);
 	void sdlUno();
 	unsigned int sdlAffChoixJoueurs();
 	unsigned int sdlAffChoixOrdinateurs();
-	void sdlAffCarte(const Carte & c, int positionX, int positionY);
-	void sdlAffJoueurActif(Jeu & jeu);
+	void sdlAffCarte(const Carte &c, int positionX, int positionY);
+	void sdlAffJoueurActif(Jeu &jeu);
 	unsigned int choixCouleur();
-	void sdlBoucleJeu (Jeu & jeu);
-	unsigned int sdlAffChoixJeu ();
-
+	void sdlBoucleJeu(Jeu &jeu);
+	unsigned int sdlAffChoixJeu();
 };
 
 #endif
