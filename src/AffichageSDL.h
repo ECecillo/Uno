@@ -73,6 +73,7 @@ public :
 	void sdlAffJoueur(Jeu & jeu, unsigned int indiceJoueur);
 	unsigned int choixCouleur();
 void sdlAffCouleurChoisie(unsigned int couleur);
+void situationUno(Jeu & jeu);
 	void sdlBoucleJeu (Jeu & jeu);
 	unsigned int sdlAffChoixJeu ();
 
