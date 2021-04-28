@@ -70,8 +70,9 @@ public :
 	unsigned int sdlAffChoixJoueurs();
 	unsigned int sdlAffChoixOrdinateurs();
 	void sdlAffCarte(const Carte & c, int positionX, int positionY);
-	void sdlAffJoueurActif(Jeu & jeu);
+	void sdlAffJoueur(Jeu & jeu, unsigned int indiceJoueur);
 	unsigned int choixCouleur();
+void sdlAffCouleurChoisie(unsigned int couleur);
 	void sdlBoucleJeu (Jeu & jeu);
 	unsigned int sdlAffChoixJeu ();
 
