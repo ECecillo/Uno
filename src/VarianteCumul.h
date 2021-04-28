@@ -9,8 +9,6 @@ private:
 		
 		unsigned int cumulCarteAPiocher;
 
-	 
-
 public:
 		/**
 		* @brief
@@ -41,7 +39,7 @@ public:
 		* @return true 
 		* @return false 
 		*/
-		bool carteValide(const Carte) const;
+		bool carteValide(const Carte) const override;
 
 		/**
 		* @brief 
@@ -50,7 +48,7 @@ public:
 		* @param indiceCarte : l'indice de la carte que le joueur veut poser.
 		* @param messageErreur : Message d'erreur à afficher avec l'interface Graphique.
 		*/
-		void poserCarte(unsigned int& indiceCarte, string &messageErreur);
+		void poserCarte(const unsigned int& indiceCarte, string &messageErreur) override;
 
 		
 		/**
