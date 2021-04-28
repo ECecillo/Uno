@@ -411,58 +411,55 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
             // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
             joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
             bool carteSpeciale = false;
-            if (testUno() == false)
-            {
                 // gestion des cartes spéciales
-                switch ((talon.back()).getValeur())
-                {
-                case 10:
-                    if (sensJeu == 1)
-                        sensJeu = 0;
-                    else
-                        sensJeu = 1;
-                    break;
-                case 11:
-                    termineTour();
-
-                    break;
-                case 12:
-                    termineTour();
-
-                    piocherCarte();
-                    piocherCarte();
-                    carteSpeciale = true;
-                    break;
-                case 13:
-                    carteSpeciale = true;
-                    if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
-                        joueurActif = 0;
-                    else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
-                    {
-                        joueurActif--;
-                    }
-                    else if (joueurActif == 0 && sensJeu == 0)
-                        joueurActif = nombreIA + nombreJoueurs - 1;
-                    joueurActif++;
-                    //termineTour();
-
-                    for (unsigned int i = 0; i < 4; i++)
-                        piocherCarte();
-                    termineTour();
-                    break;
-                case 14:
-                    termineTour();
-                    carteSpeciale = true;
-
-                    break;
-                }
-                if (joueurs[joueurActif].main.size() == 0)
-                    annonceGagnant();
-                if (carteSpeciale)
-                    return;
+            switch ((talon.back()).getValeur())
+            {
+            case 10:
+                if (sensJeu == 1)
+                    sensJeu = 0;
+                else
+                    sensJeu = 1;
+                break;
+            case 11:
                 termineTour();
-                return;
+
+                break;
+            case 12:
+                termineTour();
+
+                piocherCarte();
+                piocherCarte();
+                carteSpeciale = true;
+                break;
+            case 13:
+                carteSpeciale = true;
+                if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
+                    joueurActif = 0;
+                else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
+                {
+                    joueurActif--;
+                }
+                else if (joueurActif == 0 && sensJeu == 0)
+                    joueurActif = nombreIA + nombreJoueurs - 1;
+                joueurActif++;
+                //termineTour();
+
+                for (unsigned int i = 0; i < 4; i++)
+                    piocherCarte();
+                termineTour();
+                break;
+            case 14:
+                termineTour();
+                carteSpeciale = true;
+
+                break;
             }
+            if (joueurs[joueurActif].main.size() == 0)
+                annonceGagnant();
+            if (carteSpeciale)
+                return;
+            termineTour();
+            return;
         }
         else
         {
