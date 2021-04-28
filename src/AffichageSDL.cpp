@@ -763,6 +763,45 @@ void sdlJeu::situationUno(Jeu & jeu)
     }
 }
 
+void sdlJeu::situationContreUno(Jeu & jeu)
+{
+    bool attendre = true;
+    SDL_Event event;
+    int temps0 = SDL_GetTicks();
+    while (attendre)
+    {
+        if (SDL_GetTicks() - temps0 < 3000) // temps inférieur à 2000 ms pour cliquer sur Uno
+        {
+            while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN) 
+            {
+                int sourisX = event.button.x;
+                int sourisY = event.button.y;
+                cout << sourisX << " " << sourisY << endl;
+                if (sourisX>1270 && sourisX<1427 && sourisY>323 && sourisY<433) // clic sur Contre Uno
+                {
+                    jeu.statut_Uno = false;
+                    cout << jeu.statut_Uno << "après clic" << endl;
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                    SDL_RenderClear(renderer);
+                    SDL_Rect texte;
+                    texte.x = 400;texte.y = 300;texte.w = 1200;texte.h = 400;
+                    font_im.setSurface(TTF_RenderText_Solid(font,"Contre UNOoooooo",jaune));
+                    font_im.loadFromCurrentSurface(renderer);
+                    SDL_RenderCopy(renderer,font_im.getTexture(),NULL,&texte);
+                    SDL_RenderPresent(renderer);
+                    SDL_Delay(1000);
+                    attendre = false;
+                }
+            }
+        }
+        else
+        {
+            attendre = false;
+        }
+        
+    }
+}
+
 void sdlJeu::sdlBoucleJeu (Jeu & jeu) 
 {
      //Remplir l'écran de noir
@@ -779,15 +818,30 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
     unsigned int couleur=0;
     bool couleurChangee = false;
     bool joueurChange = true;
-    unsigned int indiceJoueur;
+    unsigned int indiceJoueur = jeu.joueurActif;
 
 	// tant que ce n'est pas la fin ...
 	while (!quit) {
         if (joueurChange)
         {
-            indiceJoueur = jeu.joueurActif;
-            sdlAffJoueur(jeu, indiceJoueur);
+            sdlAffJoueur(jeu, jeu.joueurActif);
             if (couleur != 0 && couleurChangee) sdlAffCouleurChoisie(couleur);
+            if (jeu.statut_Uno)
+            {
+                cout << jeu.statut_Uno << "avant situation Contre Uno" << endl;
+                situationContreUno(jeu);
+                cout << jeu.statut_Uno << "après situation Contre Uno" << endl;
+                if (!jeu.statut_Uno)
+                {
+                    jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
+                    jeu.pioche.pop();
+                    jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
+                    jeu.pioche.pop();
+                }
+                else jeu.statut_Uno = false;
+            }
+            
+            indiceJoueur = jeu.joueurActif;
             joueurChange = false;
         }
         
@@ -836,7 +890,9 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                         if (couleur != 0 && couleurChangee) sdlAffCouleurChoisie(couleur);
                         if (jeu.joueurs[indiceJoueur].main.size() == 1)
                         {
+                           cout << jeu.statut_Uno << "avant situation Uno" << endl;
                            situationUno(jeu); 
+                           cout << jeu.statut_Uno << "après situation Uno" << endl;
                         }    
                     }
                     break;
