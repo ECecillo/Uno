@@ -899,30 +899,77 @@ void sdlJeu::sdlMenu()
 {
     SDL_Event events;
     bool isOpen{true};
+    Menu menu;
 
-    //TTF_Font* font = TTF_OpenFont("", 18);
+    // Police des textes
+    TTF_Font *fontMenuTitre = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 110);
+    TTF_Font *fontMenuTexte = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 80);
 
+    // Créer tous les textes pour le Menu en allant récupérer dans le vecteur string dans la classe Menu.
+    SDL_Surface *surfTitre = TTF_RenderText_Blended(fontMenuTitre, "Uno", SDL_Color{255, 0, 0, 255});
+    SDL_Surface *surfJouer = TTF_RenderText_Blended(fontMenuTexte, (menu.getNomMenu(0)).c_str(), SDL_Color{255, 0, 0, 255});
+    SDL_Surface *surfReglage = TTF_RenderText_Blended(fontMenuTexte, (menu.getNomMenu(1)).c_str(), SDL_Color{255, 0, 0, 255});
+    SDL_Surface *surfQuitter = TTF_RenderText_Blended(fontMenuTexte, (menu.getNomMenu(2)).c_str(), SDL_Color{255, 0, 0, 255});
+    SDL_Surface *surfRegles = TTF_RenderText_Blended(fontMenuTexte, (menu.getNomMenu(4)).c_str(), SDL_Color{255, 0, 0, 255});
 
-    SDL_Surface *text = TTF_RenderText_Blended(font, "Uno", SDL_Color{255, 0, 0, 255});
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, text); // Crée la texture qu'on va afficher a partir de la surface
-    SDL_Rect position;
+    // Creations des textures pour les textes.
+    SDL_Texture *textTitre = SDL_CreateTextureFromSurface(renderer, surfTitre);     // Crée la texture qu'on va afficher a partir de la surface
+    SDL_Texture *textJouer = SDL_CreateTextureFromSurface(renderer, surfJouer);     // Crée la texture qu'on va afficher a partir de la surface
+    SDL_Texture *textReglage = SDL_CreateTextureFromSurface(renderer, surfReglage); // Crée la texture qu'on va afficher a partir de la surface
+    SDL_Texture *textQuitter = SDL_CreateTextureFromSurface(renderer, surfQuitter); // Crée la texture qu'on va afficher a partir de la surface
+    SDL_Texture *textRegles = SDL_CreateTextureFromSurface(renderer, surfRegles);   // Crée la texture qu'on va afficher a partir de la surface
 
-    SDL_QueryTexture(texture, nullptr, nullptr, &position.w, &position.h); // Récupere la dimension de la texture
-    // Centre la texture sur l'écran
-    position.x = (LARGEUR_ECRAN<unsigned int> / 2 - position.w / 2);
-    position.y = HAUTEUR_ECRAN<unsigned int> / 2 - position.h - HAUTEUR_ECRAN<unsigned int> / 3;
+    // Rectangle pour régler la position des texte.
+    SDL_Rect positionTitre;
+    SDL_Rect positionJouer;
+    SDL_Rect positionReglage;
+    SDL_Rect positionQuitter;
+    SDL_Rect positionRegles;
 
-    SDL_FreeSurface(text);
-    //char const *nomImage;
+    SDL_QueryTexture(textTitre, nullptr, nullptr, &positionTitre.w, &positionTitre.h);       // Récupere la dimension de la texture
+    SDL_QueryTexture(textJouer, nullptr, nullptr, &positionJouer.w, &positionJouer.h);       // Récupere la dimension de la texture
+    SDL_QueryTexture(textReglage, nullptr, nullptr, &positionReglage.w, &positionReglage.h); // Récupere la dimension de la texture
+    SDL_QueryTexture(textQuitter, nullptr, nullptr, &positionQuitter.w, &positionQuitter.h); // Récupere la dimension de la texture
+    SDL_QueryTexture(textRegles, nullptr, nullptr, &positionRegles.w, &positionRegles.h);    // Récupere la dimension de la texture
+
+    // Centre la texture du titre sur l'écran avec le rect.
+    positionTitre.x = (LARGEUR_ECRAN<unsigned int> / 2 - positionTitre.w / 2); // on soustrait pour que le texte soit alignée.
+    positionTitre.y = HAUTEUR_ECRAN<unsigned int> / 14;
+
+    // On définie les coordo des textes Jouer, ... Par rapport à la coordo du titre.
+    positionJouer.x = positionTitre.x + LARGEUR_ECRAN<unsigned int> / 6 - positionTitre.x / 2.7; // Le x est toujours le même pour tous les textes.
+    positionJouer.y = positionTitre.y + HAUTEUR_ECRAN<unsigned int> / 4;
+
+    positionReglage.x = positionTitre.x + LARGEUR_ECRAN<unsigned int> / 6 - positionTitre.x / 2.2; // Le x est toujours le même pour tous les textes.
+    positionReglage.y = positionTitre.y + HAUTEUR_ECRAN<unsigned int> / 2.6;
+
+    positionRegles.x = positionTitre.x + LARGEUR_ECRAN<unsigned int> / 6 - positionTitre.x / 2.45; // Le x est toujours le même pour tous les textes.
+    positionRegles.y = positionTitre.y + HAUTEUR_ECRAN<unsigned int> / 1.9;
+
+    positionQuitter.x = positionTitre.x + LARGEUR_ECRAN<unsigned int> / 6 - positionTitre.x / 2.4; // Le x est toujours le même pour tous les textes.
+    positionQuitter.y = positionTitre.y + HAUTEUR_ECRAN<unsigned int> / 1.5;
+
+    // On libère la surface.
+    SDL_FreeSurface(surfTitre);
+    SDL_FreeSurface(surfJouer);
+    SDL_FreeSurface(surfReglage);
+    SDL_FreeSurface(surfQuitter);
+    SDL_FreeSurface(surfRegles);
+    TTF_CloseFont(fontMenuTitre);
+
+    // Chemin + nom Image à charger pour animation.
     string nomImageBase = "data/UnoAnim/76061103e5c846bf867d0ee82f9fcbbd42WnmC6xmFteZPZe-";
+    // Variable qui contiendra le nom finale.
     string imageACharger;
 
+    // On créer un tableau de surface et un de texture.
     SDL_Surface *image[15];
     SDL_Texture *textImage[15]; // On créer un tableau de Texture pour chaque image.
 
     for (int i = 0; i < 15; i++)
     { // On charge les 15 images pour faire le gif.
         imageACharger = nomImageBase + to_string(i) + ".bmp";
+        // On convertit en char pour la fonction IMG_LOAD
         image[i] = IMG_Load(imageACharger.c_str());
         if (image == NULL) // On regarde si on a réussi à charger les images.
         {
@@ -931,47 +978,110 @@ void sdlJeu::sdlMenu()
             exit(EXIT_FAILURE);
         }
         textImage[i] = SDL_CreateTextureFromSurface(renderer, image[i]);
-        SDL_FreeSurface(image[i]); // On libère l'espace.
+        SDL_FreeSurface(image[i]); // On libère l'espace de la surface.
     }
 
+    // Rectangle destionation pour la position image dans la fenêtre.
+    SDL_Rect dstrect = {
+        0,
+        0,
+        100, 100};
+    // Nous permettra de charger chaque image dans le tableau image.
+    dstrect.y = HAUTEUR_ECRAN<unsigned int> / 3.1;
     int k = 0;
+    // Variable qui contiendront la position de la souris.
+    int posSourisX;
+    int posSourisY;
+
     // On récupère les événements.
     while (isOpen)
     {
-        /* SDL_Rect srcrect = {, 0, 320, 640};
-        SDL_Rect dstrect = {(LARGEUR_ECRAN<unsigned int> / 2 - position.w / 2), 
-        HAUTEUR_ECRAN<unsigned int> / 2 - position.h - HAUTEUR_ECRAN<unsigned int> / 3,
-         320, 640}; */
-
-        SDL_Rect srcrect =
-            {(LARGEUR_ECRAN<unsigned int> / 2 - position.w / 2),
-             HAUTEUR_ECRAN<unsigned int> / 2 - position.h - HAUTEUR_ECRAN<unsigned int> / 3,
-             320, 640};
-        SDL_Rect dstrect = {200, 200, 200, 200};
-
-        Uint32 temps = SDL_GetTicks();      // Récupère le temps.
-        Uint32 sprite = (temps / 600) % 15; // On divise par le nombre de sprite ici 15.
-        srcrect.x = sprite + 60;
+        dstrect.x = (LARGEUR_ECRAN<unsigned int> / 2 + LARGEUR_ECRAN<unsigned int> / 15);
 
         while (SDL_PollEvent(&events))
         {
             switch (events.type)
             {
-            case SDL_QUIT:
-                isOpen = false;
+            case SDL_WINDOWEVENT:
+                if (events.window.event == SDL_WINDOWEVENT_CLOSE)
+                    isOpen = false;
+                break;
+            case SDL_MOUSEBUTTONDOWN: // Click de souris
+                SDL_Log("+clic");
+                posSourisX = events.button.x;
+                posSourisY = events.button.y;
+                int posReglageX = positionReglage.x;
+                int posReglageY = positionReglage.y;
+
+                posReglageY += +HAUTEUR_ECRAN<int> / 12;
+
+                cout << posReglageX << " " << posReglageY << endl;
+                cout << posSourisX << " " << posSourisY << endl;
+
+                // On clique sur jouer et ça lance la salle d'attente (voir si il faut pas enlever des trucs).
+                if ((posSourisX > positionJouer.x && posSourisY > positionJouer.y) &&                              // Point en haut à gauche
+                    (posSourisX > positionJouer.x && posSourisY < positionJouer.y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
+                    (posSourisX < (positionJouer.x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionJouer.y)) && // Point en haut à droite
+                    (posSourisX < (positionJouer.x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionJouer.y + HAUTEUR_ECRAN<int> / 12)))
+                {
+                    cout << "Jouer je clique." << endl;
+                }
+                // On clique sur Reglage
+                if ((posSourisX > positionReglage.x && posSourisY > positionReglage.y) &&                              // Point en haut à gauche
+                    (posSourisX > positionReglage.x && posSourisY < positionReglage.y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
+                    (posSourisX < (positionReglage.x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionReglage.y)) && // Point en haut à droite
+                    (posSourisX < (positionReglage.x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionReglage.y + HAUTEUR_ECRAN<int> / 12)))
+                {
+                    cout << "Je clique sur réglage" << endl;
+                }
+                // On clique sur Regles
+                if ((posSourisX > positionRegles.x && posSourisY > positionRegles.y) &&                              // Point en haut à gauche
+                    (posSourisX > positionRegles.x && posSourisY < positionRegles.y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
+                    (posSourisX < (positionRegles.x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionRegles.y)) && // Point en haut à droite
+                    (posSourisX < (positionRegles.x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionRegles.y + HAUTEUR_ECRAN<int> / 12)))
+                {
+                    cout << "Je clique sur Regles" << endl;
+                }
+                // On clique sur quitter
+                if ((posSourisX > positionQuitter.x && posSourisY > positionQuitter.y) &&                              // Point en haut à gauche
+                    (posSourisX > positionQuitter.x && posSourisY < positionQuitter.y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
+                    (posSourisX < (positionQuitter.x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionQuitter.y)) && // Point en haut à droite
+                    (posSourisX < (positionQuitter.x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionQuitter.y + HAUTEUR_ECRAN<int> / 12)))
+                {
+                    cout << "Je clique Quitter" << endl;
+                    isOpen = false;
+                }
+
                 break;
             }
         }
 
         // On met à jour l'affichage.
-        SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255);
+        SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255); // Affiche la couleur de fond.
         SDL_RenderClear(renderer);
 
-        SDL_RenderClear(renderer);
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderCopy(renderer, texture, nullptr, &position); // Affichage du texte.
+        // Affichage texte, ici du titre.
+        SDL_RenderClear(renderer);                                    // On change sur quelle rendu on fait.
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);             // On passe sur la couleur du texte.
+        SDL_RenderCopy(renderer, textTitre, nullptr, &positionTitre); // Affichage du texte.
 
-        SDL_RenderCopy(renderer, textImage[k], &srcrect, &dstrect); // Affichage Image.
+        //Affichage Jouer
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);             // On passe sur la couleur du texte.
+        SDL_RenderCopy(renderer, textJouer, nullptr, &positionJouer); // Affichage du texte.
+
+        // Affichage Reglage
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                 // On passe sur la couleur du texte.
+        SDL_RenderCopy(renderer, textReglage, nullptr, &positionReglage); // Affichage du texte.
+
+        // Affichage Regle du Jeu
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);               // On passe sur la couleur du texte.
+        SDL_RenderCopy(renderer, textRegles, nullptr, &positionRegles); // Affichage du texte.
+
+        // Affichage Quitter
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                 // On passe sur la couleur du texte.
+        SDL_RenderCopy(renderer, textQuitter, nullptr, &positionQuitter); // Affichage du texte.
+
+        SDL_RenderCopy(renderer, textImage[k], nullptr, &dstrect); // Affichage Image.
         k++;
         SDL_Delay(50);
         if (k == 14)
@@ -979,7 +1089,162 @@ void sdlJeu::sdlMenu()
 
         SDL_RenderPresent(renderer);
     }
-    SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(textTitre);
+    SDL_DestroyTexture(textJouer);
+    SDL_DestroyTexture(textReglage);
+    SDL_DestroyTexture(textQuitter);
+    SDL_DestroyTexture(textRegles);
+    //this->~sdlJeu();
+}
+
+void sdlJeu::sdlReglage()
+{
+    SDL_Event events;
+    bool isOpen{true};
+    Menu menu;
+
+    // Police des textes
+    TTF_Font *fontMenuTexte = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 60);
+    TTF_Font *fontResText = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 45);
+
+    // Créer tous les textes pour les réglages en allant récupérer dans le vecteur string dans la classe Menu.
+    SDL_Surface *surfResolution = TTF_RenderText_Blended(fontMenuTexte, (menu.getOptions(0)).c_str(), SDL_Color{255, 0, 0, 255});
+    SDL_Surface *surfChanger = TTF_RenderText_Blended(fontMenuTexte, (menu.getOptions(1)).c_str(), SDL_Color{255, 0, 0, 255});
+    SDL_Surface *surfSon = TTF_RenderText_Blended(fontMenuTexte, (menu.getOptions(2)).c_str(), SDL_Color{255, 0, 0, 255});
+    SDL_Surface *surfRetour = TTF_RenderText_Blended(fontMenuTexte, (menu.getOptions(3)).c_str(), SDL_Color{255, 0, 0, 255});
+
+    // Textes pour les résolutions d'écran.
+    SDL_Surface *surfPetit = TTF_RenderText_Blended(fontResText, (menu.getResolution(0)).c_str(), SDL_Color{255, 0, 0, 255});
+    SDL_Surface *surfMoyen = TTF_RenderText_Blended(fontResText, (menu.getResolution(1)).c_str(), SDL_Color{255, 0, 0, 255});
+    SDL_Surface *surfGrand = TTF_RenderText_Blended(fontResText, (menu.getResolution(2)).c_str(), SDL_Color{255, 0, 0, 255});
+
+    // Creations des textures pour les textes.
+    SDL_Texture *textResolution = SDL_CreateTextureFromSurface(renderer, surfResolution); // Crée la texture qu'on va afficher a partir de la surface
+    SDL_Texture *textChanger = SDL_CreateTextureFromSurface(renderer, surfChanger);       // Crée la texture qu'on va afficher a partir de la surface
+    SDL_Texture *textSon = SDL_CreateTextureFromSurface(renderer, surfSon);               // Crée la texture qu'on va afficher a partir de la surface
+    SDL_Texture *textRetour = SDL_CreateTextureFromSurface(renderer, surfRetour);         // Crée la texture qu'on va afficher a partir de la surface
+
+    // Résolutions
+    SDL_Texture *textPetit = SDL_CreateTextureFromSurface(renderer, surfPetit); // Crée la texture qu'on va afficher a partir de la surface
+    SDL_Texture *textMoyen = SDL_CreateTextureFromSurface(renderer, surfMoyen); // Crée la texture qu'on va afficher a partir de la surface
+    SDL_Texture *textGrand = SDL_CreateTextureFromSurface(renderer, surfGrand); // Crée la texture qu'on va afficher a partir de la surface
+
+    // Rectangle pour régler la position des textes.
+    SDL_Rect positionResolution;
+    SDL_Rect positionChanger;
+    SDL_Rect positionSon;
+    SDL_Rect positionRetour;
+
+    // Postion Résolution texte.
+    SDL_Rect positionPetit;
+    SDL_Rect positionMoyen;
+    SDL_Rect positionGrand;
+
+    SDL_QueryTexture(textResolution, nullptr, nullptr, &positionResolution.w, &positionResolution.h); // Récupere la dimension de la texture
+    SDL_QueryTexture(textChanger, nullptr, nullptr, &positionChanger.w, &positionChanger.h);          // Récupere la dimension de la texture
+    SDL_QueryTexture(textSon, nullptr, nullptr, &positionSon.w, &positionSon.h);                      // Récupere la dimension de la texture
+    SDL_QueryTexture(textRetour, nullptr, nullptr, &positionRetour.w, &positionRetour.h);             // Récupere la dimension de la texture
+
+    // Attribue les rect aux résolutions
+    SDL_QueryTexture(textPetit, nullptr, nullptr, &positionPetit.w, &positionPetit.h); // Récupere la dimension de la texture
+    SDL_QueryTexture(textMoyen, nullptr, nullptr, &positionMoyen.w, &positionMoyen.h); // Récupere la dimension de la texture
+    SDL_QueryTexture(textGrand, nullptr, nullptr, &positionGrand.w, &positionGrand.h); // Récupere la dimension de la texture
+
+    // On définie les coordo des textes Resolutions, ... Par rapport à la coordo du titre.
+    positionResolution.x = (LARGEUR_ECRAN<unsigned int> / 2 - positionResolution.w / 2); // on soustrait pour que le texte soit alignée.
+    positionResolution.y = HAUTEUR_ECRAN<unsigned int> / 14;
+
+    positionChanger.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> /6 - positionResolution.x / 2.2; // Le x est toujours le même pour tous les textes.
+    positionChanger.y = positionResolution.y + HAUTEUR_ECRAN<unsigned int> / 2.6;
+
+    positionSon.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 3.5; // Le x est toujours le même pour tous les textes.
+    positionSon.y = HAUTEUR_ECRAN<unsigned int> / 1.4;
+
+    positionRetour.x = LARGEUR_ECRAN<unsigned int> / 30; // Le x est toujours le même pour tous les textes.
+    positionRetour.y = HAUTEUR_ECRAN<unsigned int> / 30;
+
+    //############### Résolutions ###############
+    positionPetit.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 2.7; // Le x est toujours le même pour tous les textes.
+    positionPetit.y = positionResolution.y + HAUTEUR_ECRAN<unsigned int> / 9;
+
+    positionMoyen.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 2.7; // Le x est toujours le même pour tous les textes.
+    positionMoyen.y = positionResolution.y + HAUTEUR_ECRAN<unsigned int> / 5;
+
+    positionGrand.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 2.7; // Le x est toujours le même pour tous les textes.
+    positionGrand.y = positionResolution.y + HAUTEUR_ECRAN<unsigned int> / 3.5;
+
+    // On libère la surface.
+    SDL_FreeSurface(surfResolution);
+    SDL_FreeSurface(surfChanger);
+    SDL_FreeSurface(surfSon);
+    SDL_FreeSurface(surfRetour);
+    SDL_FreeSurface(surfPetit);
+    SDL_FreeSurface(surfMoyen);
+    SDL_FreeSurface(surfGrand);
+    TTF_CloseFont(fontMenuTexte);
+    TTF_CloseFont(fontResText);
+
+    // Variable qui contiendront la position de la souris.
+    //int posSourisX;
+    //int posSourisY;
+
+    // On récupère les événements.
+    while (isOpen)
+    {
+
+        while (SDL_PollEvent(&events))
+        {
+            switch (events.type)
+            {
+            case SDL_WINDOWEVENT:
+                if (events.window.event == SDL_WINDOWEVENT_CLOSE)
+                    isOpen = false;
+                break;
+            }
+
+            // On met à jour l'affichage.
+            SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255); // Affiche la couleur de fond.
+            SDL_RenderClear(renderer);
+
+            // Affichage texte Resolution.
+            SDL_RenderClear(renderer);                                              // On change sur quelle rendu on fait.
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                       // On passe sur la couleur du texte.
+            SDL_RenderCopy(renderer, textResolution, nullptr, &positionResolution); // Affichage du texte.
+
+            // Affichage résolution 720 x 576
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);             // On passe sur la couleur du texte.
+            SDL_RenderCopy(renderer, textPetit, nullptr, &positionPetit); // Affichage du texte.
+
+            // Affichage résolution 1280 x 720
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);             // On passe sur la couleur du texte.
+            SDL_RenderCopy(renderer, textMoyen, nullptr, &positionMoyen); // Affichage du texte.
+
+            // Affichage résolution 1920 x 1080
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);             // On passe sur la couleur du texte.
+            SDL_RenderCopy(renderer, textGrand, nullptr, &positionGrand); // Affichage du texte.
+
+            //Affichage Changer de pseudo
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                 // On passe sur la couleur du texte.
+            SDL_RenderCopy(renderer, textChanger, nullptr, &positionChanger); // Affichage du texte.
+
+            // Affichage Texte Son
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);         // On passe sur la couleur du texte.
+            SDL_RenderCopy(renderer, textSon, nullptr, &positionSon); // Affichage du texte.
+
+            // Affichage texte Retour
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);               // On passe sur la couleur du texte.
+            SDL_RenderCopy(renderer, textRetour, nullptr, &positionRetour); // Affichage du texte.
+
+            SDL_RenderPresent(renderer);
+        }
+    }
+    SDL_DestroyTexture(textResolution);
+    SDL_DestroyTexture(textChanger);
+    SDL_DestroyTexture(textSon);
+    SDL_DestroyTexture(textRetour);
+    SDL_DestroyTexture(textPetit);
+    SDL_DestroyTexture(textMoyen);
+    SDL_DestroyTexture(textGrand);
     //this->~sdlJeu();
 }
 

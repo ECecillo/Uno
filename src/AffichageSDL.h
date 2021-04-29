@@ -6,6 +6,7 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
+#include <Menu.h>
 //#include <cstring>
 
 #include "Jeu.h"
@@ -47,6 +48,7 @@ public:
 	sdlJeu();
 	~sdlJeu();
 	void sdlMenu();
+	void sdlReglage();
 	void sdlAffSalleAttente(SDL_Window *param, SDL_Renderer *rendererParam, unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA);
 	void sdlUno();
 	unsigned int sdlAffChoixJoueurs();
