@@ -1,25 +1,38 @@
+#ifndef MENU_H
+#define MENU_H
 
+#include <string.h>
+#include <vector>
+#include <iostream>
+#include <sstream>
+
+using namespace std;
 
 class Menu
 {
 private:
-		
-		NomsMenu tableau de liens vers chaines de caractères // map (Jouer,Reprendre,Règlages,Quitter,Logs,Règles)	
-
-	 
+	vector<string> nomMenu;		   // map (Jouer,Règlages,Quitter,Logs,Règles)
+	vector<string> nomOptions;		   // Résolution, Changer Pseudo, Son.
+	vector<string> resolutionOptions; // 1920 x 1080, 720 x 576, 1280 x 720,
+	vector<string> sonOptions;		   // i = 0 à 11
 
 public:
-		
+	Menu();
+	~Menu();
 
-		Menu(); 
+	void initNomMenu();
+	void initNomOptions();
+	void initResolutionOptions();
+	void initSonOptions();
 
 
-		~Menu();
+	string getNomMenu(int i);
+	string getOptions(int i);
+	string getResolution(int i);
+	string getSon(int i);
 
+	void testRegression();
 
-		
-		
-				
 };
 
 #endif
