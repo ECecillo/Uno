@@ -944,56 +944,83 @@ void sdlJeu::sdlMenu()
     TTF_Font *fontMenuTitre = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 110);
     TTF_Font *fontMenuTexte = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 80);
 
+    SDL_Surface *surfTexte[5];
+    surfTexte[0] = TTF_RenderText_Blended(fontMenuTitre, "Uno", SDL_Color{255, 0, 0, 255});
+    for (int i = 0; i < 4; i++)
+    {
+        cout << menu.getNomMenu(i) << endl;
+        surfTexte[i + 1] = TTF_RenderText_Blended(fontMenuTexte, (menu.getNomMenu(i)).c_str(), SDL_Color{255, 0, 0, 255});
+    }
+    cout << "ok" << endl;
     // Créer tous les textes pour le Menu en allant récupérer dans le vecteur string dans la classe Menu.
-    SDL_Surface *surfTitre = TTF_RenderText_Blended(fontMenuTitre, "Uno", SDL_Color{255, 0, 0, 255});
+    /* 
     SDL_Surface *surfJouer = TTF_RenderText_Blended(fontMenuTexte, (menu.getNomMenu(0)).c_str(), SDL_Color{255, 0, 0, 255});
     SDL_Surface *surfReglage = TTF_RenderText_Blended(fontMenuTexte, (menu.getNomMenu(1)).c_str(), SDL_Color{255, 0, 0, 255});
     SDL_Surface *surfQuitter = TTF_RenderText_Blended(fontMenuTexte, (menu.getNomMenu(2)).c_str(), SDL_Color{255, 0, 0, 255});
     SDL_Surface *surfRegles = TTF_RenderText_Blended(fontMenuTexte, (menu.getNomMenu(4)).c_str(), SDL_Color{255, 0, 0, 255});
-
+ */
     // Creations des textures pour les textes.
+    SDL_Texture *textureTexte[5];
+    for (int i = 0; i < 5; i++)
+    {
+        textureTexte[i] = SDL_CreateTextureFromSurface(renderer, surfTexte[i]);
+    }
+    /* 
     SDL_Texture *textTitre = SDL_CreateTextureFromSurface(renderer, surfTitre);     // Crée la texture qu'on va afficher a partir de la surface
     SDL_Texture *textJouer = SDL_CreateTextureFromSurface(renderer, surfJouer);     // Crée la texture qu'on va afficher a partir de la surface
     SDL_Texture *textReglage = SDL_CreateTextureFromSurface(renderer, surfReglage); // Crée la texture qu'on va afficher a partir de la surface
     SDL_Texture *textQuitter = SDL_CreateTextureFromSurface(renderer, surfQuitter); // Crée la texture qu'on va afficher a partir de la surface
     SDL_Texture *textRegles = SDL_CreateTextureFromSurface(renderer, surfRegles);   // Crée la texture qu'on va afficher a partir de la surface
-
+     */
     // Rectangle pour régler la position des texte.
+    SDL_Rect positionTexte[5];
+
+    /* 
     SDL_Rect positionTitre;
     SDL_Rect positionJouer;
     SDL_Rect positionReglage;
     SDL_Rect positionQuitter;
     SDL_Rect positionRegles;
-
+ */
+    for (int i = 0; i < 5; i++)
+    {
+        SDL_QueryTexture(textureTexte[i], nullptr, nullptr, &positionTexte[i].w, &positionTexte[i].h); // Récupere la dimension de la texture
+    }
+    /* 
     SDL_QueryTexture(textTitre, nullptr, nullptr, &positionTitre.w, &positionTitre.h);       // Récupere la dimension de la texture
     SDL_QueryTexture(textJouer, nullptr, nullptr, &positionJouer.w, &positionJouer.h);       // Récupere la dimension de la texture
     SDL_QueryTexture(textReglage, nullptr, nullptr, &positionReglage.w, &positionReglage.h); // Récupere la dimension de la texture
     SDL_QueryTexture(textQuitter, nullptr, nullptr, &positionQuitter.w, &positionQuitter.h); // Récupere la dimension de la texture
     SDL_QueryTexture(textRegles, nullptr, nullptr, &positionRegles.w, &positionRegles.h);    // Récupere la dimension de la texture
-
+ */
     // Centre la texture du titre sur l'écran avec le rect.
-    positionTitre.x = (LARGEUR_ECRAN<unsigned int> / 2 - positionTitre.w / 2); // on soustrait pour que le texte soit alignée.
-    positionTitre.y = HAUTEUR_ECRAN<unsigned int> / 14;
+    positionTexte[0].x = (LARGEUR_ECRAN<unsigned int> / 2 - positionTexte[0].w / 2); // on soustrait pour que le texte soit alignée.
+    positionTexte[0].y = HAUTEUR_ECRAN<unsigned int> / 14;
 
     // On définie les coordo des textes Jouer, ... Par rapport à la coordo du titre.
-    positionJouer.x = positionTitre.x + LARGEUR_ECRAN<unsigned int> / 6 - positionTitre.x / 2.7; // Le x est toujours le même pour tous les textes.
-    positionJouer.y = positionTitre.y + HAUTEUR_ECRAN<unsigned int> / 4;
+    positionTexte[1].x = positionTexte[0].x + LARGEUR_ECRAN<unsigned int> / 6 - positionTexte[0].x / 2.7; // Le x est toujours le même pour tous les textes.
+    positionTexte[1].y = positionTexte[0].y + HAUTEUR_ECRAN<unsigned int> / 4;
 
-    positionReglage.x = positionTitre.x + LARGEUR_ECRAN<unsigned int> / 6 - positionTitre.x / 2.2; // Le x est toujours le même pour tous les textes.
-    positionReglage.y = positionTitre.y + HAUTEUR_ECRAN<unsigned int> / 2.6;
+    positionTexte[2].x = positionTexte[0].x + LARGEUR_ECRAN<unsigned int> / 6 - positionTexte[0].x / 2.2; // Le x est toujours le même pour tous les textes.
+    positionTexte[2].y = positionTexte[0].y + HAUTEUR_ECRAN<unsigned int> / 2.6;
 
-    positionRegles.x = positionTitre.x + LARGEUR_ECRAN<unsigned int> / 6 - positionTitre.x / 2.45; // Le x est toujours le même pour tous les textes.
-    positionRegles.y = positionTitre.y + HAUTEUR_ECRAN<unsigned int> / 1.9;
+    positionTexte[3].x = positionTexte[0].x + LARGEUR_ECRAN<unsigned int> / 6 - positionTexte[0].x / 2.45; // Le x est toujours le même pour tous les textes.
+    positionTexte[3].y = positionTexte[0].y + HAUTEUR_ECRAN<unsigned int> / 1.9;
 
-    positionQuitter.x = positionTitre.x + LARGEUR_ECRAN<unsigned int> / 6 - positionTitre.x / 2.4; // Le x est toujours le même pour tous les textes.
-    positionQuitter.y = positionTitre.y + HAUTEUR_ECRAN<unsigned int> / 1.5;
+    positionTexte[4].x = positionTexte[0].x + LARGEUR_ECRAN<unsigned int> / 6 - positionTexte[0].x / 2.4; // Le x est toujours le même pour tous les textes.
+    positionTexte[4].y = positionTexte[0].y + HAUTEUR_ECRAN<unsigned int> / 1.5;
 
     // On libère la surface.
-    SDL_FreeSurface(surfTitre);
+    for (int i = 0; i < 5; i++)
+    {
+        SDL_FreeSurface(surfTexte[i]);
+    }
+    /* 
     SDL_FreeSurface(surfJouer);
     SDL_FreeSurface(surfReglage);
     SDL_FreeSurface(surfQuitter);
     SDL_FreeSurface(surfRegles);
+    */
     TTF_CloseFont(fontMenuTitre);
 
     // Chemin + nom Image à charger pour animation.
@@ -1049,29 +1076,29 @@ void sdlJeu::sdlMenu()
                 SDL_Log("+clic");
                 posSourisX = events.button.x;
                 posSourisY = events.button.y;
-                int posReglageX = positionReglage.x;
-                int posReglageY = positionReglage.y;
+                //int posReglageX = positionReglage.x;
+                //int posReglageY = positionReglage.y;
 
-                posReglageY += +HAUTEUR_ECRAN<int> / 12;
+                //posReglageY += +HAUTEUR_ECRAN<int> / 12;
 
-                cout << posReglageX << " " << posReglageY << endl;
-                cout << posSourisX << " " << posSourisY << endl;
+                //cout << posReglageX << " " << posReglageY << endl;
+                //cout << posSourisX << " " << posSourisY << endl;
 
                 // On clique sur jouer et ça lance la salle d'attente (voir si il faut pas enlever des trucs).
-                if ((posSourisX > positionJouer.x && posSourisY > positionJouer.y) &&                              // Point en haut à gauche
-                    (posSourisX > positionJouer.x && posSourisY < positionJouer.y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
-                    (posSourisX < (positionJouer.x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionJouer.y)) && // Point en haut à droite
-                    (posSourisX < (positionJouer.x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionJouer.y + HAUTEUR_ECRAN<int> / 12)))
+                if ((posSourisX > positionTexte[1].x && posSourisY > positionTexte[1].y) &&                              // Point en haut à gauche
+                    (posSourisX > positionTexte[1].x && posSourisY < positionTexte[1].y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
+                    (posSourisX < (positionTexte[1].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionTexte[1].y)) && // Point en haut à droite
+                    (posSourisX < (positionTexte[1].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[1].y + HAUTEUR_ECRAN<int> / 12)))
                 {
                     cout << "je clique sur Jouer." << endl;
                     Mix_PlayChannel(0, soundA, 1);
                     //Mix_PlayChannel(1, sons[0], 0); // On joue le son salleAttente.
                 }
                 // On clique sur Reglage
-                if ((posSourisX > positionReglage.x && posSourisY > positionReglage.y) &&                              // Point en haut à gauche
-                    (posSourisX > positionReglage.x && posSourisY < positionReglage.y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
-                    (posSourisX < (positionReglage.x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionReglage.y)) && // Point en haut à droite
-                    (posSourisX < (positionReglage.x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionReglage.y + HAUTEUR_ECRAN<int> / 12)))
+                if ((posSourisX > positionTexte[2].x && posSourisY > positionTexte[2].y) &&                              // Point en haut à gauche
+                    (posSourisX > positionTexte[2].x && posSourisY < positionTexte[2].y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
+                    (posSourisX < (positionTexte[2].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionTexte[2].y)) && // Point en haut à droite
+                    (posSourisX < (positionTexte[2].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[2].y + HAUTEUR_ECRAN<int> / 12)))
                 {
                     cout << "Je clique sur réglage" << endl;
                     isOpen = false; // On quitte la boucle.
@@ -1079,19 +1106,19 @@ void sdlJeu::sdlMenu()
                     //Mix_PlayChannel(1, sons[1], 0); // On joue le son selection 1 fois.
                 }
                 // On clique sur Regles
-                if ((posSourisX > positionRegles.x && posSourisY > positionRegles.y) &&                              // Point en haut à gauche
-                    (posSourisX > positionRegles.x && posSourisY < positionRegles.y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
-                    (posSourisX < (positionRegles.x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionRegles.y)) && // Point en haut à droite
-                    (posSourisX < (positionRegles.x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionRegles.y + HAUTEUR_ECRAN<int> / 12)))
+                if ((posSourisX > positionTexte[3].x && posSourisY > positionTexte[3].y) &&                              // Point en haut à gauche
+                    (posSourisX > positionTexte[3].x && posSourisY < positionTexte[3].y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
+                    (posSourisX < (positionTexte[3].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionTexte[3].y)) && // Point en haut à droite
+                    (posSourisX < (positionTexte[3].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[3].y + HAUTEUR_ECRAN<int> / 12)))
                 {
                     cout << "Je clique sur Regles" << endl;
                     //Mix_PlayChannel(1, sons[1], 0); // On joue le son selection 1 fois.
                 }
                 // On clique sur quitter
-                if ((posSourisX > positionQuitter.x && posSourisY > positionQuitter.y) &&                              // Point en haut à gauche
-                    (posSourisX > positionQuitter.x && posSourisY < positionQuitter.y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
-                    (posSourisX < (positionQuitter.x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionQuitter.y)) && // Point en haut à droite
-                    (posSourisX < (positionQuitter.x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionQuitter.y + HAUTEUR_ECRAN<int> / 12)))
+                if ((posSourisX > positionTexte[4].x && posSourisY > positionTexte[4].y) &&                              // Point en haut à gauche
+                    (posSourisX > positionTexte[4].x && posSourisY < positionTexte[4].y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
+                    (posSourisX < (positionTexte[4].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionTexte[4].y)) && // Point en haut à droite
+                    (posSourisX < (positionTexte[4].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[4].y + HAUTEUR_ECRAN<int> / 12)))
                 {
                     cout << "Je clique Quitter" << endl;
                     isOpen = false;
@@ -1106,26 +1133,33 @@ void sdlJeu::sdlMenu()
         SDL_RenderClear(renderer);
 
         // Affichage texte, ici du titre.
-        SDL_RenderClear(renderer);                                    // On change sur quelle rendu on fait.
+        SDL_RenderClear(renderer); // On change sur quelle rendu on fait.
+
+        for (int i = 0; i < 5; i++)
+        {
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // On passe sur la couleur du texte.
+            SDL_RenderCopy(renderer, textureTexte[i], nullptr, &positionTexte[i]);
+        }
+        /* 
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);             // On passe sur la couleur du texte.
-        SDL_RenderCopy(renderer, textTitre, nullptr, &positionTitre); // Affichage du texte.
+        SDL_RenderCopy(renderer, textTitre, nullptr, &positionTexte[0]); // Affichage du texte.
 
         //Affichage Jouer
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);             // On passe sur la couleur du texte.
-        SDL_RenderCopy(renderer, textJouer, nullptr, &positionJouer); // Affichage du texte.
+        SDL_RenderCopy(renderer, textJouer, nullptr, &positionTexte[1]); // Affichage du texte.
 
         // Affichage Reglage
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                 // On passe sur la couleur du texte.
-        SDL_RenderCopy(renderer, textReglage, nullptr, &positionReglage); // Affichage du texte.
+        SDL_RenderCopy(renderer, textReglage, nullptr, &positionTexte[2]); // Affichage du texte.
 
         // Affichage Regle du Jeu
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);               // On passe sur la couleur du texte.
-        SDL_RenderCopy(renderer, textRegles, nullptr, &positionRegles); // Affichage du texte.
+        SDL_RenderCopy(renderer, textRegles, nullptr, &positionTexte[4]); // Affichage du texte.
 
         // Affichage Quitter
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                 // On passe sur la couleur du texte.
-        SDL_RenderCopy(renderer, textQuitter, nullptr, &positionQuitter); // Affichage du texte.
-
+        SDL_RenderCopy(renderer, textQuitter, nullptr, &positionTexte[3]); // Affichage du texte.
+ */
         SDL_RenderCopy(renderer, textImage[k], nullptr, &dstrect); // Affichage Image.
         k++;
         SDL_Delay(50);
@@ -1134,11 +1168,10 @@ void sdlJeu::sdlMenu()
 
         SDL_RenderPresent(renderer);
     }
-    SDL_DestroyTexture(textTitre);
-    SDL_DestroyTexture(textJouer);
-    SDL_DestroyTexture(textReglage);
-    SDL_DestroyTexture(textQuitter);
-    SDL_DestroyTexture(textRegles);
+    for (int i = 0; i < 5; i++)
+    {
+        SDL_DestroyTexture(textureTexte[i]);
+    }
     Mix_FreeChunk(soundA); // Libére la mémoire allouer pour le son
     //this->~sdlJeu();
     if (openRegle)
@@ -1264,7 +1297,7 @@ void sdlJeu::sdlReglage()
     tabPoints[1].y = tabPoints[0].y;
 
     for (int i = 2; i < 6; i += 2)
-    { 
+    {
         tabPoints[i].x = tabPoints[0].x;
         tabPoints[i].y = tabPoints[0].y + HAUTEUR_ECRAN<unsigned int> / 2.6;
 
@@ -1405,7 +1438,7 @@ void sdlJeu::sdlReglage()
             for (int i = 0; i < 6; i += 2)
             {
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                SDL_RenderDrawLine(renderer, tabPoints[i].x, tabPoints[i].y, tabPoints[i+1].x, tabPoints[i+1].y);
+                SDL_RenderDrawLine(renderer, tabPoints[i].x, tabPoints[i].y, tabPoints[i + 1].x, tabPoints[i + 1].y);
             }
 
             // Affichage texte Retour
