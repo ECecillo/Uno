@@ -1141,7 +1141,7 @@ void sdlJeu::sdlMenu()
     SDL_DestroyTexture(textRegles);
     Mix_FreeChunk(soundA); // Libére la mémoire allouer pour le son
     //this->~sdlJeu();
-    if(openRegle)
+    if (openRegle)
     {
         sdlReglage();
     }
@@ -1204,6 +1204,8 @@ void sdlJeu::sdlReglage()
 
     SDL_Rect sonSelectionne; // Encadre le son sur lequelle on clique ou qui est déjà actif.
 
+    SDL_Point tabPoints[6]; // On déclare un tableau de point pour tracer sous les titres des lignes horizontal.
+
     SDL_QueryTexture(textResolution, nullptr, nullptr, &positionResolution.w, &positionResolution.h); // Récupere la dimension de la texture
     SDL_QueryTexture(textChanger, nullptr, nullptr, &positionChanger.w, &positionChanger.h);          // Récupere la dimension de la texture
     SDL_QueryTexture(textSon, nullptr, nullptr, &positionSon.w, &positionSon.h);                      // Récupere la dimension de la texture
@@ -1215,6 +1217,9 @@ void sdlJeu::sdlReglage()
     SDL_QueryTexture(textGrand, nullptr, nullptr, &positionGrand.w, &positionGrand.h); // Récupere la dimension de la texture
 
     // On définie les coordo des textes Resolutions, ... Par rapport à la coordo du titre.
+    positionRetour.x = LARGEUR_ECRAN<unsigned int> / 30; // Le x est toujours le même pour tous les textes.
+    positionRetour.y = HAUTEUR_ECRAN<unsigned int> / 30;
+
     positionResolution.x = (LARGEUR_ECRAN<unsigned int> / 2 - positionResolution.w / 2); // on soustrait pour que le texte soit alignée.
     positionResolution.y = HAUTEUR_ECRAN<unsigned int> / 14;
 
@@ -1223,9 +1228,6 @@ void sdlJeu::sdlReglage()
 
     positionSon.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 3.5; // Le x est toujours le même pour tous les textes.
     positionSon.y = HAUTEUR_ECRAN<unsigned int> / 1.4;
-
-    positionRetour.x = LARGEUR_ECRAN<unsigned int> / 30; // Le x est toujours le même pour tous les textes.
-    positionRetour.y = HAUTEUR_ECRAN<unsigned int> / 30;
 
     //############### Résolutions ###############
     positionPetit.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 2.7; // Le x est toujours le même pour tous les textes.
@@ -1253,6 +1255,21 @@ void sdlJeu::sdlReglage()
             sonSelectionne.w = LARGEUR_ECRAN<unsigned int> / 55;
             sonSelectionne.h = HAUTEUR_ECRAN<unsigned int> / 20;
         }
+    }
+
+    tabPoints[0].x = LARGEUR_ECRAN<unsigned int> / 2 - positionResolution.w / 2;
+    tabPoints[0].y = HAUTEUR_ECRAN<unsigned int> / 7;
+
+    tabPoints[1].x = tabPoints[0].x + 300;
+    tabPoints[1].y = tabPoints[0].y;
+
+    for (int i = 2; i < 6; i += 2)
+    { 
+        tabPoints[i].x = tabPoints[0].x;
+        tabPoints[i].y = tabPoints[0].y + HAUTEUR_ECRAN<unsigned int> / 2.6;
+
+        tabPoints[i + 1].x = tabPoints[0].x + 300;
+        tabPoints[i + 1].y = tabPoints[i].y;
     }
 
     // On libère la surface.
@@ -1375,7 +1392,7 @@ void sdlJeu::sdlReglage()
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);         // On passe sur la couleur du texte.
             SDL_RenderCopy(renderer, textSon, nullptr, &positionSon); // Affichage du texte.
 
-            for (int i = 0; i < 11; i++)
+            for (int i = 0; i < 11; i++) // Echelle son [1...10]
             {
                 SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                  // On passe sur la couleur du texte.
                 SDL_RenderCopy(renderer, tabSon[i], nullptr, &positionEchelle[i]); // Affichage du texte.
@@ -1384,6 +1401,12 @@ void sdlJeu::sdlReglage()
             // Affiche le rectangle qui indique le volume de la musique du Jeu.
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // On passe sur la couleur du texte.
             SDL_RenderDrawRects(renderer, &sonSelectionne, 1);
+
+            for (int i = 0; i < 6; i += 2)
+            {
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                SDL_RenderDrawLine(renderer, tabPoints[i].x, tabPoints[i].y, tabPoints[i+1].x, tabPoints[i+1].y);
+            }
 
             // Affichage texte Retour
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);               // On passe sur la couleur du texte.
