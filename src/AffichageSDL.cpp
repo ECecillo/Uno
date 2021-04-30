@@ -1129,6 +1129,18 @@ void sdlJeu::sdlReglage()
     SDL_Texture *textMoyen = SDL_CreateTextureFromSurface(renderer, surfMoyen); // Crée la texture qu'on va afficher a partir de la surface
     SDL_Texture *textGrand = SDL_CreateTextureFromSurface(renderer, surfGrand); // Crée la texture qu'on va afficher a partir de la surface
 
+    // Creation des textes pour régler le volume du son.
+    SDL_Texture *tabSon[11];
+    SDL_Surface *surfEchelle;
+    SDL_Rect positionEchelle[11];
+
+    for (int i = 0; i < 11; i++)
+    {
+        surfEchelle = TTF_RenderText_Blended(fontResText, (menu.getSon(i)).c_str(), SDL_Color{255, 0, 0, 255});
+        tabSon[i] = SDL_CreateTextureFromSurface(renderer, surfEchelle);
+        SDL_QueryTexture(tabSon[i], nullptr, nullptr, &positionEchelle[i].w, &positionEchelle[i].h);
+    }
+
     // Rectangle pour régler la position des textes.
     SDL_Rect positionResolution;
     SDL_Rect positionChanger;
@@ -1154,7 +1166,7 @@ void sdlJeu::sdlReglage()
     positionResolution.x = (LARGEUR_ECRAN<unsigned int> / 2 - positionResolution.w / 2); // on soustrait pour que le texte soit alignée.
     positionResolution.y = HAUTEUR_ECRAN<unsigned int> / 14;
 
-    positionChanger.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> /6 - positionResolution.x / 2.2; // Le x est toujours le même pour tous les textes.
+    positionChanger.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 2.2; // Le x est toujours le même pour tous les textes.
     positionChanger.y = positionResolution.y + HAUTEUR_ECRAN<unsigned int> / 2.6;
 
     positionSon.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 3.5; // Le x est toujours le même pour tous les textes.
@@ -1173,6 +1185,17 @@ void sdlJeu::sdlReglage()
     positionGrand.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 2.7; // Le x est toujours le même pour tous les textes.
     positionGrand.y = positionResolution.y + HAUTEUR_ECRAN<unsigned int> / 3.5;
 
+    // ############## Position des sons.
+    positionEchelle[0].x = LARGEUR_ECRAN<unsigned int> / 20;
+    positionEchelle[0].y = HAUTEUR_ECRAN<unsigned int> / 1.2;
+
+    for (int i = 1; i < 11; i++)
+    {
+        positionEchelle[i].x = positionEchelle[i - 1].x + LARGEUR_ECRAN<unsigned int> / 30 + 100;
+        positionEchelle[i].y = HAUTEUR_ECRAN<unsigned int> / 1.2;
+        //cout << positionEchelle[i].x << endl;
+    }
+
     // On libère la surface.
     SDL_FreeSurface(surfResolution);
     SDL_FreeSurface(surfChanger);
@@ -1181,6 +1204,7 @@ void sdlJeu::sdlReglage()
     SDL_FreeSurface(surfPetit);
     SDL_FreeSurface(surfMoyen);
     SDL_FreeSurface(surfGrand);
+    SDL_FreeSurface(surfEchelle);
     TTF_CloseFont(fontMenuTexte);
     TTF_CloseFont(fontResText);
 
@@ -1231,6 +1255,11 @@ void sdlJeu::sdlReglage()
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);         // On passe sur la couleur du texte.
             SDL_RenderCopy(renderer, textSon, nullptr, &positionSon); // Affichage du texte.
 
+            for (int i = 0; i < 11; i++)
+            {
+                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                  // On passe sur la couleur du texte.
+                SDL_RenderCopy(renderer, tabSon[i], nullptr, &positionEchelle[i]); // Affichage du texte.
+            }
             // Affichage texte Retour
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);               // On passe sur la couleur du texte.
             SDL_RenderCopy(renderer, textRetour, nullptr, &positionRetour); // Affichage du texte.
@@ -1245,6 +1274,9 @@ void sdlJeu::sdlReglage()
     SDL_DestroyTexture(textPetit);
     SDL_DestroyTexture(textMoyen);
     SDL_DestroyTexture(textGrand);
+    for (int i = 0; i < 10; i++)
+        SDL_DestroyTexture(tabSon[i]);
+
     //this->~sdlJeu();
 }
 
