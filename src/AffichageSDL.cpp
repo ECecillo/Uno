@@ -1142,27 +1142,31 @@ void sdlJeu::sdlReglage()
     TTF_Font *fontResText = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 45);
 
     // Créer tous les textes pour les réglages en allant récupérer dans le vecteur string dans la classe Menu.
-    SDL_Surface *surfResolution = TTF_RenderText_Blended(fontMenuTexte, (menu.getOptions(0)).c_str(), SDL_Color{255, 0, 0, 255});
-    SDL_Surface *surfChanger = TTF_RenderText_Blended(fontMenuTexte, (menu.getOptions(1)).c_str(), SDL_Color{255, 0, 0, 255});
-    SDL_Surface *surfSon = TTF_RenderText_Blended(fontMenuTexte, (menu.getOptions(2)).c_str(), SDL_Color{255, 0, 0, 255});
-    SDL_Surface *surfRetour = TTF_RenderText_Blended(fontMenuTexte, (menu.getOptions(3)).c_str(), SDL_Color{255, 0, 0, 255});
-
+    SDL_Surface *tabSurfTitre[4];
+    for (int i = 0; i < 4; i++)
+    {
+        tabSurfTitre[i] = TTF_RenderText_Blended(fontMenuTexte, (menu.getOptions(i)).c_str(), SDL_Color{255, 0, 0, 255});
+    }
     // Textes pour les résolutions d'écran.
-    SDL_Surface *surfPetit = TTF_RenderText_Blended(fontResText, (menu.getResolution(0)).c_str(), SDL_Color{255, 0, 0, 255});
-    SDL_Surface *surfMoyen = TTF_RenderText_Blended(fontResText, (menu.getResolution(1)).c_str(), SDL_Color{255, 0, 0, 255});
-    SDL_Surface *surfGrand = TTF_RenderText_Blended(fontResText, (menu.getResolution(2)).c_str(), SDL_Color{255, 0, 0, 255});
-
+    SDL_Surface *tabRes[3];
+    for (int i = 0; i < 3; i++)
+    {
+        tabRes[i] = TTF_RenderText_Blended(fontResText, (menu.getResolution(i)).c_str(), SDL_Color{255, 0, 0, 255});
+        ;
+    }
     // Creations des textures pour les textes.
-    SDL_Texture *textResolution = SDL_CreateTextureFromSurface(renderer, surfResolution); // Crée la texture qu'on va afficher a partir de la surface
-    SDL_Texture *textChanger = SDL_CreateTextureFromSurface(renderer, surfChanger);       // Crée la texture qu'on va afficher a partir de la surface
-    SDL_Texture *textSon = SDL_CreateTextureFromSurface(renderer, surfSon);               // Crée la texture qu'on va afficher a partir de la surface
-    SDL_Texture *textRetour = SDL_CreateTextureFromSurface(renderer, surfRetour);         // Crée la texture qu'on va afficher a partir de la surface
+    SDL_Texture *tabTextureTitre[4];
+    for (int i = 0; i < 4; i++)
+    {
+        tabTextureTitre[i] = SDL_CreateTextureFromSurface(renderer, tabSurfTitre[i]); // Crée la texture qu'on va afficher a partir de la surface
+    }
 
     // Résolutions
-    SDL_Texture *textPetit = SDL_CreateTextureFromSurface(renderer, surfPetit); // Crée la texture qu'on va afficher a partir de la surface
-    SDL_Texture *textMoyen = SDL_CreateTextureFromSurface(renderer, surfMoyen); // Crée la texture qu'on va afficher a partir de la surface
-    SDL_Texture *textGrand = SDL_CreateTextureFromSurface(renderer, surfGrand); // Crée la texture qu'on va afficher a partir de la surface
-
+    SDL_Texture *tabTextRes[3];
+    for (int i = 0; i < 3; i++)
+    {
+        tabTextRes[i] = SDL_CreateTextureFromSurface(renderer, tabRes[i]); // Crée la texture qu'on va afficher a partir de la surface
+    }
     // Creation des textes pour régler le volume du son.
     SDL_Texture *tabSon[11];
     SDL_Surface *surfEchelle;
@@ -1176,52 +1180,45 @@ void sdlJeu::sdlReglage()
     }
 
     // Rectangle pour régler la position des textes.
-    SDL_Rect positionResolution;
-    SDL_Rect positionChanger;
-    SDL_Rect positionSon;
-    SDL_Rect positionRetour;
-
+    SDL_Rect tabPositionTitre[4];
     // Postion Résolution texte.
-    SDL_Rect positionPetit;
-    SDL_Rect positionMoyen;
-    SDL_Rect positionGrand;
-
+    SDL_Rect tabPositionRes[3];
     SDL_Rect sonSelectionne; // Encadre le son sur lequelle on clique ou qui est déjà actif.
 
     SDL_Point tabPoints[6]; // On déclare un tableau de point pour tracer sous les titres des lignes horizontal.
 
-    SDL_QueryTexture(textResolution, nullptr, nullptr, &positionResolution.w, &positionResolution.h); // Récupere la dimension de la texture
-    SDL_QueryTexture(textChanger, nullptr, nullptr, &positionChanger.w, &positionChanger.h);          // Récupere la dimension de la texture
-    SDL_QueryTexture(textSon, nullptr, nullptr, &positionSon.w, &positionSon.h);                      // Récupere la dimension de la texture
-    SDL_QueryTexture(textRetour, nullptr, nullptr, &positionRetour.w, &positionRetour.h);             // Récupere la dimension de la texture
+    for (int i = 0; i < 4; i++)
+    {
+        SDL_QueryTexture(tabTextureTitre[i], nullptr, nullptr, &tabPositionTitre[i].w, &tabPositionTitre[i].h); // Récupere la dimension de la texture
+    }
 
-    // Attribue les rect aux résolutions
-    SDL_QueryTexture(textPetit, nullptr, nullptr, &positionPetit.w, &positionPetit.h); // Récupere la dimension de la texture
-    SDL_QueryTexture(textMoyen, nullptr, nullptr, &positionMoyen.w, &positionMoyen.h); // Récupere la dimension de la texture
-    SDL_QueryTexture(textGrand, nullptr, nullptr, &positionGrand.w, &positionGrand.h); // Récupere la dimension de la texture
+    for (int i = 0; i < 3; i++)
+    {
+        SDL_QueryTexture(tabTextRes[i], nullptr, nullptr, &tabPositionRes[i].w, &tabPositionRes[i].h); // Récupere la dimension de la texture
+    }
 
     // On définie les coordo des textes Resolutions, ... Par rapport à la coordo du titre.
-    positionRetour.x = LARGEUR_ECRAN<unsigned int> / 30; // Le x est toujours le même pour tous les textes.
-    positionRetour.y = HAUTEUR_ECRAN<unsigned int> / 30;
+    tabPositionTitre[3].x = LARGEUR_ECRAN<unsigned int> / 30; // Le x est toujours le même pour tous les textes.
+    tabPositionTitre[3].y = HAUTEUR_ECRAN<unsigned int> / 30;
 
-    positionResolution.x = (LARGEUR_ECRAN<unsigned int> / 2 - positionResolution.w / 2); // on soustrait pour que le texte soit alignée.
-    positionResolution.y = HAUTEUR_ECRAN<unsigned int> / 14;
+    tabPositionTitre[0].x = (LARGEUR_ECRAN<unsigned int> / 2 - tabPositionTitre[0].w / 2); // on soustrait pour que le texte soit alignée.
+    tabPositionTitre[0].y = HAUTEUR_ECRAN<unsigned int> / 14;
 
-    positionChanger.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 2.2; // Le x est toujours le même pour tous les textes.
-    positionChanger.y = positionResolution.y + HAUTEUR_ECRAN<unsigned int> / 2.6;
+    tabPositionTitre[1].x = tabPositionTitre[0].x + LARGEUR_ECRAN<unsigned int> / 6 - tabPositionTitre[0].x / 2.2; // Le x est toujours le même pour tous les textes.
+    tabPositionTitre[1].y = tabPositionTitre[0].y + HAUTEUR_ECRAN<unsigned int> / 2.6;
 
-    positionSon.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 3.5; // Le x est toujours le même pour tous les textes.
-    positionSon.y = HAUTEUR_ECRAN<unsigned int> / 1.4;
+    tabPositionTitre[2].x = tabPositionTitre[0].x + LARGEUR_ECRAN<unsigned int> / 6 - tabPositionTitre[0].x / 3.5; // Le x est toujours le même pour tous les textes.
+    tabPositionTitre[2].y = HAUTEUR_ECRAN<unsigned int> / 1.4;
 
     //############### Résolutions ###############
-    positionPetit.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 2.7; // Le x est toujours le même pour tous les textes.
-    positionPetit.y = positionResolution.y + HAUTEUR_ECRAN<unsigned int> / 9;
+    tabPositionRes[0].x = tabPositionTitre[0].x + LARGEUR_ECRAN<unsigned int> / 6 - tabPositionTitre[0].x / 2.7; // Le x est toujours le même pour tous les textes.
+    tabPositionRes[0].y = tabPositionTitre[0].y + HAUTEUR_ECRAN<unsigned int> / 9;
 
-    positionMoyen.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 2.7; // Le x est toujours le même pour tous les textes.
-    positionMoyen.y = positionResolution.y + HAUTEUR_ECRAN<unsigned int> / 5;
+    tabPositionRes[1].x = tabPositionTitre[0].x + LARGEUR_ECRAN<unsigned int> / 6 - tabPositionTitre[0].x / 2.7; // Le x est toujours le même pour tous les textes.
+    tabPositionRes[1].y = tabPositionTitre[0].y + HAUTEUR_ECRAN<unsigned int> / 5;
 
-    positionGrand.x = positionResolution.x + LARGEUR_ECRAN<unsigned int> / 6 - positionResolution.x / 2.7; // Le x est toujours le même pour tous les textes.
-    positionGrand.y = positionResolution.y + HAUTEUR_ECRAN<unsigned int> / 3.5;
+    tabPositionRes[2].x = tabPositionTitre[0].x + LARGEUR_ECRAN<unsigned int> / 6 - tabPositionTitre[0].x / 2.7; // Le x est toujours le même pour tous les textes.
+    tabPositionRes[2].y = tabPositionTitre[0].y + HAUTEUR_ECRAN<unsigned int> / 3.5;
 
     // ############## Position des sons.
     positionEchelle[0].x = LARGEUR_ECRAN<unsigned int> / 20;
@@ -1241,7 +1238,7 @@ void sdlJeu::sdlReglage()
         }
     }
 
-    tabPoints[0].x = LARGEUR_ECRAN<unsigned int> / 2 - positionResolution.w / 2;
+    tabPoints[0].x = LARGEUR_ECRAN<unsigned int> / 2 - tabPositionTitre[0].w / 2;
     tabPoints[0].y = HAUTEUR_ECRAN<unsigned int> / 7;
 
     tabPoints[1].x = tabPoints[0].x + 300;
@@ -1257,13 +1254,14 @@ void sdlJeu::sdlReglage()
     }
 
     // On libère la surface.
-    SDL_FreeSurface(surfResolution);
-    SDL_FreeSurface(surfChanger);
-    SDL_FreeSurface(surfSon);
-    SDL_FreeSurface(surfRetour);
-    SDL_FreeSurface(surfPetit);
-    SDL_FreeSurface(surfMoyen);
-    SDL_FreeSurface(surfGrand);
+    for (int i = 0; i < 4; i++)
+    {
+        SDL_FreeSurface(tabSurfTitre[i]);
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        SDL_FreeSurface(tabRes[i]);
+    }
     SDL_FreeSurface(surfEchelle);
     TTF_CloseFont(fontMenuTexte);
     TTF_CloseFont(fontResText);
@@ -1295,24 +1293,24 @@ void sdlJeu::sdlReglage()
                 cout << posSourisX << " " << posSourisY << endl;
 
                 // Pour les résolutions
-                if ((posSourisX > positionPetit.x && posSourisY > positionPetit.y) &&                                                      // Point en haut à gauche
-                    (posSourisX < (positionPetit.x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionPetit.y)) &&                         // Point en haut à droite
-                    (posSourisX > positionPetit.x && posSourisY < positionPetit.y + HAUTEUR_ECRAN<int> / 18) &&                            // Point en bas à gauche
-                    (posSourisX < (positionPetit.x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionPetit.y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
+                if ((posSourisX > tabPositionRes[0].x && posSourisY > tabPositionRes[0].y) &&                                                      // Point en haut à gauche
+                    (posSourisX < (tabPositionRes[0].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > tabPositionRes[0].y)) &&                         // Point en haut à droite
+                    (posSourisX > tabPositionRes[0].x && posSourisY < tabPositionRes[0].y + HAUTEUR_ECRAN<int> / 18) &&                            // Point en bas à gauche
+                    (posSourisX < (tabPositionRes[0].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < tabPositionRes[0].y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
                 {
                     cout << "J'appuie sur la petit résolution" << endl;
                 }
-                if ((posSourisX > positionMoyen.x && posSourisY > positionMoyen.y) &&                                                      // Point en haut à gauche
-                    (posSourisX < (positionMoyen.x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionMoyen.y)) &&                         // Point en haut à droite
-                    (posSourisX > positionMoyen.x && posSourisY < positionMoyen.y + HAUTEUR_ECRAN<int> / 18) &&                            // Point en bas à gauche
-                    (posSourisX < (positionMoyen.x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionMoyen.y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
+                if ((posSourisX > tabPositionRes[1].x && posSourisY > tabPositionRes[1].y) &&                                                      // Point en haut à gauche
+                    (posSourisX < (tabPositionRes[1].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > tabPositionRes[1].y)) &&                         // Point en haut à droite
+                    (posSourisX > tabPositionRes[1].x && posSourisY < tabPositionRes[1].y + HAUTEUR_ECRAN<int> / 18) &&                            // Point en bas à gauche
+                    (posSourisX < (tabPositionRes[1].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < tabPositionRes[1].y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
                 {
                     cout << "J'appuie sur la résolution Moyenne" << endl;
                 }
-                if ((posSourisX > positionGrand.x && posSourisY > positionGrand.y) &&                                                      // Point en haut à gauche
-                    (posSourisX < (positionGrand.x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionGrand.y)) &&                         // Point en haut à droite
-                    (posSourisX > positionGrand.x && posSourisY < positionGrand.y + HAUTEUR_ECRAN<int> / 18) &&                            // Point en bas à gauche
-                    (posSourisX < (positionGrand.x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionGrand.y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
+                if ((posSourisX > tabPositionRes[2].x && posSourisY > tabPositionRes[2].y) &&                                                      // Point en haut à gauche
+                    (posSourisX < (tabPositionRes[2].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > tabPositionRes[2].y)) &&                         // Point en haut à droite
+                    (posSourisX > tabPositionRes[2].x && posSourisY < tabPositionRes[2].y + HAUTEUR_ECRAN<int> / 18) &&                            // Point en bas à gauche
+                    (posSourisX < (tabPositionRes[2].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < tabPositionRes[2].y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
                 {
                     cout << "J'appuie sur la résolution Grande" << endl;
                 }
@@ -1351,30 +1349,17 @@ void sdlJeu::sdlReglage()
             SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255); // Affiche la couleur de fond.
             SDL_RenderClear(renderer);
 
-            // Affichage texte Resolution.
-            SDL_RenderClear(renderer);                                              // On change sur quelle rendu on fait.
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                       // On passe sur la couleur du texte.
-            SDL_RenderCopy(renderer, textResolution, nullptr, &positionResolution); // Affichage du texte.
-
-            // Affichage résolution 720 x 576
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);             // On passe sur la couleur du texte.
-            SDL_RenderCopy(renderer, textPetit, nullptr, &positionPetit); // Affichage du texte.
-
-            // Affichage résolution 1280 x 720
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);             // On passe sur la couleur du texte.
-            SDL_RenderCopy(renderer, textMoyen, nullptr, &positionMoyen); // Affichage du texte.
-
-            // Affichage résolution 1920 x 1080
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);             // On passe sur la couleur du texte.
-            SDL_RenderCopy(renderer, textGrand, nullptr, &positionGrand); // Affichage du texte.
-
-            //Affichage Changer de pseudo
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                 // On passe sur la couleur du texte.
-            SDL_RenderCopy(renderer, textChanger, nullptr, &positionChanger); // Affichage du texte.
-
-            // Affichage Texte Son
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);         // On passe sur la couleur du texte.
-            SDL_RenderCopy(renderer, textSon, nullptr, &positionSon); // Affichage du texte.
+            SDL_RenderClear(renderer); // On change sur quelle rendu on fait.
+            for (int i = 0; i < 4; i++)
+            {
+                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                            // On passe sur la couleur du texte.
+                SDL_RenderCopy(renderer, tabTextureTitre[i], nullptr, &tabPositionTitre[i]); // Affichage du texte.
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                    // On passe sur la couleur du texte.
+                SDL_RenderCopy(renderer, tabTextRes[i], nullptr, &tabPositionRes[i]); // Affichage du texte.
+            }
 
             for (int i = 0; i < 11; i++) // Echelle son [1...10]
             {
@@ -1392,24 +1377,20 @@ void sdlJeu::sdlReglage()
                 SDL_RenderDrawLine(renderer, tabPoints[i].x, tabPoints[i].y, tabPoints[i + 1].x, tabPoints[i + 1].y);
             }
 
-            // Affichage texte Retour
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);               // On passe sur la couleur du texte.
-            SDL_RenderCopy(renderer, textRetour, nullptr, &positionRetour); // Affichage du texte.
-
             SDL_RenderPresent(renderer);
         }
     }
-    SDL_DestroyTexture(textResolution);
-    SDL_DestroyTexture(textChanger);
-    SDL_DestroyTexture(textSon);
-    SDL_DestroyTexture(textRetour);
-    SDL_DestroyTexture(textPetit);
-    SDL_DestroyTexture(textMoyen);
-    SDL_DestroyTexture(textGrand);
+    for (int i = 0; i < 4; i++)
+    {
+        SDL_DestroyTexture(tabTextureTitre[i]);
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        SDL_DestroyTexture(tabTextRes[i]);
+    }
     for (int i = 0; i < 10; i++)
         SDL_DestroyTexture(tabSon[i]);
 
-    //this->~sdlJeu();
 }
 
 void sdlJeu::sdlBoucleJeu(Jeu &jeu)
