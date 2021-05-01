@@ -16,7 +16,7 @@ int main ( int argc, char** argv ) {
     
     sdlJeu partie;
     /*partie.sdlBoucleJeu(1,4,0);*/
-    partie.sdlReglage();
+    partie.sdlMenu();
 
     //partie.~sdlJeu();
 
