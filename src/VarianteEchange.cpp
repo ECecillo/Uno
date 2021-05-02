@@ -138,8 +138,7 @@ void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messag
             case 14:
                 break;
             }
-            if (casPart != 3)
-                termineTour();
+            if (casPart != 3) termineTour();
         }
         else
         {
