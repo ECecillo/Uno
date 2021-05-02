@@ -73,6 +73,13 @@ public:
 
 	/**
 	* @brief 
+	* Indique le numéro de la variante si le jeu se trouve dans un cas particulier.
+	* 0 classique, 1 cumul, 2 doublon, 3 echange, 4 suite, 5 tourne, -1 sinon
+	*/
+	int casPart;
+
+	/**
+	* @brief 
 	* Booléen qui permettra de dire que la partie est terminée.
 	*/
 	bool finPartie;

@@ -73,6 +73,7 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
     distribueCarte();                                  // On donne les cartes au joueurs
     initTalon();                                       // On initialise le Talon.
     finTour = false;
+    casPart = -1;
     statut_Uno = false;
     finPartie = false;
     //nombreJoueurs += nombreIA; // On regroupe le nombre d'IA avec le nombre de joueurs.

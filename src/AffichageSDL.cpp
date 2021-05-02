@@ -151,8 +151,7 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
             exit(1);
 	}
 	
-    // JEU
-    Jeu jeu;
+    
 
 }
     
@@ -802,6 +801,70 @@ void sdlJeu::situationContreUno(Jeu & jeu)
     }
 }
 
+void sdlJeu::sdlEchange(Jeu & jeu)
+{
+    SDL_Window * choixEchange = SDL_CreateWindow("Quel joueur?", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 200, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (choixEchange == NULL) {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
+        SDL_Quit(); 
+        exit(1);
+    }
+
+    SDL_Renderer * rendererEchange = SDL_CreateRenderer(choixEchange,-1,SDL_RENDERER_ACCELERATED);
+
+    SDL_Rect texte;
+    texte.x = 250;texte.y = 25;texte.w = 500;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,"Echange avec le joueur",jaune));
+    font_im.loadFromCurrentSurface(rendererEchange);
+    SDL_RenderCopy(rendererEchange,font_im.getTexture(),NULL,&texte);
+    int pos=(1000-100*(jeu.nombreJoueurs-1))/2;
+    for (int i=0; i<jeu.nombreJoueurs-1; i++)
+    {
+        texte.x = pos+100*i;texte.y = 125;texte.w = 100;texte.h = 50;
+        if(i<jeu.joueurActif)
+        {
+            font_im.setSurface(TTF_RenderText_Solid(font,jeu.joueurs[i].nom.c_str(),jaune));
+        }
+        else
+        {
+            font_im.setSurface(TTF_RenderText_Solid(font,jeu.joueurs[i+1].nom.c_str(),jaune));
+        }
+        font_im.loadFromCurrentSurface(rendererEchange);
+        SDL_RenderCopy(rendererEchange,font_im.getTexture(),NULL,&texte);
+    }
+    SDL_RenderPresent(rendererEchange);
+
+    SDL_Event event;
+    bool choixFait=false;
+    int sourisX;
+    int sourisY;
+    unsigned int indice;
+
+    while (!choixFait)
+    {
+        while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN) 
+        {
+            sourisX = event.button.x;
+            sourisY = event.button.y;
+            cout << "choix joueurs " << sourisX << " " << sourisY << endl;
+            if(event.type==SDL_MOUSEBUTTONDOWN)
+            {
+                if (sourisX>0 && sourisX<100*(jeu.nombreJoueurs-1) && sourisY>125 && sourisY<175) // clic sur un nom
+                {
+                    indice = (sourisX-pos)/100;
+                    if (indice>=jeu.joueurActif) indice++;
+                    choixFait = true;
+                }
+            }
+        }
+    }
+    jeu.joueurs[jeu.joueurActif].main.swap(jeu.joueurs[indice].main);
+    jeu.casPart = -1;
+    jeu.termineTour();
+    SDL_DestroyRenderer(rendererEchange);
+    SDL_DestroyWindow(choixEchange);
+}
+
 void sdlJeu::sdlBoucleJeu (Jeu & jeu) 
 {
      //Remplir l'écran de noir
@@ -886,6 +949,7 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                             }
                         }
                         jeu.poserCarte(indiceCarte, messageErreur);
+                        if (jeu.casPart==3) sdlEchange(jeu);
                         sdlAffJoueur(jeu, indiceJoueur);
                         if (couleur != 0 && couleurChangee) sdlAffCouleurChoisie(couleur);
                         if (jeu.joueurs[indiceJoueur].main.size() == 1)
