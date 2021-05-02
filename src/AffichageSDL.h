@@ -76,6 +76,7 @@ void sdlAffCouleurChoisie(unsigned int couleur);
 void situationUno(Jeu & jeu);
 void situationContreUno(Jeu & jeu);
 void sdlEchange(Jeu & jeu);
+void sdlDoublon(Jeu & jeu);
 	void sdlBoucleJeu (Jeu & jeu);
 	unsigned int sdlAffChoixJeu ();
 
