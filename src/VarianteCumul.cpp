@@ -89,8 +89,7 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                     annonceGagnant();
                 return;
             }
-            /* if (carteSpeciale && testUno() != false)
-                termineTour(); */
+            termineTour(); 
         }
         else
         {
@@ -120,9 +119,7 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                     sensJeu = 1;
                 break;
             case 11:
-                if (joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
-                    joueurActif = 0;
-                joueurActif++;
+                termineTour();
                 break;
             case 12:
                 cumulCarteAPiocher += 2;
