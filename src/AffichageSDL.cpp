@@ -166,7 +166,7 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     // IMAGES
-    im_salleAttente.loadFromFile("data/uno4.png", renderer);
+    fondMenu.loadFromFile("data/uno1.bmp", renderer);
 
     // FONTS
     font = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 100);
@@ -177,8 +177,9 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
         exit(1);
     }
     fontTexte = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 60);
-    SDL_SetRenderDrawColor(renderer, 168, 230, 255, 255);
-    SDL_RenderClear(renderer);
+
+    //SDL_SetRenderDrawColor(renderer, 168, 230, 255, 255);
+    //SDL_RenderClear(renderer);
 
     // Son
     Mix_AllocateChannels(3);                    // Alloue 3 cannaux
@@ -246,7 +247,7 @@ void sdlJeu::modifFichierRes(int largeur, int hauteur)
         monFichier << to_string(hauteur) + "\n";
         monFichier.close();
     }
-    else 
+    else
     {
         cout << "Le fichier n'a pas pu être modifier." << endl;
         exit(EXIT_FAILURE);
@@ -354,7 +355,7 @@ void sdlJeu::sdlUno()
     SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255);
     SDL_RenderClear(renderer);
 
-    im_salleAttente.draw(renderer, 0, 0, 2000, 1000);
+    fondMenu.draw(renderer, 0, 0, 2000, 1000);
     SDL_RenderPresent(renderer);
 
     SDL_Window *param = SDL_CreateWindow("Paramètres du jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
@@ -987,14 +988,17 @@ void sdlJeu::sdlMenu()
 
     // Police des textes
     TTF_Font *fontMenuTitre = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 110);
+    if (LargeurEcran == 1920 && HauteurEcran == 1080)
+    {
+        fontTexte = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 80);
+    }
 
     // Créer tous les textes pour le Menu en allant récupérer dans le vecteur string dans la classe Menu.
     SDL_Surface *surfTexte[5];
-    surfTexte[0] = TTF_RenderText_Blended(fontMenuTitre, "Uno", SDL_Color{255, 0, 0, 255});
+    surfTexte[0] = TTF_RenderText_Blended(fontMenuTitre, "Uno", SDL_Color{255, 255, 255, 255});
     for (int i = 0; i < 4; i++)
     {
-        cout << menu.getNomMenu(i) << endl;
-        surfTexte[i + 1] = TTF_RenderText_Blended(fontTexte, (menu.getNomMenu(i)).c_str(), SDL_Color{255, 0, 0, 255});
+        surfTexte[i + 1] = TTF_RenderText_Blended(fontTexte, (menu.getNomMenu(i)).c_str(), SDL_Color{255, 255, 255, 255});
     }
     // Creations des textures pour les textes.
     SDL_Texture *textureTexte[5];
@@ -1147,8 +1151,9 @@ void sdlJeu::sdlMenu()
         SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255); // Affiche la couleur de fond.
         SDL_RenderClear(renderer);
 
+        fondMenu.draw(renderer, 0, 0, LargeurEcran, HauteurEcran);
         // Affichage texte, ici du titre.
-        SDL_RenderClear(renderer); // On change sur quelle rendu on fait.
+        //SDL_RenderClear(renderer); // On change sur quelle rendu on fait.
         // Affichage des Textes
         for (int i = 0; i < 5; i++)
         {
@@ -1183,22 +1188,32 @@ void sdlJeu::sdlReglage(Menu &menu)
 
     // Police des textes
     TTF_Font *fontResText = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 45);
-
+    /* 
+    SDL_Surface *surfImageFond = SDL_LoadBMP("data/uno1.bmp");
+    if (surfImageFond == NULL)
+    {
+        cout << "Erreur impossible de lire l'image de fond" << endl;
+        this->~sdlJeu();
+        exit(EXIT_FAILURE);
+    }
+    SDL_Texture *textureImageFond = SDL_CreateTextureFromSurface(renderer, surfImageFond);
+    SDL_FreeSurface(surfImageFond);
+ */
     // Créer tous les textes pour les réglages en allant récupérer dans le vecteur string dans la classe Menu.
     SDL_Surface *tabSurfTitre[4];
     for (int i = 0; i < 4; i++)
     {
-        tabSurfTitre[i] = TTF_RenderText_Blended(fontTexte, (menu.getOptions(i)).c_str(), SDL_Color{255, 0, 0, 255});
+        tabSurfTitre[i] = TTF_RenderText_Blended(fontTexte, (menu.getOptions(i)).c_str(), SDL_Color{255, 255, 255, 255});
     }
-    if(LargeurEcran == 800 && HauteurEcran == 800)
+    if (LargeurEcran == 800 && HauteurEcran == 800)
     {
-        tabSurfTitre[3] = TTF_RenderText_Blended(fontResText, (menu.getOptions(3)).c_str(), SDL_Color{255, 0, 0, 255});
+        tabSurfTitre[3] = TTF_RenderText_Blended(fontResText, (menu.getOptions(3)).c_str(), SDL_Color{255, 255, 255, 255});
     }
     // Textes pour les résolutions d'écran.
     SDL_Surface *tabRes[3];
     for (int i = 0; i < 3; i++)
     {
-        tabRes[i] = TTF_RenderText_Blended(fontResText, (menu.getResolution(i)).c_str(), SDL_Color{255, 0, 0, 255});
+        tabRes[i] = TTF_RenderText_Blended(fontResText, (menu.getResolution(i)).c_str(), SDL_Color{255, 255, 255, 255});
         ;
     }
     // Creations des textures pour les textes.
@@ -1221,7 +1236,7 @@ void sdlJeu::sdlReglage(Menu &menu)
 
     for (int i = 0; i < 11; i++)
     {
-        surfEchelle = TTF_RenderText_Blended(fontResText, (menu.getSon(i)).c_str(), SDL_Color{255, 0, 0, 255});
+        surfEchelle = TTF_RenderText_Blended(fontResText, (menu.getSon(i)).c_str(), SDL_Color{255, 255, 255, 255});
         tabSon[i] = SDL_CreateTextureFromSurface(renderer, surfEchelle);
         SDL_QueryTexture(tabSon[i], nullptr, nullptr, &positionEchelle[i].w, &positionEchelle[i].h);
     }
@@ -1231,8 +1246,6 @@ void sdlJeu::sdlReglage(Menu &menu)
     // Postion Résolution texte.
     SDL_Rect tabPositionRes[3];
     SDL_Rect sonSelectionne; // Encadre le son sur lequelle on clique ou qui est déjà actif.
-
-    SDL_Point tabPoints[6]; // On déclare un tableau de point pour tracer sous les titres des lignes horizontal.
 
     for (int i = 0; i < 4; i++)
     {
@@ -1244,14 +1257,14 @@ void sdlJeu::sdlReglage(Menu &menu)
         SDL_QueryTexture(tabTextRes[i], nullptr, nullptr, &tabPositionRes[i].w, &tabPositionRes[i].h); // Récupere la dimension de la texture
     }
 
-    // On définie les coordo des textes Resolutions, ... Par rapport à la coordo du titre.
+    // On définie les coordo des titres Resolutions, Changer Pseudo, Son.
     tabPositionTitre[3].x = LargeurEcran / 30; // Le x est toujours le même pour tous les textes.
     tabPositionTitre[3].y = HauteurEcran / 30;
 
     tabPositionTitre[0].x = (LargeurEcran / 2 - tabPositionTitre[0].w / 2); // on soustrait pour que le texte soit alignée.
     tabPositionTitre[0].y = HauteurEcran / 14;
 
-    tabPositionTitre[1].x = tabPositionTitre[0].x + LargeurEcran / 6 - tabPositionTitre[0].x / 2.2; // Le x est toujours le même pour tous les textes.
+    tabPositionTitre[1].x = tabPositionTitre[0].x + LargeurEcran / 6 - tabPositionTitre[0].x / 1.8; // Le x est toujours le même pour tous les textes.
     tabPositionTitre[1].y = tabPositionTitre[0].y + HauteurEcran / 2.6;
 
     tabPositionTitre[2].x = tabPositionTitre[0].x + LargeurEcran / 6 - tabPositionTitre[0].x / 3.5; // Le x est toujours le même pour tous les textes.
@@ -1273,33 +1286,30 @@ void sdlJeu::sdlReglage(Menu &menu)
 
     for (int i = 1; i < 11; i++)
     {
-        positionEchelle[i].x = positionEchelle[i - 1].x + LargeurEcran / 30 + 100;
-        positionEchelle[i].y = HauteurEcran / 1.2;
+        positionEchelle[i].x = positionEchelle[i - 1].x + LargeurEcran / 12;
+        positionEchelle[i].y = positionEchelle[0].y;
         if (i == choixVolume) // choixVolume est pour rappelle la donnée membre qui nous indique sur l'échelle de 0 à 10 le volume de la musique.
         {
             // Position du rectangle repère pour régler le son.
-            sonSelectionne.x = positionEchelle[i].x - 5;
+            sonSelectionne.x = positionEchelle[i].x - LargeurEcran / 130;
             sonSelectionne.y = positionEchelle[i].y;
-            sonSelectionne.w = LargeurEcran / 55;
-            sonSelectionne.h = HauteurEcran / 20;
+            if (LargeurEcran == 1920 && HauteurEcran == 1080)
+            {
+                sonSelectionne.w = LargeurEcran / 40;
+                sonSelectionne.h = HauteurEcran / 22;
+            }
+            else if (LargeurEcran == 1280 && HauteurEcran == 720)
+            {
+                sonSelectionne.w = LargeurEcran / 30;
+                sonSelectionne.h = HauteurEcran / 15;
+            }
+            else
+            {
+                sonSelectionne.w = LargeurEcran / 20;
+                sonSelectionne.h = HauteurEcran / 15;
+            }
         }
     }
-
-    tabPoints[0].x = LargeurEcran / 2 - tabPositionTitre[0].w / 2;
-    tabPoints[0].y = HauteurEcran / 7;
-
-    tabPoints[1].x = tabPoints[0].x + 300;
-    tabPoints[1].y = tabPoints[0].y;
-
-    for (int i = 2; i < 6; i += 2)
-    {
-        tabPoints[i].x = tabPoints[0].x;
-        tabPoints[i].y = tabPoints[0].y + HauteurEcran / 2.6;
-
-        tabPoints[i + 1].x = tabPoints[0].x + 300;
-        tabPoints[i + 1].y = tabPoints[i].y;
-    }
-
     // On libère la surface.
     for (int i = 0; i < 4; i++)
     {
@@ -1392,10 +1402,23 @@ void sdlJeu::sdlReglage(Menu &menu)
                             }
                             else
                             {
-                                sonSelectionne.x = positionEchelle[i].x - 5;
+                                sonSelectionne.x = positionEchelle[i].x - LargeurEcran / 130;
                                 sonSelectionne.y = positionEchelle[i].y;
-                                sonSelectionne.w = LargeurEcran / 55;
-                                sonSelectionne.h = HauteurEcran / 20;
+                                if (LargeurEcran == 1920 && HauteurEcran == 1080)
+                                {
+                                    sonSelectionne.w = LargeurEcran / 40;
+                                    sonSelectionne.h = HauteurEcran / 22;
+                                }
+                                else if (LargeurEcran == 1280 && HauteurEcran == 720)
+                                {
+                                    sonSelectionne.w = LargeurEcran / 30;
+                                    sonSelectionne.h = HauteurEcran / 15;
+                                }
+                                else
+                                {
+                                    sonSelectionne.w = LargeurEcran / 20;
+                                    sonSelectionne.h = HauteurEcran / 15;
+                                }
                             }
                             //Mix_VolumeMusic(0,volume); // On modifie le son du cannal actif.
                         }
@@ -1403,11 +1426,15 @@ void sdlJeu::sdlReglage(Menu &menu)
                 }
             }
 
+            // Affiche l'image.
             // On met à jour l'affichage.
             SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255); // Affiche la couleur de fond.
             SDL_RenderClear(renderer);
 
-            SDL_RenderClear(renderer); // On change sur quelle rendu on fait.
+            fondMenu.draw(renderer, 0, 0, LargeurEcran, HauteurEcran);
+            //SDL_RenderCopy(renderer, fondMenu, nullptr, nullptr); // Affichage du texte.
+
+            //SDL_RenderClear(renderer); // On change sur quelle rendu on fait.
             for (int i = 0; i < 4; i++)
             {
                 SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                            // On passe sur la couleur du texte.
@@ -1428,12 +1455,6 @@ void sdlJeu::sdlReglage(Menu &menu)
             // Affiche le rectangle qui indique le volume de la musique du Jeu.
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // On passe sur la couleur du texte.
             SDL_RenderDrawRects(renderer, &sonSelectionne, 1);
-
-            for (int i = 0; i < 6; i += 2)
-            {
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                SDL_RenderDrawLine(renderer, tabPoints[i].x, tabPoints[i].y, tabPoints[i + 1].x, tabPoints[i + 1].y);
-            }
 
             SDL_RenderPresent(renderer);
         }
