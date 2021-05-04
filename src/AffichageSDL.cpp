@@ -1397,8 +1397,21 @@ void sdlJeu::sdlReglage(Menu &menu)
                             {
                                 sonSelectionne.x = positionEchelle[i].x - 5;
                                 sonSelectionne.y = positionEchelle[i].y;
-                                sonSelectionne.w = LargeurEcran / 30;
-                                sonSelectionne.h = HauteurEcran / 20;
+                                if (LargeurEcran == 1920 && HauteurEcran == 1080)
+                                {
+                                    sonSelectionne.w = LargeurEcran / 30;
+                                    sonSelectionne.h = HauteurEcran / 20;
+                                }
+                                else if (LargeurEcran == 1280 && HauteurEcran == 720)
+                                {
+                                    sonSelectionne.w = LargeurEcran / 19;
+                                    sonSelectionne.h = HauteurEcran / 15;
+                                }
+                                else
+                                {
+                                    sonSelectionne.w = LargeurEcran / 13;
+                                    sonSelectionne.h = HauteurEcran / 15;
+                                }
                             }
                             else
                             {
