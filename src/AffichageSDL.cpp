@@ -921,13 +921,13 @@ void sdlJeu::sdlDoublon(Jeu & jeu)
             {
                 sourisX = event.button.x;
                 sourisY = event.button.y;
-                if (sourisX>350 && sourisX<450 && sourisY>125 && sourisY<175) // clic sur un nom
+                if (sourisX>350 && sourisX<450 && sourisY>125 && sourisY<175) // clic sur oui
                 {
                     jeu.talon.push(jeu.joueurs[jeu.joueurActif].main[indice]); // On pousse le doublon.
                     jeu.joueurs[jeu.joueurActif].main.erase(jeu.joueurs[jeu.joueurActif].main.begin() + indice);
                     choixFait = true;
                 }
-                if (sourisX>550 && sourisX<650 && sourisY>125 && sourisY<175) // clic sur un nom
+                if (sourisX>550 && sourisX<650 && sourisY>125 && sourisY<175) // clic sur non
                 {
                     choixFait = true;
                 }
@@ -936,6 +936,69 @@ void sdlJeu::sdlDoublon(Jeu & jeu)
         SDL_DestroyRenderer(rendererDoublon);
         SDL_DestroyWindow(choixDoublon);
     }
+    jeu.casPart = -1;
+    jeu.termineTour();
+}
+
+void sdlJeu::sdlSuite(Jeu & jeu, unsigned int indice)
+{
+    SDL_Window * choixSuite = SDL_CreateWindow("Suite", 0, 280, 570, 200, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (choixSuite == NULL) {
+        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl; 
+        SDL_Quit(); 
+        exit(1);
+    }
+
+    SDL_Renderer * rendererSuite = SDL_CreateRenderer(choixSuite,-1,SDL_RENDERER_ACCELERATED);
+    SDL_SetRenderDrawColor(rendererSuite, 0, 255, 0, 255);
+    SDL_RenderClear(rendererSuite);
+
+    SDL_Rect texte;
+    texte.x = 35;texte.y = 25;texte.w = 500;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,"Suite: Jouer la carte suivante",noir));
+    font_im.loadFromCurrentSurface(rendererSuite);
+    SDL_RenderCopy(rendererSuite,font_im.getTexture(),NULL,&texte);
+    int pos=(1000-100*(jeu.nombreJoueurs-1))/2;
+    texte.x = 135;texte.y = 125;texte.w = 100;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,"oui",noir));
+    font_im.loadFromCurrentSurface(rendererSuite);
+    SDL_RenderCopy(rendererSuite,font_im.getTexture(),NULL,&texte);
+    texte.x = 335;texte.y = 125;texte.w = 100;texte.h = 50;
+    font_im.setSurface(TTF_RenderText_Solid(font,"non",noir));
+    font_im.loadFromCurrentSurface(rendererSuite);
+    SDL_RenderCopy(rendererSuite,font_im.getTexture(),NULL,&texte);
+    
+    SDL_RenderPresent(rendererSuite);
+
+    SDL_Event event;
+    bool choixFait=false;
+    int sourisX;
+    int sourisY;
+    int carteTalon = jeu.talon.back().getValeur();
+
+    while (!choixFait && jeu.talon.back().getValeur() < 7)
+    {
+        while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN) 
+        {
+            sourisX = event.button.x;
+            sourisY = event.button.y;
+            if (sourisX>135 && sourisX<435 && sourisY>125 && sourisY<175) // clic sur oui
+            {
+                if (jeu.joueurs[jeu.joueurActif].main[indice].getValeur() == carteTalon) indice++; // il a le doublon de la carte du talon, on la passe
+    
+                jeu.talon.push(jeu.joueurs[jeu.joueurActif].main[indice]); // On pousse le doublon.
+                jeu.joueurs[jeu.joueurActif].main.erase(jeu.joueurs[jeu.joueurActif].main.begin() + indice);
+                carteTalon++;
+            }
+            if (sourisX>550 && sourisX<650 && sourisY>125 && sourisY<175) // clic sur non
+            {
+                choixFait = true;
+            }
+        }
+    }
+    SDL_DestroyRenderer(rendererSuite);
+    SDL_DestroyWindow(choixSuite);
+
     jeu.casPart = -1;
     jeu.termineTour();
 }
@@ -1016,7 +1079,6 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                             indiceJoueur = jeu.joueurActif;
                         }
                         jeu.termineTour();
-                        cout << jeu.casPart << "après piocher" << endl;
 
                         if (couleur != 0 && couleurChangee) sdlAffCouleurChoisie(couleur);
                     }
@@ -1038,10 +1100,10 @@ void sdlJeu::sdlBoucleJeu (Jeu & jeu)
                                 jeu.joueurs[jeu.joueurActif].main[indiceCarte].setCouleur(couleur);
                             }
                         }
-                        cout << jeu.casPart << "avant poser" << endl;
+
                         if(jeu.casPart % 2 == 0) indiceJoueur = jeu.joueurActif;
                         jeu.poserCarte(indiceCarte, messageErreur);
-                        cout << jeu.casPart << "après poser" << endl;
+                        if (jeu.casPart==5) sdlSuite(jeu, indiceCarte);
                         if (jeu.casPart==3) sdlEchange(jeu);
                         if (jeu.casPart==1) sdlDoublon(jeu);
                         sdlAffJoueur(jeu, indiceJoueur);
