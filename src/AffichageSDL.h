@@ -54,7 +54,7 @@ private:
 	Mix_Chunk *sons[3]; // Tableau dans lequel on charge nos fichiers audio.
 
 	int choixVolume;	  // Volume qui sert de référence pour la définition du volume.
-	Uint8 volume;		  // Volume Sons.
+	int volume;		  // Volume Sons.
 	Mix_Music *selection; // son pour la sélection d'un paramètre.
 
 	int HauteurEcran; // Résolution de la fenêtre.
