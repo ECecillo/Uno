@@ -130,11 +130,11 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
         SDL_Quit();
         exit(1);
     }
-    if (Mix_OpenAudio(96000, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) < 0) // création de la configuration de la carte son
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
     {
-        SDL_Log("Erreur initialisation SDL_mixer : %s", Mix_GetError());
-        SDL_Quit();
-        exit(1);
+        cout << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << endl;
+        cout << "No sound !!!" << endl;
+        this->~sdlJeu();
     }
 
     int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
@@ -192,7 +192,20 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
 
     sons[0] = Mix_LoadWAV("data/sounds/passageSalleAttente.wav");
     sons[1] = Mix_LoadWAV("data/sounds/selection.wav"); // On charge la musique.
+    if (sons[1] == NULL)
+    {
+        sons[1] = Mix_LoadWAV("../data/sounds/selection.wav"); // On charge la musique.
+    }
     sons[2] = Mix_LoadWAV("data/sounds/valide.wav");
+    for (int i = 0; i < 3; i++)
+    {
+        if (sons[i] == NULL)
+        {
+            cout << "Failed to load son.wav! SDL_mixer Error: " << Mix_GetError() << endl;
+            this->~sdlJeu();
+            exit(1);
+        }
+    }
 
     //Mix_PlayMusic(selection, -1); // Joue notre musique
 
@@ -210,6 +223,7 @@ sdlJeu::~sdlJeu()
     for (int i = 0; i < 3; i++)
         Mix_FreeChunk(sons[i]); // Libére la mémoire allouer pour le son
     Mix_CloseAudio();
+    Mix_Quit();
     TTF_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
@@ -977,7 +991,6 @@ void sdlJeu::sdlMenu()
     bool isOpen{true};
     bool openRegle{false};
     Menu menu;
-    Mix_AllocateChannels(1);
     Mix_Volume(0, MIX_MAX_VOLUME);
 
     Mix_Chunk *soundA = Mix_LoadWAV("selection.wav");
@@ -1110,8 +1123,8 @@ void sdlJeu::sdlMenu()
                     (posSourisX < (positionTexte[1].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[1].y + HAUTEUR_ECRAN<int> / 12)))
                 {
                     cout << "je clique sur Jouer." << endl;
-                    Mix_PlayChannel(0, soundA, 1);
-                    //Mix_PlayChannel(1, sons[0], 0); // On joue le son salleAttente.
+                    //Mix_PlayChannel(0, soundA, 1);
+                    Mix_PlayChannel(1, sons[0], 0); // On joue le son salleAttente.
                 }
                 // On clique sur Reglage
                 if ((posSourisX > positionTexte[2].x && posSourisY > positionTexte[2].y) &&                              // Point en haut à gauche
@@ -1122,7 +1135,7 @@ void sdlJeu::sdlMenu()
                     cout << "Je clique sur réglage" << endl;
                     isOpen = false; // On quitte la boucle.
                     openRegle = true;
-                    //Mix_PlayChannel(1, sons[1], 0); // On joue le son selection 1 fois.
+                    Mix_PlayChannel(1, sons[1], 0); // On joue le son selection 1 fois.
                 }
                 // On clique sur Regles
                 if ((posSourisX > positionTexte[3].x && posSourisY > positionTexte[3].y) &&                              // Point en haut à gauche
@@ -1131,7 +1144,7 @@ void sdlJeu::sdlMenu()
                     (posSourisX < (positionTexte[3].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[3].y + HAUTEUR_ECRAN<int> / 12)))
                 {
                     cout << "Je clique sur Regles" << endl;
-                    //Mix_PlayChannel(1, sons[1], 0); // On joue le son selection 1 fois.
+                    Mix_PlayChannel(1, sons[1], 0); // On joue le son selection 1 fois.
                 }
                 // On clique sur quitter
                 if ((posSourisX > positionTexte[4].x && posSourisY > positionTexte[4].y) &&                              // Point en haut à gauche
@@ -1142,7 +1155,6 @@ void sdlJeu::sdlMenu()
                     cout << "Je clique Quitter" << endl;
                     isOpen = false;
                 }
-
                 break;
             }
         }
