@@ -146,7 +146,7 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
             case 14:
                 break;
             }
-            if(casPart != 2) termineTour();
+            if(casPart != 1) termineTour();
         }
         else
         {

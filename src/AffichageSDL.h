@@ -77,6 +77,7 @@ void situationUno(Jeu & jeu);
 void situationContreUno(Jeu & jeu);
 void sdlEchange(Jeu & jeu);
 void sdlDoublon(Jeu & jeu);
+void sdlSuite(Jeu & jeu, unsigned int indice);
 	void sdlBoucleJeu (Jeu & jeu);
 	unsigned int sdlAffChoixJeu ();
 

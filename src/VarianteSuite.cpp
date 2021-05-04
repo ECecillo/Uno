@@ -96,23 +96,10 @@ void VarianteSuite::poserCarte(const unsigned int &indiceCarte, string &messageE
         { // La carte qu'il veut poser est valide
             //char reponse = 'O';
             talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
-            testSuite(indiceCarte, joueurs[joueurActif].main);  //est-ce que la carte que le joueur joue fait partie d'une suite?
+            // la carte fait partie d'une suite de 0 à 7, et qu'elle est plus petite que 7, au delà le joueur ne pourra pas jouer plusieurs cartes
+            if (testSuite(indiceCarte, joueurs[joueurActif].main) && talon.back().getValeur() < 7) casPart = 5; 
             joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
-            // le joueur va choisir de jouer ou pas la carte suivante de la suite
-            /* if (suite)
-        {
-            while (reponse == 'O' && joueurs[joueurActif].main[indiceCarte].getValeur() < 7) //
-            {
-                cout << "Veux-tu jouer la carte suivante? O/N ";
-                cin >> reponse;
-                cout << endl;
-                if (reponse == 'O')
-                {
-                    talon.push(joueurs[joueurActif].main[indiceCarte]); // l'indice reste le même comme les cartes ont été décalées dans la main triée
-                    joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
-                }
-            }
-        } */
+
 
             // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
             joueurs[joueurActif].modifMainTxt();
@@ -148,7 +135,7 @@ void VarianteSuite::poserCarte(const unsigned int &indiceCarte, string &messageE
             case 14:
                 break;
             }
-            termineTour();
+            if (casPart != 5) termineTour();
         }
         else
         {
@@ -160,20 +147,22 @@ void VarianteSuite::poserCarte(const unsigned int &indiceCarte, string &messageE
     }
 }
 
-// retourne vrai si dans m, la carte d'indice ind fait partie de la suite de 0 à 7 de la même couleur
-void VarianteSuite::testSuite(unsigned int ind, vector<Carte> main)
+// retourne vrai si dans main, la carte d'indice ind fait partie de la suite de 0 à 7 de la même couleur
+bool VarianteSuite::testSuite(unsigned int ind, vector<Carte> main)
 {
-    /* bool test = (m[ind].getValeur() <= 7);
+    bool test = (main[ind].getValeur() <= 7);
     unsigned int carteSerie = 0; //1ère valeur de la série à tester
     int i = 0;
-    while (i < m.size() && test && carteSerie <= 7)
+    while (i < main.size() && test && carteSerie <= 7)
     {
-        if (m[i].getCouleur() > m[ind].getCouleur())
+        if (main[i].getCouleur() > main[ind].getCouleur())
             test = false;
-        else if (m[i].getCouleur() == m[ind].getCouleur() && m[i].getValeur() == carteSerie)
+        else if (main[i].getCouleur() == main[ind].getCouleur() && main[i].getValeur() == carteSerie)
             carteSerie++;
-        return test;
-    } */
+    }
+    if (carteSerie <= 7) test = false;
+    return test;
+/*
     char reponse = 'O';
     int k = 0;
     // Si on a bien 2 chiffres au moins à la suite
@@ -213,5 +202,5 @@ void VarianteSuite::testSuite(unsigned int ind, vector<Carte> main)
                 }
             }
         }
-    }
+    }*/
 }
