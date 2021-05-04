@@ -188,8 +188,8 @@ void Jeu::definieCouleurBot(Bot &tabJoueursBot, Carte &c)
 // true si la carte est valide
 bool Jeu::carteValide(const Carte c) const
 {
+    cout << "valide jeu" << endl;
     bool chercheCouleur = false;
-    //cout << "Carte Valide" << endl;
     //si carte +4, on regarde dans la main du joueur s'il y a une carte de la même couleur que celle du talon
     if (c.getValeur() == 13)
     {
@@ -210,6 +210,7 @@ bool Jeu::carteValide(const Carte c) const
 // Met une carte de la pioche dans la main du joueur
 void Jeu::piocherCarte()
 {
+    cout << "piocher jeu" << endl;
     if (joueurActif >= nombreJoueurs) // Si on a un bot pas besoin de modif affichage.
     {
         int indexBot = joueurActif - nombreJoueurs;
@@ -433,21 +434,10 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                 carteSpeciale = true;
                 break;
             case 13:
-                carteSpeciale = true;
-                if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
-                    joueurActif = 0;
-                else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
-                {
-                    joueurActif--;
-                }
-                else if (joueurActif == 0 && sensJeu == 0)
-                    joueurActif = nombreIA + nombreJoueurs - 1;
-                joueurActif++;
-                //termineTour();
+                termineTour();
 
                 for (unsigned int i = 0; i < 4; i++)
                     piocherCarte();
-                termineTour();
                 break;
             case 14:
                 termineTour();
