@@ -74,7 +74,7 @@ public:
 	/**
 	* @brief 
 	* Indique le numéro de la variante si le jeu se trouve dans un cas particulier.
-	* 0 classique, 1 cumul, 2 doublon, 3 echange, 4 suite, 5 tourne, -1 sinon
+	* -1 classique, 1 doublon, 3 echange, 5 suite, 0 ou smultiple de 2 cumul
 	*/
 	int casPart;
 
@@ -168,7 +168,7 @@ public:
 	* @brief 
 	* On met dans la main du joueur une carte provenant de la pioche.
 	*/
-	void piocherCarte();
+	virtual void piocherCarte();
 
 	/**
 	* @brief 
