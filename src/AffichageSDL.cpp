@@ -184,20 +184,17 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
     // Son
     Mix_AllocateChannels(3);                    // Alloue 3 cannaux
     choixVolume = 5;                            // Notre échelle étant de 0 à 10.
-    volume = MIX_MAX_VOLUME / 10 * choixVolume; // On met le son à 5 de base (Moitié).
+    volume = MIX_MAX_VOLUME / 30 * choixVolume; // On met le son à 5 de base (Moitié).
 
-    Mix_Volume(0, volume);             // Mets la musique salle attente à 5.
+    cout << volume << endl;
+    Mix_Volume(0, volume);             // Mets la musique salle attente et de Jeu au niveau volume.
     Mix_Volume(1, MIX_MAX_VOLUME / 4); // Mets le son 25 %
-    Mix_Volume(2, MIX_MAX_VOLUME / 4); // Mets le son 25 %
 
-    sons[0] = Mix_LoadWAV("data/sounds/passageSalleAttente.wav");
-    sons[1] = Mix_LoadWAV("data/sounds/selection.wav"); // On charge la musique.
-    if (sons[1] == NULL)
-    {
-        sons[1] = Mix_LoadWAV("../data/sounds/selection.wav"); // On charge la musique.
-    }
-    sons[2] = Mix_LoadWAV("data/sounds/valide.wav");
-    for (int i = 0; i < 3; i++)
+    sons[0] = Mix_LoadWAV("data/sounds/musiqueMenu.wav");
+    sons[1] = Mix_LoadWAV("data/sounds/passageSalleAttente.wav");
+    sons[2] = Mix_LoadWAV("data/sounds/selection.wav"); // On charge la musique.
+    sons[3] = Mix_LoadWAV("data/sounds/valide.wav");
+    for (int i = 0; i < 4; i++)
     {
         if (sons[i] == NULL)
         {
@@ -206,14 +203,7 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
             exit(1);
         }
     }
-
-    //Mix_PlayMusic(selection, -1); // Joue notre musique
-
-    //Mix_FreeMusic(music); // Libére en mémoire notre musique
-    //Mix_CloseAudio(); // Quitter correctement SDL_Mixer
-
-    // JEU
-    //Jeu jeu;
+    Mix_PlayChannel(0, sons[0], 1);
 }
 
 sdlJeu::~sdlJeu()
@@ -989,16 +979,8 @@ void sdlJeu::sdlMenu()
 {
     SDL_Event events;
     bool isOpen{true};
-    bool openRegle{false};
+    bool openReglage{false};
     Menu menu;
-    Mix_Volume(0, MIX_MAX_VOLUME);
-
-    Mix_Chunk *soundA = Mix_LoadWAV("selection.wav");
-    if (soundA == NULL)
-    {
-        exit(1);
-    }
-
     // Police des textes
     TTF_Font *fontMenuTitre = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 110);
     if (LargeurEcran == 1920 && HauteurEcran == 1080)
@@ -1123,8 +1105,7 @@ void sdlJeu::sdlMenu()
                     (posSourisX < (positionTexte[1].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[1].y + HAUTEUR_ECRAN<int> / 12)))
                 {
                     cout << "je clique sur Jouer." << endl;
-                    //Mix_PlayChannel(0, soundA, 1);
-                    Mix_PlayChannel(1, sons[0], 0); // On joue le son salleAttente.
+                    //Mix_PlayChannel(1, sons[1], 0); // On joue le son salleAttente.
                 }
                 // On clique sur Reglage
                 if ((posSourisX > positionTexte[2].x && posSourisY > positionTexte[2].y) &&                              // Point en haut à gauche
@@ -1134,8 +1115,8 @@ void sdlJeu::sdlMenu()
                 {
                     cout << "Je clique sur réglage" << endl;
                     isOpen = false; // On quitte la boucle.
-                    openRegle = true;
-                    Mix_PlayChannel(1, sons[1], 0); // On joue le son selection 1 fois.
+                    openReglage = true;
+                    Mix_PlayChannel(1, sons[2], 0); // On joue le son selection 1 fois.
                 }
                 // On clique sur Regles
                 if ((posSourisX > positionTexte[3].x && posSourisY > positionTexte[3].y) &&                              // Point en haut à gauche
@@ -1144,7 +1125,7 @@ void sdlJeu::sdlMenu()
                     (posSourisX < (positionTexte[3].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[3].y + HAUTEUR_ECRAN<int> / 12)))
                 {
                     cout << "Je clique sur Regles" << endl;
-                    Mix_PlayChannel(1, sons[1], 0); // On joue le son selection 1 fois.
+                    Mix_PlayChannel(1, sons[2], 0); // On joue le son selection 1 fois.
                 }
                 // On clique sur quitter
                 if ((posSourisX > positionTexte[4].x && posSourisY > positionTexte[4].y) &&                              // Point en haut à gauche
@@ -1185,8 +1166,7 @@ void sdlJeu::sdlMenu()
     {
         SDL_DestroyTexture(textureTexte[i]);
     }
-    Mix_FreeChunk(soundA); // Libére la mémoire allouer pour le son
-    if (openRegle)
+    if (openReglage)
     {
         sdlReglage(menu);
     }
@@ -1200,17 +1180,7 @@ void sdlJeu::sdlReglage(Menu &menu)
 
     // Police des textes
     TTF_Font *fontResText = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 45);
-    /* 
-    SDL_Surface *surfImageFond = SDL_LoadBMP("data/uno1.bmp");
-    if (surfImageFond == NULL)
-    {
-        cout << "Erreur impossible de lire l'image de fond" << endl;
-        this->~sdlJeu();
-        exit(EXIT_FAILURE);
-    }
-    SDL_Texture *textureImageFond = SDL_CreateTextureFromSurface(renderer, surfImageFond);
-    SDL_FreeSurface(surfImageFond);
- */
+
     // Créer tous les textes pour les réglages en allant récupérer dans le vecteur string dans la classe Menu.
     SDL_Surface *tabSurfTitre[4];
     for (int i = 0; i < 4; i++)
@@ -1300,7 +1270,7 @@ void sdlJeu::sdlReglage(Menu &menu)
     {
         positionEchelle[i].x = positionEchelle[i - 1].x + LargeurEcran / 12;
         positionEchelle[i].y = positionEchelle[0].y;
-        if (i == choixVolume) // choixVolume est pour rappelle la donnée membre qui nous indique sur l'échelle de 0 à 10 le volume de la musique.
+        if (i == 5) // choixVolume est pour rappelle la donnée membre qui nous indique sur l'échelle de 0 à 10 le volume de la musique.
         {
             // Position du rectangle repère pour régler le son.
             sonSelectionne.x = positionEchelle[i].x - LargeurEcran / 130;
@@ -1376,6 +1346,7 @@ void sdlJeu::sdlReglage(Menu &menu)
                     (posSourisX < (tabPositionRes[0].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < tabPositionRes[0].y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
                 {
                     modifFichierRes(800, 800);
+                    Mix_PlayChannel(1, sons[2], 0); // On joue le son valider 1 fois.
                     // Afficher : La résolution sera changé au redémarrage.
                 }
                 if ((posSourisX > tabPositionRes[1].x && posSourisY > tabPositionRes[1].y) &&                                                      // Point en haut à gauche
@@ -1385,6 +1356,7 @@ void sdlJeu::sdlReglage(Menu &menu)
                 {
                     // Afficher : La résolution sera changé au redémarrage.
                     modifFichierRes(1280, 720);
+                    Mix_PlayChannel(1, sons[2], 0); // On joue le son valider 1 fois.
                 }
                 if ((posSourisX > tabPositionRes[2].x && posSourisY > tabPositionRes[2].y) &&                                                      // Point en haut à gauche
                     (posSourisX < (tabPositionRes[2].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > tabPositionRes[2].y)) &&                         // Point en haut à droite
@@ -1393,6 +1365,7 @@ void sdlJeu::sdlReglage(Menu &menu)
                 {
                     // Afficher : La résolution sera changé au redémarrage.
                     modifFichierRes(1920, 1080);
+                    Mix_PlayChannel(1, sons[2], 0); // On joue le son valider 1 fois.
                 }
                 if ((posSourisX > positionEchelle[0].x && posSourisY > positionEchelle[0].y)) // Si on est dans la partie basse vers l'echelle de son on regarde si on clique sur un nombre.
                 {
@@ -1403,7 +1376,6 @@ void sdlJeu::sdlReglage(Menu &menu)
                             (posSourisX > positionEchelle[i].x && posSourisY < positionEchelle[i].y + HAUTEUR_ECRAN<int> / 18) &&                             // Point en bas à gauche
                             (posSourisX < (positionEchelle[i].x + LARGEUR_ECRAN<int> / 50) && (posSourisY < positionEchelle[i].y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
                         {
-                            // Joue le son qui confirme.
                             choixVolume = i;
                             if (i == 10)
                             {
@@ -1445,7 +1417,9 @@ void sdlJeu::sdlReglage(Menu &menu)
                                     sonSelectionne.h = HauteurEcran / 15;
                                 }
                             }
-                            //Mix_VolumeMusic(0,volume); // On modifie le son du cannal actif.
+                            Mix_PlayChannel(1, sons[2], 0); // On joue le son valider 1 fois.
+                            volume = MIX_MAX_VOLUME / 30 * choixVolume; // On met le son à 5 de base (Moitié).
+                            Mix_Volume(0, volume);                      // On modifie le son du cannal actif.
                         }
                     }
                 }
