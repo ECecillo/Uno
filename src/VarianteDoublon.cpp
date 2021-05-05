@@ -110,18 +110,8 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
             talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
             joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
             // si le joueur a le doublon de la carte qu'il vient de jouer, on lui propose de la jouer
-            int indice = indiceDoublon(talon.back(), joueurs[joueurActif].main);
-            if (indice >= 0)
-            {
-                char reponse;
-                cout << "Veux-tu jouer la carte doublon? O/N" << endl;
-                cin >> reponse;
-                if (reponse == 'O')
-                {
-                    talon.push(joueurs[joueurActif].main[indice]); // On pousse le doublon.
-                    joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indice);
-                }
-            }
+            casPart = 1;
+            
             sleep(3);
             // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
             joueurs[joueurActif].modifMainTxt();
@@ -139,9 +129,7 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
                     sensJeu = 1;
                 break;
             case 11:
-                if (joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
-                    joueurActif = 0;
-                joueurActif++;
+                termineTour();
                 break;
             case 12:
                 termineTour();
@@ -158,8 +146,7 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
             case 14:
                 break;
             }
-            if (testUno() == false)
-                termineTour();
+            if(casPart != 1) termineTour();
         }
         else
         {

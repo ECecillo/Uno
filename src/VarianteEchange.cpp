@@ -103,10 +103,7 @@ void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messag
             // si la carte posée est un 7, le joueur échange sa main avec un autre joueur
             if (talon.back().getValeur() == 7)
             {
-                unsigned int numJoueur;
-                cout << "indique le numéro du joueur avec lequel tu veux échanger ta main: ";
-                cin >> numJoueur;
-                joueurs[joueurActif].main.swap(joueurs[numJoueur - 1].main);
+                casPart = 3;
             }
             // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
             joueurs[joueurActif].modifMainTxt();
@@ -124,9 +121,7 @@ void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messag
                     sensJeu = 1;
                 break;
             case 11:
-                if (joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
-                    joueurActif = 0;
-                joueurActif++;
+                termineTour();
                 break;
             case 12:
                 termineTour();
@@ -143,8 +138,7 @@ void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messag
             case 14:
                 break;
             }
-            if (testUno() == false)
-                termineTour();
+            if (casPart != 3) termineTour();
         }
         else
         {

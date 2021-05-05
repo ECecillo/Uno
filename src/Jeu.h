@@ -73,6 +73,13 @@ public:
 
 	/**
 	* @brief 
+	* Indique le numéro de la variante si le jeu se trouve dans un cas particulier.
+	* -1 classique, 1 doublon, 3 echange, 5 suite, 0 ou smultiple de 2 cumul
+	*/
+	int casPart;
+
+	/**
+	* @brief 
 	* Booléen qui permettra de dire que la partie est terminée.
 	*/
 	bool finPartie;
@@ -161,7 +168,7 @@ public:
 	* @brief 
 	* On met dans la main du joueur une carte provenant de la pioche.
 	*/
-	void piocherCarte();
+	virtual void piocherCarte();
 
 	/**
 	* @brief 

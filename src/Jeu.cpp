@@ -73,6 +73,7 @@ Jeu::Jeu(const unsigned int nbjoueurs, const unsigned int nbIA = 0)
     distribueCarte();                                  // On donne les cartes au joueurs
     initTalon();                                       // On initialise le Talon.
     finTour = false;
+    casPart = -1;
     statut_Uno = false;
     finPartie = false;
     //nombreJoueurs += nombreIA; // On regroupe le nombre d'IA avec le nombre de joueurs.
@@ -187,8 +188,8 @@ void Jeu::definieCouleurBot(Bot &tabJoueursBot, Carte &c)
 // true si la carte est valide
 bool Jeu::carteValide(const Carte c) const
 {
+    cout << "valide jeu" << endl;
     bool chercheCouleur = false;
-    //cout << "Carte Valide" << endl;
     //si carte +4, on regarde dans la main du joueur s'il y a une carte de la même couleur que celle du talon
     if (c.getValeur() == 13)
     {
@@ -209,6 +210,7 @@ bool Jeu::carteValide(const Carte c) const
 // Met une carte de la pioche dans la main du joueur
 void Jeu::piocherCarte()
 {
+    cout << "piocher jeu" << endl;
     if (joueurActif >= nombreJoueurs) // Si on a un bot pas besoin de modif affichage.
     {
         int indexBot = joueurActif - nombreJoueurs;
@@ -411,58 +413,44 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
             // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
             joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
             bool carteSpeciale = false;
-            if (testUno() == false)
-            {
                 // gestion des cartes spéciales
-                switch ((talon.back()).getValeur())
-                {
-                case 10:
-                    if (sensJeu == 1)
-                        sensJeu = 0;
-                    else
-                        sensJeu = 1;
-                    break;
-                case 11:
-                    termineTour();
-
-                    break;
-                case 12:
-                    termineTour();
-
-                    piocherCarte();
-                    piocherCarte();
-                    carteSpeciale = true;
-                    break;
-                case 13:
-                    carteSpeciale = true;
-                    if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
-                        joueurActif = 0;
-                    else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
-                    {
-                        joueurActif--;
-                    }
-                    else if (joueurActif == 0 && sensJeu == 0)
-                        joueurActif = nombreIA + nombreJoueurs - 1;
-                    joueurActif++;
-                    //termineTour();
-
-                    for (unsigned int i = 0; i < 4; i++)
-                        piocherCarte();
-                    termineTour();
-                    break;
-                case 14:
-                    termineTour();
-                    carteSpeciale = true;
-
-                    break;
-                }
-                if (joueurs[joueurActif].main.size() == 0)
-                    annonceGagnant();
-                if (carteSpeciale)
-                    return;
+            switch ((talon.back()).getValeur())
+            {
+            case 10:
+                if (sensJeu == 1)
+                    sensJeu = 0;
+                else
+                    sensJeu = 1;
+                break;
+            case 11:
                 termineTour();
-                return;
+
+                break;
+            case 12:
+                termineTour();
+
+                piocherCarte();
+                piocherCarte();
+                carteSpeciale = true;
+                break;
+            case 13:
+                termineTour();
+
+                for (unsigned int i = 0; i < 4; i++)
+                    piocherCarte();
+                break;
+            case 14:
+                termineTour();
+                carteSpeciale = true;
+
+                break;
             }
+            if (joueurs[joueurActif].main.size() == 0)
+                annonceGagnant();
+            if (carteSpeciale)
+                return;
+            termineTour();
+            return;
         }
         else
         {

@@ -7,7 +7,7 @@ class VarianteCumul : public Jeu
 {
 private:
 		
-		unsigned int cumulCarteAPiocher;
+		
 
 public:
 		/**
@@ -55,7 +55,7 @@ public:
 		* @brief 
 	 	* On met dans la main du joueur des cartes provenant de la pioche selon cumulCarteAPiocher.
 	 	*/
-		void piocherCarte();
+		void piocherCarte() override;
 
 		
 				
