@@ -137,7 +137,7 @@ public:
 
 	/**
 	 * @brief 
-	 * Procédure qui s'occupe d'afficher les cartes du Joueur Actif.
+	 * Procédure qui s'occupe d'afficher une carte.
 	 * @param c : La carte.
 	 * @param positionX  : La position dans la fenêtre.
 	 * @param positionY : //
@@ -146,7 +146,7 @@ public:
 
 	/**
 	 * @brief 
-	 * Affiche une carte le nombre de carte restant pour ce joueur et son Nom.
+	 * Affiche les cartes du joueur Actif, des adversaires, talon, pioche ..
 	 * @param jeu : Variable permettant de récupérer les infos du Joueur.
 	 * @param indiceJoueur : Indice du Joueur que l'on affiche. 
 	 */
