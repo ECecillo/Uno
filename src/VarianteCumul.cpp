@@ -1,8 +1,11 @@
 #include "VarianteCumul.h"
 
-VarianteCumul::VarianteCumul() : Jeu(), cumulCarteAPiocher(0) {}
+VarianteCumul::VarianteCumul() : Jeu() {}
 
-VarianteCumul::VarianteCumul(const unsigned int nbjoueurs, const unsigned int nbIA = 0) : Jeu(nbjoueurs, nbIA) {}
+VarianteCumul::VarianteCumul(const unsigned int nbjoueurs, const unsigned int nbIA = 0) : Jeu(nbjoueurs, nbIA) 
+{
+    casPart = 0;
+}
 
 VarianteCumul::~VarianteCumul()
 {
@@ -16,14 +19,26 @@ VarianteCumul::~VarianteCumul()
 bool VarianteCumul::carteValide(const Carte c) const
 {
     bool chercheCouleur = false;
+    if (c.getValeur() == 13)
+    {
+        unsigned int i = 0;
+        while (i < joueurs[joueurActif].main.size() && !chercheCouleur)
+        {
+            if (talon.back().getCouleur() == joueurs[joueurActif].main[i].getCouleur())
+                chercheCouleur = true;
+            i++;
+        }
+    }
     return (c.getValeur() == talon.back().getValeur()) ||
-           (c.getCouleur() == talon.back().getCouleur()) ||
-           (c.getValeur() == 14) ||
+           (c.getCouleur() == talon.back().getCouleur() && (talon.back().getValeur() != 12 || casPart % 2 != 0 || casPart <= 0)) || // bloquer le cas du +2 sur le talon
+           (c.getValeur() == 12 && (talon.back().getValeur() != 13 && casPart % 2 != 0)) || // bloquer le +2 sur +4
+           (c.getValeur() == 14 && talon.back().getValeur() != 13 && talon.back().getValeur() != 12) || // le joker ne peut pas se poser sur un +2 ou un +4
            (c.getValeur() == 13 && talon.back().getValeur() != 13 && (talon.back().getValeur() == 12 || chercheCouleur == false)); //on peut jouer +4 sur n'importe quelle carte si on n'a pas la couleur ou sur +2
 }
 
 void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
+    cout << "poser cumul" << endl;
     assert(indiceCarte >= 0);
     if (joueurActif >= nombreJoueurs)
     {
@@ -64,7 +79,7 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                 case 12:
                     termineTour();
 
-                    cumulCarteAPiocher += 2;
+                    casPart += 2;
                     carteSpeciale = true;
                     termineTour();
                     break;
@@ -73,7 +88,7 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                     joueursBot[indexBot].setCartePlus4(newIndice);
                     //termineTour();
 
-                    cumulCarteAPiocher += 4;
+                    casPart += 4;
                     termineTour();
 
                     break;
@@ -89,8 +104,7 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                     annonceGagnant();
                 return;
             }
-            /* if (carteSpeciale && testUno() != false)
-                termineTour(); */
+            termineTour(); 
         }
         else
         {
@@ -120,23 +134,20 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                     sensJeu = 1;
                 break;
             case 11:
-                if (joueurActif == nombreJoueurs) // Si On passe le tour du dernier joueur on revient au premier.
-                    joueurActif = 0;
-                joueurActif++;
+                termineTour();
                 break;
             case 12:
-                cumulCarteAPiocher += 2;
-                termineTour();
+                casPart += 2;
+                cout << casPart << "après +2" << endl;
                 break;
             case 13:
-                cumulCarteAPiocher += 4;
-                termineTour();
+                casPart += 4;
+                cout << casPart << "après +4" << endl;
                 break;
             case 14:
                 break;
             }
-            if (testUno() == false)
-                termineTour();
+            termineTour();
         }
         else
         {
@@ -150,7 +161,8 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
 
 void VarianteCumul::piocherCarte()
 {
-    if (cumulCarteAPiocher == 0) // cas classique, 1 carte à piocher
+    cout << casPart << "dans piocherCarte" << endl;
+    if (casPart == 0) // cas classique, 1 carte à piocher
     {
         if (joueurActif >= nombreJoueurs)
         {
@@ -262,7 +274,7 @@ void VarianteCumul::piocherCarte()
             int indexBot = joueurActif - nombreJoueurs;
             unsigned int indCarte;
             joueursBot[indexBot].main.push_back(pioche.top());
-            for (int i = 0; i < cumulCarteAPiocher; i++)
+            for (int i = 0; i < casPart; i++)
             {
                 switch (pioche.top().getCouleur())
                 {
@@ -354,16 +366,16 @@ void VarianteCumul::piocherCarte()
                 joueursBot[indexBot].trierMain();
                 return;
             }
-            cumulCarteAPiocher = 0;
+            casPart = -1;
         }
         else
         {
-            for (int i = 0; i < cumulCarteAPiocher; i++)
+            for (int i = 0; i < casPart; i++)
             {
                 joueurs[joueurActif].main.push_back(pioche.top());
                 pioche.pop();
             }
-            cumulCarteAPiocher = 0;
+            if (casPart % 2 == 1) casPart = 0;
             joueurs[joueurActif].modifMainTxt();
             joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
         }

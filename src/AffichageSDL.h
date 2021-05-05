@@ -49,12 +49,10 @@ private:
 	Image fondMenu;
 	Image im_carte;
 
-	
-
 	Mix_Chunk *sons[3]; // Tableau dans lequel on charge nos fichiers audio.
 
 	int choixVolume;	  // Volume qui sert de référence pour la définition du volume.
-	int volume;		  // Volume Sons.
+	int volume;			  // Volume Sons.
 	Mix_Music *selection; // son pour la sélection d'un paramètre.
 
 	int HauteurEcran; // Résolution de la fenêtre.
@@ -76,7 +74,7 @@ public:
 	 * 
 	 */
 	void modifFichierRes(int largeur, int hauteur);
-	
+
 	/**
 	 * @brief 
 	 * Affiche le Menu avec tous les fonts à partir d'un objet Menu
@@ -90,7 +88,7 @@ public:
 	 * @param m : Objet Menu qui contient les string à afficher pour la partie Reglage. 
 	 */
 	void sdlReglage(Menu &m);
-	
+
 	/**
 	 * @brief 
 	 * Affiche la salle d'attente avec les textes (Nombre Joueurs, Nombre Bots ...)
@@ -99,7 +97,7 @@ public:
 	 * @param nombreIA : Nombre d'ordinateurs dans le Jeu.
 	 */
 	void sdlAffSalleAttente(unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA);
-	
+
 	/**
 	 * @brief 
 	 * Appelle l'affichage de la salle d'attente et s'occupe des interactions avec la souris, 
@@ -120,7 +118,7 @@ public:
 	 * @return unsigned int correspondant au nombre de Bot. 
 	 */
 	unsigned int sdlAffChoixOrdinateurs();
-	
+
 	/**
 	 * @brief 
 	 * Créer une nouvelle fenêtre et affiche toutes les variantes sur lequel on peut Jouer.
@@ -159,6 +157,10 @@ public:
 	 * @return unsigned int entre [] chaque entier correspond à une Couleur.
 	 */
 	unsigned int choixCouleur();
+	void situationContreUno(Jeu &jeu);
+	void sdlEchange(Jeu &jeu);
+	void sdlDoublon(Jeu &jeu);
+	void sdlSuite(Jeu &jeu, unsigned int indice);
 
 	/**
 	 * @brief 
