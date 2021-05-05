@@ -837,17 +837,17 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
     // affiche le centre
     // pioche
     im_carte.loadFromFile("data/dos.png", renderer);
-    im_carte.draw(renderer, LargeurEcran / 2.4, HauteurEcran / 3.6, LargeurEcran / 17.5, HauteurEcran / 21.5);
+    im_carte.draw(renderer, LargeurEcran / 2.4, HauteurEcran / 3.6, LargeurEcran / 17.5, HauteurEcran / 6.9);
 
     // talon
     sdlAffCarte(jeu.talon.back(), LargeurEcran / 1.76, HauteurEcran / 3.6);
 
     // Uno
     im_carte.loadFromFile("data/carteuno.png", renderer);
-    im_carte.draw(renderer, LargeurEcran / 3.35, HauteurEcran / 3.34, LargeurEcran / 17.5, HauteurEcran / 21.5);
+    im_carte.draw(renderer, LargeurEcran / 3.35, HauteurEcran / 3.34, LargeurEcran / 16.5, HauteurEcran / 11);
 
-    texte.x = LargeurEcran / 3.07;
-    texte.y = HauteurEcran / 3.06;
+    texte.x = LargeurEcran / 3.17;
+    texte.y = HauteurEcran / 3.16;
     texte.w = LargeurEcran / 38;
     texte.h = HauteurEcran / 21.6;
     font_im.setSurface(TTF_RenderText_Solid(font, "Uno", noir));
@@ -856,18 +856,18 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
 
     // Contre Uno
     im_carte.loadFromFile("data/cartecontreuno.png", renderer);
-    im_carte.draw(renderer, LargeurEcran / 1.51, HauteurEcran / 3.34, LargeurEcran / 17.5, HauteurEcran / 21.5);
+    im_carte.draw(renderer, LargeurEcran / 1.516, HauteurEcran / 3.34, LargeurEcran / 16, HauteurEcran / 11);
 
-    texte.x = LargeurEcran / 1.46;
-    texte.y = HauteurEcran / 3.19;
-    texte.w = LargeurEcran / 24;
-    texte.h = HauteurEcran / 21.6;
+    texte.x = LargeurEcran / 1.484;
+    texte.y = HauteurEcran / 3.22;
+    texte.w = LargeurEcran / 30;
+    texte.h = HauteurEcran / 22;
     font_im.setSurface(TTF_RenderText_Solid(font, "Contre", noir));
     font_im.loadFromCurrentSurface(renderer);
     SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
-    texte.x = LargeurEcran / 1.45;
-    texte.y = HauteurEcran / 2.9;
-    texte.w = LargeurEcran / 38;
+    texte.x = LargeurEcran / 1.48;
+    texte.y = HauteurEcran / 2.95;
+    texte.w = LargeurEcran / 40;
     texte.h = HauteurEcran / 21.6;
     font_im.setSurface(TTF_RenderText_Solid(font, "Uno", noir));
     font_im.loadFromCurrentSurface(renderer);
@@ -877,7 +877,7 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
 
     // le nom
     texte.x = 0;
-    texte.y = LargeurEcran / 1.963;
+    texte.y = LargeurEcran / 2.5;
     texte.w = LargeurEcran / 17.5;
     texte.h = HauteurEcran / 21.6;
     font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[indiceJoueur].nom.c_str(), jaune));
@@ -908,7 +908,7 @@ unsigned int sdlJeu::choixCouleur()
 
     Image im_choix;
     im_choix.loadFromFile("data/questioncouleur.png", rendererCouleur);
-    im_choix.draw(rendererCouleur, LargeurEcran / 38.4, HauteurEcran / 51.45, LargeurEcran / 17.5, HauteurEcran / 21.5);
+    im_choix.draw(rendererCouleur, LargeurEcran / 38.4, HauteurEcran / 48, LargeurEcran / 17.5, HauteurEcran / 8);
 
     SDL_Rect texte;
     texte.x = LargeurEcran / 9.1;
