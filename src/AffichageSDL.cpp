@@ -277,8 +277,8 @@ void sdlJeu::sdlAffSalleAttente(unsigned int variante, unsigned int nombreJoueur
     texte.w = 100;
     texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font, "Jeu : ", jaune));
-    font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
+    font_im.loadFromCurrentSurface(renderer);
+    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
     texte.x = 220;
     texte.y = 50;
@@ -307,8 +307,8 @@ void sdlJeu::sdlAffSalleAttente(unsigned int variante, unsigned int nombreJoueur
     default:
         break;
     }
-    font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
+    font_im.loadFromCurrentSurface(renderer);
+    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
     // Texte "Nombre de joueurs"
     texte.x = 100;
@@ -316,8 +316,8 @@ void sdlJeu::sdlAffSalleAttente(unsigned int variante, unsigned int nombreJoueur
     texte.w = 300;
     texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font, "Nombre de joueurs : ", jaune));
-    font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
+    font_im.loadFromCurrentSurface(renderer);
+    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
     // Texte qui récupère la variable nombreJoueur et affiche le numéro.
     texte.x = 420;
@@ -325,8 +325,8 @@ void sdlJeu::sdlAffSalleAttente(unsigned int variante, unsigned int nombreJoueur
     texte.w = 50;
     texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font, to_string(nombreJoueurs).c_str(), jaune));
-    font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
+    font_im.loadFromCurrentSurface(renderer);
+    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
     // Texte "Nombre d'ordinateurs"
     texte.x = 100;
@@ -334,8 +334,8 @@ void sdlJeu::sdlAffSalleAttente(unsigned int variante, unsigned int nombreJoueur
     texte.w = 300;
     texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font, "Nombre d'ordinateurs : ", jaune));
-    font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
+    font_im.loadFromCurrentSurface(renderer);
+    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
     // Texte qui récupère la variable nombreIA et affiche le numéro.
     texte.x = 420;
@@ -343,8 +343,8 @@ void sdlJeu::sdlAffSalleAttente(unsigned int variante, unsigned int nombreJoueur
     texte.w = 50;
     texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font, to_string(nombreIA).c_str(), jaune));
-    font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
+    font_im.loadFromCurrentSurface(renderer);
+    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
     // Texte "Lancer le jeu"
     texte.x = 100;
@@ -352,10 +352,10 @@ void sdlJeu::sdlAffSalleAttente(unsigned int variante, unsigned int nombreJoueur
     texte.w = 300;
     texte.h = 50;
     font_im.setSurface(TTF_RenderText_Solid(font, "Lancer le jeu", jaune));
-    font_im.loadFromCurrentSurface(rendererParam);
-    SDL_RenderCopy(rendererParam, font_im.getTexture(), NULL, &texte);
+    font_im.loadFromCurrentSurface(renderer);
+    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
-    SDL_RenderPresent(rendererParam);
+    SDL_RenderPresent(renderer);
 }
 
 // Préparation de la partie
@@ -416,7 +416,7 @@ void sdlJeu::sdlUno()
                 if (sourisX > 100 && sourisX < 320 && sourisY > 50 && sourisY < 100) // clic sur la ligne "Jeu"
                 {
                     variante = sdlAffChoixJeu();
-                    sdlAffSalleAttente(window, renderer, variante, nombreJoueurs, nombreIA);
+                    sdlAffSalleAttente(variante, nombreJoueurs, nombreIA);
                     SDL_RenderClear(renderer);
                     cout << "variante=" << variante << endl;
                 }
@@ -424,13 +424,13 @@ void sdlJeu::sdlUno()
                 {
                     nombreJoueurs = sdlAffChoixJoueurs();
                     cout << "nombre joueurs " << nombreJoueurs << endl;
-                    sdlAffSalleAttente(window, renderer, variante, nombreJoueurs, nombreIA);
+                    sdlAffSalleAttente(variante, nombreJoueurs, nombreIA);
                 }
                 if (event.button.x > 100 && event.button.x < 470 && event.button.y > 250 && event.button.y < 300) // clic sur la ligne "Nombre d'ordinateurs"
                 {
                     nombreIA = sdlAffChoixOrdinateurs();
                     cout << "nombre bots " << nombreIA << endl;
-                    sdlAffSalleAttente(window, renderer, variante, nombreJoueurs, nombreIA);
+                    sdlAffSalleAttente(variante, nombreJoueurs, nombreIA);
                     SDL_RenderClear(renderer);
                 }
                 if (event.button.x > 100 && event.button.x < 400 && event.button.y > 350 && event.button.y < 400) // clic sur la ligne "Lancer le jeu"
@@ -444,7 +444,7 @@ void sdlJeu::sdlUno()
             default:
                 break;
             }
-            sdlAffSalleAttente(window, renderer, variante, nombreJoueurs, nombreIA);
+            sdlAffSalleAttente(variante, nombreJoueurs, nombreIA);
         }
     }
     switch (variante)
@@ -778,12 +778,12 @@ void sdlJeu::sdlAffCarte(const Carte &c, int positionX, int positionY)
     if (c.getValeur() == 13)
     {
         im_carte.loadFromFile("data/+4.png", renderer);
-        im_carte.draw(renderer, positionX, positionY, 110, 157);
+        im_carte.draw(renderer, positionX, positionY, (LargeurEcran / 17.5), (HauteurEcran / 6.9));
     }
     if (c.getValeur() == 14)
     {
         im_carte.loadFromFile("data/joker.png", renderer);
-        im_carte.draw(renderer, positionX, positionY, 110, 157);
+        im_carte.draw(renderer, positionX, positionY, (LargeurEcran / 17.5), (HauteurEcran / 6.9));
     }
     if (c.getValeur() <= 12)
     {
@@ -794,7 +794,7 @@ void sdlJeu::sdlAffCarte(const Carte &c, int positionX, int positionY)
         strcat(nomFichier, nomImage);
         strcat(nomFichier, ".png");
         im_carte.loadFromFile(nomFichier, renderer);
-        im_carte.draw(renderer, positionX, positionY, 110, 157);
+        im_carte.draw(renderer, positionX, positionY, (LargeurEcran / 17.5), (HauteurEcran / 6.9));
     }
 }
 
@@ -809,26 +809,26 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
     // affiche les adversaires
     for (unsigned int i = 0; i < jeu.nombreJoueurs + jeu.nombreIA - 1; i++)
     {
-        int positionCarte = (2000 - (130 * (jeu.nombreJoueurs + jeu.nombreIA - 1) - 20)) / 2 + 130 * i;
+        int positionCarte = (LargeurEcran - ((LargeurEcran / 14.7) * (jeu.nombreJoueurs + jeu.nombreIA - 1) - (LargeurEcran / 96))) / 2 + (LargeurEcran / 14.7) * i;
 
         // nom adversaire
         texte.x = positionCarte;
         texte.y = 0;
-        texte.w = 110;
-        texte.h = 50;
+        texte.w = LargeurEcran / 17.5;
+        texte.h = HauteurEcran / 21.5;
         font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs + jeu.nombreIA)].nom.c_str(), jaune));
         font_im.loadFromCurrentSurface(renderer);
         SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
         // carte adversaire
         im_carte.loadFromFile("data/dosvide.png", renderer);
-        im_carte.draw(renderer, positionCarte, 50, 110, 157);
+        im_carte.draw(renderer, positionCarte, LargeurEcran / 38, HauteurEcran / 9.8, LargeurEcran / 12.2);
 
         // nombre de cartes adversaires
-        texte.x = positionCarte + 40;
-        texte.y = 113;
-        texte.w = 30;
-        texte.h = 30;
+        texte.x = positionCarte + LargeurEcran / 38;
+        texte.y = HauteurEcran / 9.5;
+        texte.w = LargeurEcran / 64;
+        texte.h = HauteurEcran / 36;
         font_im.setSurface(TTF_RenderText_Solid(font, to_string(jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs + jeu.nombreIA)].main.size()).c_str(), jaune));
         font_im.loadFromCurrentSurface(renderer);
         SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
@@ -837,38 +837,38 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
     // affiche le centre
     // pioche
     im_carte.loadFromFile("data/dos.png", renderer);
-    im_carte.draw(renderer, 800, 300, 110, 157);
+    im_carte.draw(renderer, LargeurEcran / 2.4, HauteurEcran / 3.6, LargeurEcran / 17.5, HauteurEcran / 21.5);
 
     // talon
-    sdlAffCarte(jeu.talon.back(), 1090, 300);
+    sdlAffCarte(jeu.talon.back(), LargeurEcran / 1.76, HauteurEcran / 3.6);
 
     // Uno
     im_carte.loadFromFile("data/carteuno.png", renderer);
-    im_carte.draw(renderer, 573, 323, 157, 110);
+    im_carte.draw(renderer, LargeurEcran / 3.35, HauteurEcran / 3.34, LargeurEcran / 17.5, HauteurEcran / 21.5);
 
-    texte.x = 626;
-    texte.y = 353;
-    texte.w = 50;
-    texte.h = 50;
+    texte.x = LargeurEcran / 3.07;
+    texte.y = HauteurEcran / 3.06;
+    texte.w = LargeurEcran / 38;
+    texte.h = HauteurEcran / 21.6;
     font_im.setSurface(TTF_RenderText_Solid(font, "Uno", noir));
     font_im.loadFromCurrentSurface(renderer);
     SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
     // Contre Uno
     im_carte.loadFromFile("data/cartecontreuno.png", renderer);
-    im_carte.draw(renderer, 1270, 323, 157, 110);
+    im_carte.draw(renderer, LargeurEcran / 1.51, HauteurEcran / 3.34, LargeurEcran / 17.5, HauteurEcran / 21.5);
 
-    texte.x = 1318;
-    texte.y = 338;
-    texte.w = 80;
-    texte.h = 50;
+    texte.x = LargeurEcran / 1.46;
+    texte.y = HauteurEcran / 3.19;
+    texte.w = LargeurEcran / 24;
+    texte.h = HauteurEcran / 21.6;
     font_im.setSurface(TTF_RenderText_Solid(font, "Contre", noir));
     font_im.loadFromCurrentSurface(renderer);
     SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
-    texte.x = 1313;
-    texte.y = 373;
-    texte.w = 50;
-    texte.h = 50;
+    texte.x = LargeurEcran / 1.45;
+    texte.y = HauteurEcran / 2.9;
+    texte.w = LargeurEcran / 38;
+    texte.h = HauteurEcran / 21.6;
     font_im.setSurface(TTF_RenderText_Solid(font, "Uno", noir));
     font_im.loadFromCurrentSurface(renderer);
     SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
@@ -877,9 +877,9 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
 
     // le nom
     texte.x = 0;
-    texte.y = 550;
-    texte.w = 110;
-    texte.h = 50;
+    texte.y = LargeurEcran / 1.963;
+    texte.w = LargeurEcran / 17.5;
+    texte.h = HauteurEcran / 21.6;
     font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[indiceJoueur].nom.c_str(), jaune));
     font_im.loadFromCurrentSurface(renderer);
     SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
@@ -888,7 +888,7 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
     unsigned int tailleMain = jeu.joueurs[indiceJoueur].main.size();
     for (int i = 0; i < tailleMain; i++)
     {
-        sdlAffCarte(jeu.joueurs[indiceJoueur].main[i], 110 * (i % 17), 600 + 200 * (i / 17));
+        sdlAffCarte(jeu.joueurs[indiceJoueur].main[i], (LargeurEcran / 17.5) * (i % 17), (LargeurEcran / 3.2) + (LargeurEcran / 9.6) * (i / 17));
     }
     SDL_RenderPresent(renderer);
 }
@@ -908,37 +908,37 @@ unsigned int sdlJeu::choixCouleur()
 
     Image im_choix;
     im_choix.loadFromFile("data/questioncouleur.png", rendererCouleur);
-    im_choix.draw(rendererCouleur, 50, 21, 110, 157);
+    im_choix.draw(rendererCouleur, LargeurEcran / 38.4, HauteurEcran / 51.45, LargeurEcran / 17.5, HauteurEcran / 21.5);
 
     SDL_Rect texte;
-    texte.x = 210;
-    texte.y = 75;
-    texte.w = 100;
-    texte.h = 50;
+    texte.x = LargeurEcran / 9.1;
+    texte.y = HauteurEcran / 14.4;
+    texte.w = LargeurEcran / 19.2;
+    texte.h = HauteurEcran / 21.6;
     font_im.setSurface(TTF_RenderText_Solid(font, "Rouge", jaune));
     font_im.loadFromCurrentSurface(rendererCouleur);
     SDL_RenderCopy(rendererCouleur, font_im.getTexture(), NULL, &texte);
 
-    texte.x = 340;
-    texte.y = 75;
-    texte.w = 100;
-    texte.h = 50;
+    texte.x = LargeurEcran / 5.641;
+    texte.y = HauteurEcran / 14.4;
+    texte.w = LargeurEcran / 19.2;
+    texte.h = HauteurEcran / 21.6;
     font_im.setSurface(TTF_RenderText_Solid(font, "Vert", jaune));
     font_im.loadFromCurrentSurface(rendererCouleur);
     SDL_RenderCopy(rendererCouleur, font_im.getTexture(), NULL, &texte);
 
-    texte.x = 470;
-    texte.y = 75;
-    texte.w = 100;
-    texte.h = 50;
+    texte.x = LargeurEcran / 4.08;
+    texte.y = HauteurEcran / 14.4;
+    texte.w = LargeurEcran / 19.2;
+    texte.h = HauteurEcran / 21.6;
     font_im.setSurface(TTF_RenderText_Solid(font, "Bleu", jaune));
     font_im.loadFromCurrentSurface(rendererCouleur);
     SDL_RenderCopy(rendererCouleur, font_im.getTexture(), NULL, &texte);
 
-    texte.x = 600;
-    texte.y = 75;
-    texte.w = 100;
-    texte.h = 50;
+    texte.x = LargeurEcran / 3.2;
+    texte.y = HauteurEcran / 14.4;
+    texte.w = LargeurEcran / 19.2;
+    texte.h = HauteurEcran / 21.6;
     font_im.setSurface(TTF_RenderText_Solid(font, "Jaune", jaune));
     font_im.loadFromCurrentSurface(rendererCouleur);
     SDL_RenderCopy(rendererCouleur, font_im.getTexture(), NULL, &texte);
@@ -960,9 +960,9 @@ unsigned int sdlJeu::choixCouleur()
             cout << "choix joueurs " << sourisX << " " << sourisY << endl;
             if (eventCouleur.type == SDL_MOUSEBUTTONDOWN)
             {
-                if (sourisX > 210 && sourisX < 700 && sourisY > 75 && sourisY < 232) // clic sur une couleur
+                if (sourisX > (LargeurEcran / 9.1) && sourisX < (LargeurEcran / 2.74) && sourisY > (HauteurEcran / 14.4) && sourisY < (HauteurEcran / 4.69)) // clic sur une couleur
                 {
-                    couleur = (sourisX - 210) / 130 + 1;
+                    couleur = (sourisX - (LargeurEcran / 9.1)) / (LargeurEcran / 14.7) + 1;
                     choixFait = true;
                 }
             }
@@ -984,7 +984,7 @@ void sdlJeu::sdlAffCouleurChoisie(unsigned int couleur)
     strcat(nomFichier, nomImage);
     strcat(nomFichier, ".png");
     im_carte.loadFromFile(nomFichier, renderer);
-    im_carte.draw(renderer, 1090, 300, 110, 157);
+    im_carte.draw(renderer, (LargeurEcran / 1.613), (HauteurEcran / 3.6), LargeurEcran / 17.5, HauteurEcran / 21.5);
     SDL_RenderPresent(renderer);
 }
 
@@ -1002,16 +1002,16 @@ void sdlJeu::situationUno(Jeu &jeu)
             {
                 int sourisX = event.button.x;
                 int sourisY = event.button.y;
-                if (sourisX > 573 && sourisX < 730 && sourisY > 323 && sourisY < 433) // clic sur Uno
+                if (sourisX > (LargeurEcran / 3.35) && sourisX < (LargeurEcran / 2.63) && sourisY > (HauteurEcran / 3.34) && sourisY < (HauteurEcran / 2.5)) // clic sur Uno
                 {
                     jeu.statut_Uno = false;
                     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                     SDL_RenderClear(renderer);
                     SDL_Rect texte;
-                    texte.x = 400;
-                    texte.y = 300;
-                    texte.w = 1200;
-                    texte.h = 400;
+                    texte.x = LargeurEcran / 4.8;
+                    texte.y = HauteurEcran / 3.6;
+                    texte.w = LargeurEcran / 1.6;
+                    texte.h = HauteurEcran / 2.7;
                     font_im.setSurface(TTF_RenderText_Solid(font, "UNOoooooo", jaune));
                     font_im.loadFromCurrentSurface(renderer);
                     SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
@@ -1580,7 +1580,7 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 break;
             case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est appuyé
                 joueurChange = true;
-                if (sourisX > 800 && sourisX < 910 && sourisY > 300 && sourisY < 457) // clic sur la pioche
+                if (sourisX > (LargeurEcran / 2.4) && sourisX < (LargeurEcran / 2.108) && sourisY > (HauteurEcran / 3.6) && sourisY < (HauteurEcran / 2.4)) // clic sur la pioche
                 {
                     jeu.piocherCarte();
                     jeu.termineTour();
@@ -1589,14 +1589,14 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                     if (couleur != 0 && couleurChangee)
                         sdlAffCouleurChoisie(couleur);
                 }
-                if (sourisX > 0 && sourisX < LargeurEcran / 1.05 && sourisY > 600 && sourisY < 957) // clic sur une carte de la main
+                if (sourisX > 0 && sourisX < LargeurEcran / 1.05 && sourisY > HauteurEcran / 1.8 && sourisY < HauteurEcran / 1.15) // clic sur une carte de la main
                 {
                     couleur = 0;
                     string messageErreur;
                     unsigned int indiceCarte;
-                    if (sourisY < 757)
+                    if (sourisY < HauteurEcran / 1.43)
                         indiceCarte = sourisX / 110;
-                    if (sourisY > 800)
+                    if (sourisY > HauteurEcran / 1.35)
                         indiceCarte = 17 + sourisX / 110;
 
                     if (jeu.carteValide(jeu.joueurs[jeu.joueurActif].main[indiceCarte]))
