@@ -193,8 +193,8 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
     sons[0] = Mix_LoadWAV("data/sounds/musiqueMenu.wav");
     sons[1] = Mix_LoadWAV("data/sounds/passageSalleAttente.wav");
     sons[2] = Mix_LoadWAV("data/sounds/selection.wav"); // On charge la musique.
-    sons[3] = Mix_LoadWAV("data/sounds/valide.wav");
-    for (int i = 0; i < 4; i++)
+    //sons[3] = Mix_LoadWAV("data/sounds/valide.wav");
+    for (int i = 0; i < 3; i++)
     {
         if (sons[i] == NULL)
         {
@@ -259,10 +259,16 @@ void sdlJeu::modifFichierRes(int largeur, int hauteur)
 }
 
 // Affiche la salle d'attente
-void sdlJeu::sdlAffSalleAttente(SDL_Window *param, SDL_Renderer *rendererParam, unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA)
+void sdlJeu::sdlAffSalleAttente(unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA)
 {
-    SDL_SetRenderDrawColor(rendererParam, 0, 0, 0, 255);
-    SDL_RenderClear(rendererParam);
+    //SDL_SetRenderDrawColor(rendererParam, 0, 0, 0, 255);
+    //SDL_RenderClear(rendererParam);
+    //Remplir l'écran de noir
+    SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255);
+    SDL_RenderClear(renderer);
+
+    fondMenu.draw(renderer, 0, 0, LargeurEcran, HauteurEcran);
+    SDL_RenderPresent(renderer);
 
     // Texte "Jeu"
     SDL_Rect texte;
@@ -355,23 +361,23 @@ void sdlJeu::sdlAffSalleAttente(SDL_Window *param, SDL_Renderer *rendererParam, 
 // Préparation de la partie
 void sdlJeu::sdlUno()
 {
-    //Remplir l'écran de noir
+
     SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255);
     SDL_RenderClear(renderer);
 
-    fondMenu.draw(renderer, 0, 0, 2000, 1000);
+    fondMenu.draw(renderer, 0, 0, LargeurEcran, HauteurEcran);
     SDL_RenderPresent(renderer);
-
-    SDL_Window *param = SDL_CreateWindow("Paramètres du jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (param == NULL)
+    //SDL_RenderClear(renderer);
+    //SDL_Window *param = SDL_CreateWindow("Paramètres du jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    /* if (param == NULL)
     {
         cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
         SDL_Quit();
         exit(1);
-    }
-    SDL_Renderer *rendererParam = SDL_CreateRenderer(param, -1, SDL_RENDERER_ACCELERATED);
+    } */
+    /* SDL_Renderer *rendererParam = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_RenderClear(rendererParam);
-
+ */
     SDL_Event event;
     bool quit = false;
 
@@ -384,7 +390,6 @@ void sdlJeu::sdlUno()
     int sourisX;
     int sourisY;
 
-    sdlAffSalleAttente(param, rendererParam, variante, nombreJoueurs, nombreIA);
     // tant que ce n'est pas la fin ...
     while (!quit)
     {
@@ -394,8 +399,8 @@ void sdlJeu::sdlUno()
         {
             sourisX = event.button.x;
             sourisY = event.button.y;
-            cout << sourisX << " " << sourisY << endl;
-            cout << "debut while Uno" << endl;
+            //cout << sourisX << " " << sourisY << endl;
+            //cout << "debut while Uno" << endl;
             switch (event.type)
             {
             case SDL_WINDOWEVENT:                                // On clique sur la fenêtre.
@@ -411,25 +416,26 @@ void sdlJeu::sdlUno()
                 if (sourisX > 100 && sourisX < 320 && sourisY > 50 && sourisY < 100) // clic sur la ligne "Jeu"
                 {
                     variante = sdlAffChoixJeu();
-                    sdlAffSalleAttente(param, rendererParam, variante, nombreJoueurs, nombreIA);
+                    sdlAffSalleAttente(window, renderer, variante, nombreJoueurs, nombreIA);
+                    SDL_RenderClear(renderer);
                     cout << "variante=" << variante << endl;
                 }
                 if (sourisX > 100 && sourisX < 470 && sourisY > 150 && sourisY < 200) // clic sur la ligne "Nombre de joueurs"
                 {
                     nombreJoueurs = sdlAffChoixJoueurs();
                     cout << "nombre joueurs " << nombreJoueurs << endl;
-                    sdlAffSalleAttente(param, rendererParam, variante, nombreJoueurs, nombreIA);
+                    sdlAffSalleAttente(window, renderer, variante, nombreJoueurs, nombreIA);
                 }
                 if (event.button.x > 100 && event.button.x < 470 && event.button.y > 250 && event.button.y < 300) // clic sur la ligne "Nombre d'ordinateurs"
                 {
                     nombreIA = sdlAffChoixOrdinateurs();
                     cout << "nombre bots " << nombreIA << endl;
-                    sdlAffSalleAttente(param, rendererParam, variante, nombreJoueurs, nombreIA);
+                    sdlAffSalleAttente(window, renderer, variante, nombreJoueurs, nombreIA);
+                    SDL_RenderClear(renderer);
                 }
                 if (event.button.x > 100 && event.button.x < 400 && event.button.y > 350 && event.button.y < 400) // clic sur la ligne "Lancer le jeu"
                 {
-                    SDL_DestroyRenderer(rendererParam);
-                    SDL_DestroyWindow(param);
+                    // Detruire le font ?
                     quit = true;
                 }
 
@@ -438,6 +444,7 @@ void sdlJeu::sdlUno()
             default:
                 break;
             }
+            sdlAffSalleAttente(window, renderer, variante, nombreJoueurs, nombreIA);
         }
     }
     switch (variante)
@@ -481,13 +488,15 @@ void sdlJeu::sdlUno()
     default:
         break;
     }
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
 }
 
 // Fait choisir la variante
 unsigned int sdlJeu::sdlAffChoixJeu()
 {
-    unsigned int choixVariante;
-    SDL_Window *choixJeu = SDL_CreateWindow("Choix du jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    unsigned int choixVariante = 1;
+    SDL_Window *choixJeu = SDL_CreateWindow("Choix du jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (choixJeu == NULL)
     {
         cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
@@ -573,18 +582,32 @@ unsigned int sdlJeu::sdlAffChoixJeu()
 
     while (!choixFait)
     {
-        while (SDL_PollEvent(&eventJeu) && eventJeu.type == SDL_MOUSEBUTTONDOWN)
+        while (SDL_PollEvent(&eventJeu))
         {
             sourisX = eventJeu.button.x;
             sourisY = eventJeu.button.y;
-            cout << "choix variante " << sourisX << " " << sourisY << endl;
-            if (eventJeu.type == SDL_MOUSEBUTTONDOWN)
+            switch (eventJeu.type)
             {
+            case SDL_WINDOWEVENT:                                   // On clique sur la fenêtre.
+                if (eventJeu.window.event == SDL_WINDOWEVENT_CLOSE) // On appuie sur la croix pour fermer.
+                    choixFait = true;
+
+                break;
+            case SDL_KEYDOWN:                                            // Si une touche est enfoncee
+                if (eventJeu.key.keysym.scancode == SDL_SCANCODE_ESCAPE) // Si la touche est ESC on ferme.
+                    choixFait = true;
+
+                break;
+            case SDL_MOUSEBUTTONDOWN:
                 if (sourisX > 50 && sourisX < 350 && sourisY > 50 && sourisY < 450) // clic sur une variante
                 {
+                    Mix_PlayChannel(1, sons[2], 0); // On joue le son selection 1 fois.
                     choixVariante = (sourisY - 50) / 70 + 1;
                     choixFait = true;
                 }
+                break;
+            default:
+                break;
             }
         }
     }
@@ -596,8 +619,8 @@ unsigned int sdlJeu::sdlAffChoixJeu()
 // Fait choisir le nombre de joueurs
 unsigned int sdlJeu::sdlAffChoixJoueurs()
 {
-    unsigned int Joueurs;
-    SDL_Window *choixJoueurs = SDL_CreateWindow("Choix du nombre de joueurs", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    unsigned int Joueurs = 2;
+    SDL_Window *choixJoueurs = SDL_CreateWindow("Choix du nombre de joueurs", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 200, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (choixJoueurs == NULL)
     {
         cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
@@ -618,7 +641,7 @@ unsigned int sdlJeu::sdlAffChoixJoueurs()
     {
         SDL_Rect paramJoueurs;
         paramJoueurs.x = 50 + 100 * i;
-        paramJoueurs.y = 200;
+        paramJoueurs.y = 75;
         paramJoueurs.w = 50;
         paramJoueurs.h = 50;
         font_im.setSurface(TTF_RenderText_Solid(font, to_string(i + 1).c_str(), jaune));
@@ -634,18 +657,31 @@ unsigned int sdlJeu::sdlAffChoixJoueurs()
 
     while (!choixFait)
     {
-        while (SDL_PollEvent(&eventJoueurs) && eventJoueurs.type == SDL_MOUSEBUTTONDOWN)
+        while (SDL_PollEvent(&eventJoueurs))
         {
             sourisX = eventJoueurs.button.x;
             sourisY = eventJoueurs.button.y;
-            cout << "choix joueurs " << sourisX << " " << sourisY << endl;
-            if (eventJoueurs.type == SDL_MOUSEBUTTONDOWN)
+            switch (eventJoueurs.type)
             {
-                if (sourisX > 50 && sourisX < 900 && sourisY > 200 && sourisY < 250) // clic sur une variante
+            case SDL_WINDOWEVENT:                                       // On clique sur la fenêtre.
+                if (eventJoueurs.window.event == SDL_WINDOWEVENT_CLOSE) // On appuie sur la croix pour fermer.
+                    choixFait = true;
+                break;
+            case SDL_KEYDOWN:                                                // Si une touche est enfoncee
+                if (eventJoueurs.key.keysym.scancode == SDL_SCANCODE_ESCAPE) // Si la touche est ESC on ferme.
+                    choixFait = true;
+
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (sourisX > 50 && sourisX < 900 && sourisY > 75 && sourisY < 125) // clic sur une variante
                 {
+                    Mix_PlayChannel(1, sons[2], 0); // On joue le son selection 1 fois.
                     Joueurs = (sourisX - 50) / 100 + 1;
                     choixFait = true;
                 }
+                break;
+            default:
+                break;
             }
         }
     }
@@ -657,7 +693,7 @@ unsigned int sdlJeu::sdlAffChoixJoueurs()
 // Fait choisir le nombre de bots
 unsigned int sdlJeu::sdlAffChoixOrdinateurs()
 {
-    unsigned int nombreIA;
+    unsigned int nombreIA = 0;
     SDL_Window *choixBots = SDL_CreateWindow("Choix du nombre d'ordinateurs", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (choixBots == NULL)
     {
@@ -695,18 +731,35 @@ unsigned int sdlJeu::sdlAffChoixOrdinateurs()
 
     while (!choixFait)
     {
-        while (SDL_PollEvent(&eventBots) && eventBots.type == SDL_MOUSEBUTTONDOWN)
+        while (SDL_PollEvent(&eventBots))
         {
             sourisX = eventBots.button.x;
             sourisY = eventBots.button.y;
-            cout << "choix bots " << sourisX << " " << sourisY << endl;
-            if (eventBots.type == SDL_MOUSEBUTTONDOWN)
+            switch (eventBots.type)
             {
+            case SDL_WINDOWEVENT:                                    // On clique sur la fenêtre.
+                if (eventBots.window.event == SDL_WINDOWEVENT_CLOSE) // On appuie sur la croix pour fermer.
+                {
+                    choixFait = true;
+                }
+                break;
+            case SDL_KEYDOWN:                                             // Si une touche est enfoncee
+                if (eventBots.key.keysym.scancode == SDL_SCANCODE_ESCAPE) // Si la touche est ESC on ferme.
+                {
+                    choixFait = true;
+                }
+                break;
+            case SDL_MOUSEBUTTONDOWN:
                 if (sourisX > 50 && sourisX < 450 && sourisY > 200 && sourisY < 250) // clic sur une variante
                 {
+                    Mix_PlayChannel(1, sons[2], 0); // On joue le son selection 1 fois.
                     nombreIA = (sourisX - 150) / 100;
                     choixFait = true;
                 }
+                break;
+
+            default:
+                break;
             }
         }
     }
@@ -980,6 +1033,7 @@ void sdlJeu::sdlMenu()
     SDL_Event events;
     bool isOpen{true};
     bool openReglage{false};
+    bool openSalleAttente{false};
     Menu menu;
     // Police des textes
     TTF_Font *fontMenuTitre = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 110);
@@ -1105,7 +1159,9 @@ void sdlJeu::sdlMenu()
                     (posSourisX < (positionTexte[1].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[1].y + HAUTEUR_ECRAN<int> / 12)))
                 {
                     cout << "je clique sur Jouer." << endl;
-                    //Mix_PlayChannel(1, sons[1], 0); // On joue le son salleAttente.
+                    Mix_PlayChannel(1, sons[1], 0); // On joue le son salleAttente.
+                    openSalleAttente = true;
+                    isOpen = false;
                 }
                 // On clique sur Reglage
                 if ((posSourisX > positionTexte[2].x && posSourisY > positionTexte[2].y) &&                              // Point en haut à gauche
@@ -1169,6 +1225,11 @@ void sdlJeu::sdlMenu()
     if (openReglage)
     {
         sdlReglage(menu);
+    }
+    if (openSalleAttente)
+    {
+
+        sdlUno();
     }
 }
 
@@ -1417,7 +1478,7 @@ void sdlJeu::sdlReglage(Menu &menu)
                                     sonSelectionne.h = HauteurEcran / 15;
                                 }
                             }
-                            Mix_PlayChannel(1, sons[2], 0); // On joue le son valider 1 fois.
+                            Mix_PlayChannel(1, sons[2], 0);             // On joue le son valider 1 fois.
                             volume = MIX_MAX_VOLUME / 30 * choixVolume; // On met le son à 5 de base (Moitié).
                             Mix_Volume(0, volume);                      // On modifie le son du cannal actif.
                         }
@@ -1528,7 +1589,7 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                     if (couleur != 0 && couleurChangee)
                         sdlAffCouleurChoisie(couleur);
                 }
-                if (sourisX > 0 && sourisX < 1870 && sourisY > 600 && sourisY < 957) // clic sur une carte de la main
+                if (sourisX > 0 && sourisX < LargeurEcran / 1.05 && sourisY > 600 && sourisY < 957) // clic sur une carte de la main
                 {
                     couleur = 0;
                     string messageErreur;
