@@ -461,7 +461,6 @@ void Bot::choixJeu(Jeu &jeu)
     {
         cout << "La valeur est " << i.getValeur() << " et la couleur " << i.getCouleur() << endl;
     }
-    sleep(5);
     int nbCarteCouleur, nbCarteValeur;
     int maxNbCouleur = couleurAvecPlusDeCarte(); // Renvoie la couleur avec le plus de carte.
     nbCarteCouleur = carteMemeCouleurTalon(jeu); // Nombre de carte meme couleur que talon.
@@ -523,7 +522,6 @@ void Bot::choixJeu(Jeu &jeu)
         cout << "Indice du +4 est : " << indCartePlus4 << endl;
         cout << "La valeur du +4 doit être " << main[indCartePlus4].getValeur() << " la couleur est " << main[indCartePlus4].getCouleur() << endl;
         cout << "On joue le joker +4 car pas d'autres options avec indice : " << indCartePlus4 << endl;
-        sleep(3);
         joueCouleurSelonEntier(jeu, maxNbCouleur, indCartePlus4);
         indCartePlus4 = -1;
         cout << "suppression +4" << endl;

@@ -183,12 +183,12 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
     //SDL_RenderClear(renderer);
 
     // Son
-    Mix_AllocateChannels(3);                    // Alloue 3 cannaux
-    choixVolume = 5;                            // Notre échelle étant de 0 à 10.
+    Mix_AllocateChannels(3);                     // Alloue 3 cannaux
+    choixVolume = 5;                             // Notre échelle étant de 0 à 10.
     volume = MIX_MAX_VOLUME / 100 * choixVolume; // On met le son à 5 de base (Moitié).
 
     cout << volume << endl;
-    Mix_Volume(0, volume);             // Mets la musique salle attente et de Jeu au niveau volume.
+    Mix_Volume(0, volume);              // Mets la musique salle attente et de Jeu au niveau volume.
     Mix_Volume(1, MIX_MAX_VOLUME / 60); // Mets le son 25 %
 
     sons[0] = Mix_LoadWAV("data/sounds/musiqueMenu.wav");
@@ -817,7 +817,16 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
         texte.y = 0;
         texte.w = LargeurEcran / 17.5;
         texte.h = HauteurEcran / 21.5;
-        font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs + jeu.nombreIA)].nom.c_str(), jaune));
+        // Calcul l'indice différent du joueur actif pour afficher les noms et nb cartes.
+        int indiceAffiche = (jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs + jeu.nombreIA);
+        if (indiceAffiche >= jeu.nombreJoueurs)
+        {
+            font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[indiceAffiche - jeu.nombreJoueurs].nom.c_str(), jaune));
+        }
+        else
+        {
+            font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[indiceAffiche].nom.c_str(), jaune));
+        }
         font_im.loadFromCurrentSurface(renderer);
         SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
@@ -830,7 +839,14 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
         texte.y = HauteurEcran / 9.5;
         texte.w = LargeurEcran / 64;
         texte.h = HauteurEcran / 36;
-        font_im.setSurface(TTF_RenderText_Solid(font, to_string(jeu.joueurs[(jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs + jeu.nombreIA)].main.size()).c_str(), jaune));
+        if (indiceAffiche >= jeu.nombreJoueurs)
+        {
+            font_im.setSurface(TTF_RenderText_Solid(font, to_string(jeu.joueursBot[indiceAffiche - jeu.nombreJoueurs].main.size()).c_str(), jaune));
+        }
+        else
+        {
+            font_im.setSurface(TTF_RenderText_Solid(font, to_string(jeu.joueurs[indiceAffiche].main.size()).c_str(), jaune));
+        }
         font_im.loadFromCurrentSurface(renderer);
         SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
     }
@@ -875,22 +891,24 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
     SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
     // affiche le nom et la main du joueur actif
+    if (indiceJoueur < jeu.nombreJoueurs)
+    { // Si c'est un Joueur et non pas un Bot qui doit jouer on affiche sa main.
+        // le nom
+        texte.x = 0;
+        texte.y = LargeurEcran / 2.5;
+        texte.w = LargeurEcran / 17.5;
+        texte.h = HauteurEcran / 21.6;
+        font_im.loadFromCurrentSurface(renderer);
+        SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
-    // le nom
-    texte.x = 0;
-    texte.y = LargeurEcran / 2.5;
-    texte.w = LargeurEcran / 17.5;
-    texte.h = HauteurEcran / 21.6;
-    font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[indiceJoueur].nom.c_str(), jaune));
-    font_im.loadFromCurrentSurface(renderer);
-    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
-
-    // la main
-    unsigned int tailleMain = jeu.joueurs[indiceJoueur].main.size();
-    for (int i = 0; i < tailleMain; i++)
-    {
-        sdlAffCarte(jeu.joueurs[indiceJoueur].main[i], (LargeurEcran / 17.5) * (i % 17), (LargeurEcran / 3.2) + (LargeurEcran / 9.6) * (i / 17));
+        // la main
+        unsigned int tailleMain = jeu.joueurs[indiceJoueur].main.size();
+        for (int i = 0; i < tailleMain; i++)
+        {
+            sdlAffCarte(jeu.joueurs[indiceJoueur].main[i], (LargeurEcran / 17.5) * (i % 17), (LargeurEcran / 3.2) + (LargeurEcran / 9.6) * (i / 17));
+        }
     }
+
     SDL_RenderPresent(renderer);
 }
 
@@ -1478,9 +1496,9 @@ void sdlJeu::sdlReglage(Menu &menu)
                                     sonSelectionne.h = HauteurEcran / 15;
                                 }
                             }
-                            Mix_PlayChannel(1, sons[2], 0);             // On joue le son valider 1 fois.
+                            Mix_PlayChannel(1, sons[2], 0);              // On joue le son valider 1 fois.
                             volume = MIX_MAX_VOLUME / 100 * choixVolume; // On met le son à 5 de base (Moitié).
-                            Mix_Volume(0, volume);                      // On modifie le son du cannal actif.
+                            Mix_Volume(0, volume);                       // On modifie le son du cannal actif.
                         }
                     }
                 }
@@ -1547,17 +1565,17 @@ void sdlJeu::situationContreUno(Jeu &jeu)
             {
                 int sourisX = event.button.x;
                 int sourisY = event.button.y;
-                if (sourisX > (LargeurEcran * (127/192)) && sourisX < (LargeurEcran * 0.7432) && sourisY > (HauteurEcran * 0.299) && sourisY < (HauteurEcran * 0.40)) // clic sur Contre Uno
+                if (sourisX > (LargeurEcran * (127 / 192)) && sourisX < (LargeurEcran * 0.7432) && sourisY > (HauteurEcran * 0.299) && sourisY < (HauteurEcran * 0.40)) // clic sur Contre Uno
                 {
                     jeu.statut_Uno = false;
                     cout << jeu.statut_Uno << "après clic" << endl;
                     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                     SDL_RenderClear(renderer);
                     SDL_Rect texte;
-                    texte.x = LargeurEcran * 5/24;
-                    texte.y = HauteurEcran * 5/18;
+                    texte.x = LargeurEcran * 5 / 24;
+                    texte.y = HauteurEcran * 5 / 18;
                     texte.w = LargeurEcran * 0.625;
-                    texte.h = HauteurEcran * 10/27;
+                    texte.h = HauteurEcran * 10 / 27;
                     font_im.setSurface(TTF_RenderText_Solid(font, "Contre UNOoooooo", jaune));
                     font_im.loadFromCurrentSurface(renderer);
                     SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
@@ -1576,7 +1594,7 @@ void sdlJeu::situationContreUno(Jeu &jeu)
 
 void sdlJeu::sdlEchange(Jeu &jeu)
 {
-    SDL_Window *choixEchange = SDL_CreateWindow("Echange", SDL_WINDOWPOS_CENTERED, (HauteurEcran * 5/27), (LargeurEcran *25/48), (HauteurEcran * 5/27), SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    SDL_Window *choixEchange = SDL_CreateWindow("Echange", SDL_WINDOWPOS_CENTERED, (HauteurEcran * 5 / 27), (LargeurEcran * 25 / 48), (HauteurEcran * 5 / 27), SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (choixEchange == NULL)
     {
         cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
@@ -1589,20 +1607,20 @@ void sdlJeu::sdlEchange(Jeu &jeu)
     SDL_RenderClear(rendererEchange);
 
     SDL_Rect texte;
-    texte.x = LargeurEcran * 25/192;
-    texte.y = HauteurEcran * 5/216;
-    texte.w = LargeurEcran * 25/96;
-    texte.h = HauteurEcran * 5/108;
+    texte.x = LargeurEcran * 25 / 192;
+    texte.y = HauteurEcran * 5 / 216;
+    texte.w = LargeurEcran * 25 / 96;
+    texte.h = HauteurEcran * 5 / 108;
     font_im.setSurface(TTF_RenderText_Solid(font, "Echange avec le joueur", noir));
     font_im.loadFromCurrentSurface(rendererEchange);
     SDL_RenderCopy(rendererEchange, font_im.getTexture(), NULL, &texte);
-    int pos = ((LargeurEcran * 25/48) - (LargeurEcran * 5/96) * (jeu.nombreJoueurs - 1)) / 2;
+    int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs - 1)) / 2;
     for (int i = 0; i < jeu.nombreJoueurs - 1; i++)
     {
-        texte.x = pos + (LargeurEcran * 5/96) * i;
-        texte.y = HauteurEcran * 25/216;
-        texte.w = (LargeurEcran * 5/96);
-        texte.h = HauteurEcran * 5/108;
+        texte.x = pos + (LargeurEcran * 5 / 96) * i;
+        texte.y = HauteurEcran * 25 / 216;
+        texte.w = (LargeurEcran * 5 / 96);
+        texte.h = HauteurEcran * 5 / 108;
         if (i < jeu.joueurActif)
         {
             font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[i].nom.c_str(), noir));
@@ -1631,9 +1649,9 @@ void sdlJeu::sdlEchange(Jeu &jeu)
             cout << "choix joueurs " << sourisX << " " << sourisY << endl;
             if (event.type == SDL_MOUSEBUTTONDOWN)
             {
-                if (sourisX > pos && sourisX < pos + (LargeurEcran * 25/192) * (jeu.nombreJoueurs - 1) && sourisY > (HauteurEcran * 25/216) && sourisY < (HauteurEcran * 35/216)) // clic sur un nom
+                if (sourisX > pos && sourisX < pos + (LargeurEcran * 25 / 192) * (jeu.nombreJoueurs - 1) && sourisY > (HauteurEcran * 25 / 216) && sourisY < (HauteurEcran * 35 / 216)) // clic sur un nom
                 {
-                    indice = (sourisX - pos) / (LargeurEcran * 25/192);
+                    indice = (sourisX - pos) / (LargeurEcran * 25 / 192);
                     if (indice >= jeu.joueurActif)
                         indice++;
                     choixFait = true;
@@ -1665,7 +1683,7 @@ void sdlJeu::sdlDoublon(Jeu &jeu)
 
     if (indice != -1)
     {
-        SDL_Window *choixDoublon = SDL_CreateWindow("Doublon", SDL_WINDOWPOS_CENTERED, (HauteurEcran * 7/27), (LargeurEcran * 25/48), (HauteurEcran * 5/27), SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+        SDL_Window *choixDoublon = SDL_CreateWindow("Doublon", SDL_WINDOWPOS_CENTERED, (HauteurEcran * 7 / 27), (LargeurEcran * 25 / 48), (HauteurEcran * 5 / 27), SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
         if (choixDoublon == NULL)
         {
             cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
@@ -1678,25 +1696,25 @@ void sdlJeu::sdlDoublon(Jeu &jeu)
         SDL_RenderClear(rendererDoublon);
 
         SDL_Rect texte;
-        texte.x = LargeurEcran * 25/192;
-        texte.y = HauteurEcran * 5/216;
-        texte.w = LargeurEcran * 25/96;
-        texte.h = HauteurEcran * 5/108;
+        texte.x = LargeurEcran * 25 / 192;
+        texte.y = HauteurEcran * 5 / 216;
+        texte.w = LargeurEcran * 25 / 96;
+        texte.h = HauteurEcran * 5 / 108;
         font_im.setSurface(TTF_RenderText_Solid(font, "Jouer le doublon", noir));
         font_im.loadFromCurrentSurface(rendererDoublon);
         SDL_RenderCopy(rendererDoublon, font_im.getTexture(), NULL, &texte);
-        int pos = ((LargeurEcran * 25/48) - (LargeurEcran * 5/96) * (jeu.nombreJoueurs - 1)) / 2;
-        texte.x = LargeurEcran * 35/192;
-        texte.y = HauteurEcran *125/108;
-        texte.w = (LargeurEcran * 5/96);
-        texte.h = HauteurEcran * 5/108;
+        int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs - 1)) / 2;
+        texte.x = LargeurEcran * 35 / 192;
+        texte.y = HauteurEcran * 125 / 108;
+        texte.w = (LargeurEcran * 5 / 96);
+        texte.h = HauteurEcran * 5 / 108;
         font_im.setSurface(TTF_RenderText_Solid(font, "oui", noir));
         font_im.loadFromCurrentSurface(rendererDoublon);
         SDL_RenderCopy(rendererDoublon, font_im.getTexture(), NULL, &texte);
-        texte.x = LargeurEcran * 55/192;
-        texte.y = HauteurEcran * 25/216;
-        texte.w = (LargeurEcran * 5/96);
-        texte.h = HauteurEcran * 5/108;
+        texte.x = LargeurEcran * 55 / 192;
+        texte.y = HauteurEcran * 25 / 216;
+        texte.w = (LargeurEcran * 5 / 96);
+        texte.h = HauteurEcran * 5 / 108;
         font_im.setSurface(TTF_RenderText_Solid(font, "non", noir));
         font_im.loadFromCurrentSurface(rendererDoublon);
         SDL_RenderCopy(rendererDoublon, font_im.getTexture(), NULL, &texte);
@@ -1714,13 +1732,13 @@ void sdlJeu::sdlDoublon(Jeu &jeu)
             {
                 sourisX = event.button.x;
                 sourisY = event.button.y;
-                if (sourisX > (LargeurEcran * 35/192) && sourisX < (LargeurEcran * 15/64) && sourisY > (HauteurEcran * 25/216) && sourisY < (HauteurEcran * 35/216)) // clic sur oui
+                if (sourisX > (LargeurEcran * 35 / 192) && sourisX < (LargeurEcran * 15 / 64) && sourisY > (HauteurEcran * 25 / 216) && sourisY < (HauteurEcran * 35 / 216)) // clic sur oui
                 {
                     jeu.talon.push(jeu.joueurs[jeu.joueurActif].main[indice]); // On pousse le doublon.
                     jeu.joueurs[jeu.joueurActif].main.erase(jeu.joueurs[jeu.joueurActif].main.begin() + indice);
                     choixFait = true;
                 }
-                if (sourisX > (LargeurEcran * 55/192) && sourisX < (LargeurEcran * 65/192) && sourisY > (HauteurEcran * 25/216) && sourisY < (HauteurEcran * 35/216)) // clic sur non
+                if (sourisX > (LargeurEcran * 55 / 192) && sourisX < (LargeurEcran * 65 / 192) && sourisY > (HauteurEcran * 25 / 216) && sourisY < (HauteurEcran * 35 / 216)) // clic sur non
                 {
                     choixFait = true;
                 }
@@ -1735,7 +1753,7 @@ void sdlJeu::sdlDoublon(Jeu &jeu)
 
 void sdlJeu::sdlSuite(Jeu &jeu, unsigned int indice)
 {
-    SDL_Window *choixSuite = SDL_CreateWindow("Suite", 0, HauteurEcran * 27/7, LargeurEcran * 19/64, HauteurEcran * 5/27, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    SDL_Window *choixSuite = SDL_CreateWindow("Suite", 0, HauteurEcran * 27 / 7, LargeurEcran * 19 / 64, HauteurEcran * 5 / 27, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (choixSuite == NULL)
     {
         cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
@@ -1748,25 +1766,25 @@ void sdlJeu::sdlSuite(Jeu &jeu, unsigned int indice)
     SDL_RenderClear(rendererSuite);
 
     SDL_Rect texte;
-    texte.x = LargeurEcran * 7/384;
-    texte.y = HauteurEcran * 5/216;
-    texte.w = LargeurEcran * 25/96;
-    texte.h = HauteurEcran * 5/108;
+    texte.x = LargeurEcran * 7 / 384;
+    texte.y = HauteurEcran * 5 / 216;
+    texte.w = LargeurEcran * 25 / 96;
+    texte.h = HauteurEcran * 5 / 108;
     font_im.setSurface(TTF_RenderText_Solid(font, "Suite: Jouer la carte suivante", noir));
     font_im.loadFromCurrentSurface(rendererSuite);
     SDL_RenderCopy(rendererSuite, font_im.getTexture(), NULL, &texte);
-    int pos = ((LargeurEcran * 25/48) - (LargeurEcran* 5/96) * (jeu.nombreJoueurs - 1)) / 2;
-    texte.x = LargeurEcran * 9/128;
-    texte.y = HauteurEcran * 25/215;
-    texte.w = LargeurEcran * 5/96;
-    texte.h = HauteurEcran * 5/108;
+    int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs - 1)) / 2;
+    texte.x = LargeurEcran * 9 / 128;
+    texte.y = HauteurEcran * 25 / 215;
+    texte.w = LargeurEcran * 5 / 96;
+    texte.h = HauteurEcran * 5 / 108;
     font_im.setSurface(TTF_RenderText_Solid(font, "oui", noir));
     font_im.loadFromCurrentSurface(rendererSuite);
     SDL_RenderCopy(rendererSuite, font_im.getTexture(), NULL, &texte);
-    texte.x = LargeurEcran * 67/384;
-    texte.y = HauteurEcran * 25/216;
-    texte.w = LargeurEcran * 5/96;
-    texte.h = HauteurEcran * 5/108;
+    texte.x = LargeurEcran * 67 / 384;
+    texte.y = HauteurEcran * 25 / 216;
+    texte.w = LargeurEcran * 5 / 96;
+    texte.h = HauteurEcran * 5 / 108;
     font_im.setSurface(TTF_RenderText_Solid(font, "non", noir));
     font_im.loadFromCurrentSurface(rendererSuite);
     SDL_RenderCopy(rendererSuite, font_im.getTexture(), NULL, &texte);
@@ -1785,7 +1803,7 @@ void sdlJeu::sdlSuite(Jeu &jeu, unsigned int indice)
         {
             sourisX = event.button.x;
             sourisY = event.button.y;
-            if (sourisX > (LargeurEcran * 9/128) && sourisX < (LargeurEcran * 29/128) && sourisY > (HauteurEcran * 25/216) && sourisY < (HauteurEcran * 35/216)) // clic sur oui
+            if (sourisX > (LargeurEcran * 9 / 128) && sourisX < (LargeurEcran * 29 / 128) && sourisY > (HauteurEcran * 25 / 216) && sourisY < (HauteurEcran * 35 / 216)) // clic sur oui
             {
                 if (jeu.joueurs[jeu.joueurActif].main[indice].getValeur() == carteTalon)
                     indice++; // il a le doublon de la carte du talon, on la passe
@@ -1794,7 +1812,7 @@ void sdlJeu::sdlSuite(Jeu &jeu, unsigned int indice)
                 jeu.joueurs[jeu.joueurActif].main.erase(jeu.joueurs[jeu.joueurActif].main.begin() + indice);
                 carteTalon++;
             }
-            if (sourisX > (LargeurEcran * 55/192) && sourisX < (LargeurEcran * 65/192) && sourisY > (HauteurEcran * 25/216) && sourisY < (HauteurEcran * 35/216)) // clic sur non
+            if (sourisX > (LargeurEcran * 55 / 192) && sourisX < (LargeurEcran * 65 / 192) && sourisY > (HauteurEcran * 25 / 216) && sourisY < (HauteurEcran * 35 / 216)) // clic sur non
             {
                 choixFait = true;
             }
@@ -1813,7 +1831,7 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
     SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255);
     SDL_RenderClear(renderer);
 
-    fondMenu.draw(renderer, 0,0, LargeurEcran, HauteurEcran);
+    fondMenu.draw(renderer, 0, 0, LargeurEcran, HauteurEcran);
     SDL_RenderPresent(renderer);
 
     //sdlAffJoueurActif(jeu);
@@ -1827,14 +1845,36 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
     bool joueurChange = true;
     unsigned int indiceJoueur = jeu.joueurActif;
 
+    cout << "Boucle Jeu " << endl;
+    cout << jeu.joueurActif << endl;
     // tant que ce n'est pas la fin ...
     while (!quit)
     {
+        cout << "Je suis joueur " << jeu.joueurActif << endl;
+        if (jeu.joueurActif >= jeu.nombreJoueurs)
+        {
+            jeu.joueursBot[jeu.joueurActif - jeu.nombreJoueurs].choixJeu(jeu);
+            if (jeu.talon.back().getValeur() == 13 || jeu.talon.back().getValeur() == 14)
+            {
+                couleur = jeu.talon.back().getCouleur();
+                couleurChangee = true;
+            }
+            continue;
+        }
         if (joueurChange) // pour éviter le clignotement de la carte couleur
         {
-            sdlAffJoueur(jeu, jeu.joueurActif);
-            if (couleur != 0 && couleurChangee)
-                sdlAffCouleurChoisie(couleur);
+            cout << "Boucle " << endl;
+            if (jeu.joueurActif < jeu.nombreJoueurs)
+            {
+                sdlAffJoueur(jeu, jeu.joueurActif);
+                cout << "Afficahge Joueur Ok" << endl;
+                if (couleur != 0 && couleurChangee)
+                {
+                    sdlAffCouleurChoisie(couleur);
+                    couleur = 0;
+                    couleurChangee = false;
+                }
+            }
             if (jeu.statut_Uno)
             {
                 cout << jeu.statut_Uno << "avant situation Contre Uno" << endl;
@@ -1842,10 +1882,20 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 cout << jeu.statut_Uno << "après situation Contre Uno" << endl;
                 if (!jeu.statut_Uno)
                 {
-                    jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
-                    jeu.pioche.pop();
-                    jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
-                    jeu.pioche.pop();
+                    if (jeu.joueurActif >= jeu.nombreJoueurs)
+                    {
+                        jeu.joueursBot[indiceJoueur].main.push_back(jeu.pioche.top());
+                        jeu.pioche.pop();
+                        jeu.joueursBot[indiceJoueur].main.push_back(jeu.pioche.top());
+                        jeu.pioche.pop();
+                    }
+                    else
+                    {
+                        jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
+                        jeu.pioche.pop();
+                        jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
+                        jeu.pioche.pop();
+                    }
                 }
                 else
                     jeu.statut_Uno = false;
@@ -1855,9 +1905,11 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 indiceJoueur = jeu.joueurActif;
             joueurChange = false;
         }
+        //cout << "Le joueur actif " << jeu.joueurActif << endl;
 
-        while (SDL_PollEvent(&event))
+        while (SDL_PollEvent(&event) && jeu.joueurActif < jeu.nombreJoueurs)
         {
+            cout << "Le joueur actif " << jeu.joueurActif << endl;
             sourisX = event.button.x;
             sourisY = event.button.y;
             switch (event.type)
@@ -1872,7 +1924,7 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
             case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est appuyé
                 joueurChange = true;
                 cout << "Clique" << endl;
-                if (sourisX > (LargeurEcran * 5/12) && sourisX < (LargeurEcran * 91/192) && sourisY > (HauteurEcran * 5/18) && sourisY < (HauteurEcran * 457/1080)) // clic sur la pioche
+                if (sourisX > (LargeurEcran * 5 / 12) && sourisX < (LargeurEcran * 91 / 192) && sourisY > (HauteurEcran * 5 / 18) && sourisY < (HauteurEcran * 457 / 1080)) // clic sur la pioche
                 {
                     jeu.piocherCarte();
                     sdlAffJoueur(jeu, jeu.joueurActif);
@@ -1893,7 +1945,11 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                     jeu.termineTour();
 
                     if (couleur != 0 && couleurChangee)
+                    {
                         sdlAffCouleurChoisie(couleur);
+                        couleur = 0;
+                        couleurChangee = false;
+                    }
                 }
                 if (sourisX > 0 && sourisX < LargeurEcran / 1.05 && sourisY > HauteurEcran / 1.8 && sourisY < HauteurEcran / 1.15) // clic sur une carte de la main
                 {
@@ -1931,7 +1987,11 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                             sdlDoublon(jeu);
                         sdlAffJoueur(jeu, indiceJoueur);
                         if (couleur != 0 && couleurChangee)
+                        {
                             sdlAffCouleurChoisie(couleur);
+                            couleur = 0;
+                            couleurChangee = false;
+                        }
                         if (jeu.joueurs[indiceJoueur].main.size() == 1)
                         {
                             situationUno(jeu);
@@ -1943,30 +2003,36 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 break;
             }
         }
+        cout << "Apres Poll Event" << endl;
         SDL_Delay(500);
-
-        if (jeu.joueurs[indiceJoueur].gagnant())
+        if (jeu.joueurActif < jeu.nombreJoueurs)
         {
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-            SDL_RenderClear(renderer);
-            SDL_Rect texte;
-            texte.x = 400;
-            texte.y = 100;
-            texte.w = 1200;
-            texte.h = 400;
-            font_im.setSurface(TTF_RenderText_Solid(font, "Good Game", jaune));
-            font_im.loadFromCurrentSurface(renderer);
-            SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
-            texte.x = 500;
-            texte.y = 500;
-            texte.w = 800;
-            texte.h = 400;
-            font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[indiceJoueur].nom.c_str(), jaune));
-            font_im.loadFromCurrentSurface(renderer);
-            SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
-            SDL_RenderPresent(renderer);
-            SDL_Delay(2000);
-            quit = true;
+            if (jeu.joueurs[jeu.joueurActif].main.size() == 0)
+            {
+                cout << "Joueur gagnant ?" << endl;
+                cout << indiceJoueur << endl;
+                cout << jeu.joueurs[jeu.joueurActif].main.size() << endl;
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                SDL_RenderClear(renderer);
+                SDL_Rect texte;
+                texte.x = 400;
+                texte.y = 100;
+                texte.w = 1200;
+                texte.h = 400;
+                font_im.setSurface(TTF_RenderText_Solid(font, "Good Game", jaune));
+                font_im.loadFromCurrentSurface(renderer);
+                SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
+                texte.x = 500;
+                texte.y = 500;
+                texte.w = 800;
+                texte.h = 400;
+                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[indiceJoueur].nom.c_str(), jaune));
+                font_im.loadFromCurrentSurface(renderer);
+                SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
+                SDL_RenderPresent(renderer);
+                SDL_Delay(2000);
+                quit = true;
+            }
         }
     }
 }
