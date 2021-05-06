@@ -1967,7 +1967,7 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                         if (jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 13 || jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 14)
                         {
                             couleurChangee = false;
-                            if ((jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 13 && (jeu.casPart % 2 != 0 || jeu.casPart == 0)) || jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 14)
+                            if ((jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 13 && jeu.casPart % 2 != 0) || jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 14)
                             {
                                 couleur = choixCouleur();
                                 couleurChangee = true;
