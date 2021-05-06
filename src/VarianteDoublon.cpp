@@ -112,7 +112,6 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
             // si le joueur a le doublon de la carte qu'il vient de jouer, on lui propose de la jouer
             casPart = 1;
             
-            sleep(3);
             // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
             joueurs[joueurActif].modifMainTxt();
             // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.

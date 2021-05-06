@@ -47,6 +47,7 @@ private:
 	SDL_Color font_color;
 
 	Image fondMenu;
+	Image fondPartie;
 	Image im_carte;
 
 	Mix_Chunk *sons[3]; // Tableau dans lequel on charge nos fichiers audio.
