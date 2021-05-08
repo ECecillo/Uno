@@ -407,6 +407,7 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
         {                                                       // La carte qu'il veut poser est valide
             talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
             joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
+            testUno();
 
             // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
             joueurs[joueurActif].modifMainTxt();
