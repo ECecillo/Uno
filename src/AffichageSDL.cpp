@@ -1008,7 +1008,6 @@ void sdlJeu::sdlAffCouleurChoisie(unsigned int couleur)
 
 void sdlJeu::situationUno(Jeu &jeu)
 {
-    jeu.statut_Uno = true;
     bool attendre = true;
     SDL_Event event;
     int temps0 = SDL_GetTicks();
@@ -1016,12 +1015,14 @@ void sdlJeu::situationUno(Jeu &jeu)
     {
         if (SDL_GetTicks() - temps0 < 2000) // temps inférieur à 2000 ms pour cliquer sur Uno
         {
+            cout << "Attente Uno" << endl;
             while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN)
             {
                 int sourisX = event.button.x;
                 int sourisY = event.button.y;
                 if (sourisX > (LargeurEcran / 3.35) && sourisX < (LargeurEcran / 2.63) && sourisY > (HauteurEcran / 3.34) && sourisY < (HauteurEcran / 2.5)) // clic sur Uno
                 {
+                    cout << "Uno" << endl;
                     jeu.statut_Uno = false;
                     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                     SDL_RenderClear(renderer);
@@ -1041,6 +1042,7 @@ void sdlJeu::situationUno(Jeu &jeu)
         }
         else
         {
+            cout << "Pas cliqué sur Uno" << endl;
             attendre = false;
         }
     }
@@ -1565,6 +1567,7 @@ void sdlJeu::situationContreUno(Jeu &jeu)
             {
                 int sourisX = event.button.x;
                 int sourisY = event.button.y;
+                cout << "Contre Uno" << endl;
                 if (sourisX > (LargeurEcran * (127 / 192)) && sourisX < (LargeurEcran * 0.7432) && sourisY > (HauteurEcran * 0.299) && sourisY < (HauteurEcran * 0.40)) // clic sur Contre Uno
                 {
                     jeu.statut_Uno = false;
@@ -1587,6 +1590,7 @@ void sdlJeu::situationContreUno(Jeu &jeu)
         }
         else
         {
+            cout << "Fin du temps contre Uno " << endl;
             attendre = false;
         }
     }
@@ -1844,13 +1848,15 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
     bool couleurChangee = false;
     bool joueurChange = true;
     unsigned int indiceJoueur = jeu.joueurActif;
+    int compteurBotUno = 0;
 
     cout << "Boucle Jeu " << endl;
     cout << jeu.joueurActif << endl;
     // tant que ce n'est pas la fin ...
     while (!quit)
     {
-        cout << "Je suis joueur " << jeu.joueurActif << endl;
+        cout << "Joueur actif" << endl;
+        cout << jeu.joueurActif << endl;
         if (jeu.joueurActif >= jeu.nombreJoueurs)
         {
             jeu.joueursBot[jeu.joueurActif - jeu.nombreJoueurs].choixJeu(jeu);
@@ -1858,6 +1864,24 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
             {
                 couleur = jeu.talon.back().getCouleur();
                 couleurChangee = true;
+            }
+            if (jeu.statut_Uno)
+            {
+                cout << jeu.statut_Uno << "avant situation Contre Uno" << endl;
+                situationContreUno(jeu);
+                cout << jeu.statut_Uno << "après situation Contre Uno" << endl;
+                if (!jeu.statut_Uno)
+                {
+                    if (jeu.joueurActif >= jeu.nombreJoueurs)
+                    {
+                        jeu.joueursBot[indiceJoueur].main.push_back(jeu.pioche.top());
+                        jeu.pioche.pop();
+                        jeu.joueursBot[indiceJoueur].main.push_back(jeu.pioche.top());
+                        jeu.pioche.pop();
+                    }
+                    else
+                        jeu.statut_Uno = false;
+                }
             }
             continue;
         }
@@ -1882,20 +1906,10 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 cout << jeu.statut_Uno << "après situation Contre Uno" << endl;
                 if (!jeu.statut_Uno)
                 {
-                    if (jeu.joueurActif >= jeu.nombreJoueurs)
-                    {
-                        jeu.joueursBot[indiceJoueur].main.push_back(jeu.pioche.top());
-                        jeu.pioche.pop();
-                        jeu.joueursBot[indiceJoueur].main.push_back(jeu.pioche.top());
-                        jeu.pioche.pop();
-                    }
-                    else
-                    {
-                        jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
-                        jeu.pioche.pop();
-                        jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
-                        jeu.pioche.pop();
-                    }
+                    jeu.joueurs[jeu.joueurActif].main.push_back(jeu.pioche.top());
+                    jeu.pioche.pop();
+                    jeu.joueurs[jeu.joueurActif].main.push_back(jeu.pioche.top());
+                    jeu.pioche.pop();
                 }
                 else
                     jeu.statut_Uno = false;
@@ -1909,7 +1923,6 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
 
         while (SDL_PollEvent(&event) && jeu.joueurActif < jeu.nombreJoueurs)
         {
-            cout << "Le joueur actif " << jeu.joueurActif << endl;
             sourisX = event.button.x;
             sourisY = event.button.y;
             switch (event.type)
@@ -1992,8 +2005,12 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                             couleur = 0;
                             couleurChangee = false;
                         }
-                        if (jeu.joueurs[indiceJoueur].main.size() == 1)
+                        cout << "Dans le Poll"<< endl;
+                        if(jeu.joueurs[jeu.joueurActif].main.size() == 1)
+                            cout << "Wut " << endl;
+                        if (jeu.testUno())
                         {
+                            cout << "Situation Uno" << endl;
                             situationUno(jeu);
                         }
                     }
