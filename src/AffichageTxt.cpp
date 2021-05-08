@@ -181,8 +181,8 @@ void txtBoucle(Jeu &jeu) //
 
     do
     {
-        c = win.getCh();  // On récupère le caractère de la touche appuyé et on le met dans c.
         txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
+        
 #ifdef _WIN32
         Sleep(100);
 #else
@@ -193,50 +193,16 @@ void txtBoucle(Jeu &jeu) //
             jeu.joueurs[jeu.joueurActif].indiceEtoile = 0;
         jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
         jeu.annonceGagnant();               // Annonce le gagnant de la partie.
+        
         if (jeu.finPartie == true)
             return;
         while (jeu.finTour == false || jeu.finPartie == false) // Tant que l'on a pas terminé le tour.
         {
+            c = win.getCh();  // On récupère le caractère de la touche appuyé et on le met dans c.
             sprintf(&touche, "%c", c);
             printf(&touche, win);
             //cout << "Joueur Actif " << jeu.joueurActif << endl;
-            txtAff(win, jeu);                   // On initialise le jeu avec les éléments principaux.
-            jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
 
-            if (jeu.joueurActif >= jeu.nombreJoueurs)
-            {
-                sleep(1);
-                // Appelle choix joueur.
-                int indexBot = jeu.joueurActif - jeu.nombreJoueurs;
-                jeu.joueursBot[indexBot].choixJeu(jeu);
-            }
-            if (jeu.statut_Uno)
-            {
-                cout << "========== Un des joueurs peut jouer UNO !!! ===============" << endl;
-                sleep(1.0);
-                c2 = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
-                while (jeu.statut_Uno)
-                {
-                    sleep(1);
-                    if (c2 == 'u' && jeu.joueurActif < jeu.nombreJoueurs)
-                    { // Si le joueur humain appuie sur U pour uno, avant le sleep alors il continue de jouer.
-                        jeu.actionJoueur('u');
-                    }
-                    else if (c2 == 'c' && jeu.joueurActif >= jeu.nombreJoueurs)
-                    { // Si le joueur Humain fait un contre Uno alors que le bot est en situation de Uno, le bot pioche.
-                        jeu.Uno(c);
-                    }
-                    else if (jeu.joueurActif >= jeu.nombreJoueurs && (c2 != 'c' || c2 != 'u'))
-                    {
-                        jeu.Uno('u');
-                    }
-                    // Si le joueur Humain n'appuie pas sur une des touches après le sleep alors l'ordi fait un contre uno.
-                    else if ((c2 != 'c' || c2 != 'u') && jeu.joueurActif < jeu.nombreJoueurs)
-                    {
-                        jeu.Uno('c');
-                    }
-                }
-            }
             //c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
             switch (c)
             {
@@ -265,6 +231,45 @@ void txtBoucle(Jeu &jeu) //
                 jeu.finPartie = true;
                 break;
             }
+            
+            jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
+            txtAff(win, jeu);                   // On initialise le jeu avec les éléments principaux.
+
+            if (jeu.joueurActif >= jeu.nombreJoueurs)
+            {
+                sleep(1);
+                // Appelle choix joueur.
+                int indexBot = jeu.joueurActif - jeu.nombreJoueurs;
+                jeu.joueursBot[indexBot].choixJeu(jeu);
+            }
+            if (jeu.statut_Uno)
+            {
+                cout << "========== Un des joueurs peut jouer UNO !!! ===============" << endl;
+                sleep(1.0);
+                c2 = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
+                while (jeu.statut_Uno)
+                {
+                    sleep(1);
+                    if (c2 == 'u' && jeu.joueurActif < jeu.nombreJoueurs)
+                    { // Si le joueur humain appuie sur U pour uno, avant le sleep alors il continue de jouer.
+                        jeu.Uno('u');
+                    }
+                    else if (c2 == 'c' && jeu.joueurActif >= jeu.nombreJoueurs)
+                    { // Si le joueur Humain fait un contre Uno alors que le bot est en situation de Uno, le bot pioche.
+                        jeu.Uno(c);
+                    }
+                    else if (jeu.joueurActif >= jeu.nombreJoueurs && (c2 != 'c' || c2 != 'u'))
+                    {
+                        jeu.Uno('u');
+                    }
+                    // Si le joueur Humain n'appuie pas sur une des touches après le sleep alors l'ordi fait un contre uno.
+                    else if ((c2 != 'c' || c2 != 'u') && jeu.joueurActif < jeu.nombreJoueurs)
+                    {
+                        jeu.Uno('c');
+                    }
+                }
+            }
+            
             /* if (jeu.finTour)
                 cout << "Fin du tour" << endl; */
             /* if(ok)
