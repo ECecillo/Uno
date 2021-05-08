@@ -134,6 +134,7 @@ void Jeu::initTalon()
     for (int i = 0; i < nombreJoueurs; i++)
         joueurs[i].modifTalonPiocheTxt(talon, pioche);
 }
+
 // 7 cartes par joueur et par Bot.
 void Jeu::distribueCarte()
 {
@@ -159,6 +160,7 @@ void Jeu::distribueCarte()
         joueursBot[i].trierMain();
     }
 }
+
 void Jeu::definieCouleurBot(Bot &tabJoueursBot, Carte &c)
 {
     switch (c.getCouleur())

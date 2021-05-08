@@ -895,9 +895,10 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
     { // Si c'est un Joueur et non pas un Bot qui doit jouer on affiche sa main.
         // le nom
         texte.x = 0;
-        texte.y = LargeurEcran / 2.5;
+        texte.y = LargeurEcran / 3.5;
         texte.w = LargeurEcran / 17.5;
         texte.h = HauteurEcran / 21.6;
+        font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[indiceJoueur].nom.c_str(), jaune));
         font_im.loadFromCurrentSurface(renderer);
         SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
 
@@ -990,6 +991,7 @@ unsigned int sdlJeu::choixCouleur()
     SDL_DestroyWindow(choixCouleur);
     return couleur;
 }
+
 // affiche une carte de la couleur qui a été choisie
 void sdlJeu::sdlAffCouleurChoisie(unsigned int couleur)
 {
@@ -1004,48 +1006,6 @@ void sdlJeu::sdlAffCouleurChoisie(unsigned int couleur)
     im_carte.loadFromFile(nomFichier, renderer);
     im_carte.draw(renderer, (LargeurEcran / 1.76), (HauteurEcran / 3.6), LargeurEcran / 17.5, HauteurEcran / 7);
     SDL_RenderPresent(renderer);
-}
-
-void sdlJeu::situationUno(Jeu &jeu)
-{
-    bool attendre = true;
-    SDL_Event event;
-    int temps0 = SDL_GetTicks();
-    while (attendre)
-    {
-        if (SDL_GetTicks() - temps0 < 2000) // temps inférieur à 2000 ms pour cliquer sur Uno
-        {
-            cout << "Attente Uno" << endl;
-            while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN)
-            {
-                int sourisX = event.button.x;
-                int sourisY = event.button.y;
-                if (sourisX > (LargeurEcran / 3.35) && sourisX < (LargeurEcran / 2.63) && sourisY > (HauteurEcran / 3.34) && sourisY < (HauteurEcran / 2.5)) // clic sur Uno
-                {
-                    cout << "Uno" << endl;
-                    jeu.statut_Uno = false;
-                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                    SDL_RenderClear(renderer);
-                    SDL_Rect texte;
-                    texte.x = LargeurEcran / 4.8;
-                    texte.y = HauteurEcran / 3.6;
-                    texte.w = LargeurEcran / 1.6;
-                    texte.h = HauteurEcran / 2.7;
-                    font_im.setSurface(TTF_RenderText_Solid(font, "UNOoooooo", jaune));
-                    font_im.loadFromCurrentSurface(renderer);
-                    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
-                    SDL_RenderPresent(renderer);
-                    SDL_Delay(1000);
-                    attendre = false;
-                }
-            }
-        }
-        else
-        {
-            cout << "Pas cliqué sur Uno" << endl;
-            attendre = false;
-        }
-    }
 }
 
 void sdlJeu::sdlMenu()
@@ -1554,6 +1514,49 @@ void sdlJeu::sdlReglage(Menu &menu)
         sdlMenu();
     }
 }
+
+void sdlJeu::situationUno(Jeu &jeu)
+{
+    bool attendre = true;
+    SDL_Event event;
+    int temps0 = SDL_GetTicks();
+    while (attendre)
+    {
+        if (SDL_GetTicks() - temps0 < 2000) // temps inférieur à 2000 ms pour cliquer sur Uno
+        {
+            cout << "Attente Uno" << endl;
+            while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                int sourisX = event.button.x;
+                int sourisY = event.button.y;
+                if (sourisX > (LargeurEcran / 3.35) && sourisX < (LargeurEcran / 2.63) && sourisY > (HauteurEcran / 3.34) && sourisY < (HauteurEcran / 2.5)) // clic sur Uno
+                {
+                    cout << "Uno" << endl;
+                    jeu.statut_Uno = false;
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                    SDL_RenderClear(renderer);
+                    SDL_Rect texte;
+                    texte.x = LargeurEcran / 4.8;
+                    texte.y = HauteurEcran / 3.6;
+                    texte.w = LargeurEcran / 1.6;
+                    texte.h = HauteurEcran / 2.7;
+                    font_im.setSurface(TTF_RenderText_Solid(font, "UNOoooooo", jaune));
+                    font_im.loadFromCurrentSurface(renderer);
+                    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
+                    SDL_RenderPresent(renderer);
+                    SDL_Delay(1000);
+                    attendre = false;
+                }
+            }
+        }
+        else
+        {
+            cout << "Pas cliqué sur Uno" << endl;
+            attendre = false;
+        }
+    }
+}
+
 void sdlJeu::situationContreUno(Jeu &jeu)
 {
     bool attendre = true;
@@ -1567,7 +1570,7 @@ void sdlJeu::situationContreUno(Jeu &jeu)
     { // C'est un Joueur Humain qui doit faire Contre Uno.
         while (attendre)
         {
-            if (SDL_GetTicks() - temps0 < 3000) // temps inférieur à 2000 ms pour cliquer sur Uno
+            if (SDL_GetTicks() - temps0 < 3000) // temps inférieur à 3000 ms pour cliquer sur Contre Uno
             {
                 while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN)
                 {
@@ -1902,18 +1905,15 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
             }
             continue;
         }
-        if (joueurChange) // pour éviter le clignotement de la carte couleur
+        if (joueurChange) // pour éviter le clignotement de la carte couleur, ne pas actualiser l'affichage
         {
             cout << "Boucle " << endl;
             if (jeu.joueurActif < jeu.nombreJoueurs)
             {
                 sdlAffJoueur(jeu, jeu.joueurActif);
-                cout << "Afficahge Joueur Ok" << endl;
                 if (couleur != 0 && couleurChangee)
                 {
                     sdlAffCouleurChoisie(couleur);
-                    couleur = 0;
-                    couleurChangee = false;
                 }
             }
             if (jeu.statut_Uno)
@@ -1939,7 +1939,6 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 indiceJoueur = jeu.joueurActif;
             joueurChange = false;
         }
-        //cout << "Le joueur actif " << jeu.joueurActif << endl;
 
         while (SDL_PollEvent(&event) && jeu.joueurActif < jeu.nombreJoueurs)
         {
@@ -1961,9 +1960,10 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 {
                     jeu.piocherCarte();
                     sdlAffJoueur(jeu, jeu.joueurActif);
+                    // variante cumul, le joueur actif ne peut pas jouer
                     if (jeu.casPart % 2 == 0 && jeu.casPart > 0 && jeu.talon.back().getValeur() == 13)
                     {
-                        sdlAffJoueur(jeu, indiceJoueur);
+                        sdlAffJoueur(jeu, indiceJoueur); // on revient au joueur précédent pour qu'il choisisse la couleur
                         couleur = choixCouleur();
                         couleurChangee = true;
                         jeu.talon.back().setCouleur(couleur);
@@ -1971,17 +1971,16 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                     if (jeu.casPart % 2 == 1)
                         jeu.casPart = -1;
                     else
-                    {
+                    {// variante cumul
                         jeu.casPart = 0;
                         indiceJoueur = jeu.joueurActif;
                     }
+                    cout << "casPart après pioche" << jeu.casPart << endl;
                     jeu.termineTour();
 
                     if (couleur != 0 && couleurChangee)
                     {
                         sdlAffCouleurChoisie(couleur);
-                        couleur = 0;
-                        couleurChangee = false;
                     }
                 }
                 if (sourisX > 0 && sourisX < LargeurEcran / 1.05 && sourisY > HauteurEcran / 1.8 && sourisY < HauteurEcran / 1.15) // clic sur une carte de la main
@@ -1993,13 +1992,15 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                         indiceCarte = sourisX / 110;
                     if (sourisY > HauteurEcran / 1.35)
                         indiceCarte = 17 + sourisX / 110;
-
+                    cout << "indice carte " << indiceCarte << endl;
                     if (jeu.carteValide(jeu.joueurs[jeu.joueurActif].main[indiceCarte]))
                     {
+                        cout << "coucou" << jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() << endl;
                         couleurChangee = false;
                         if (jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 13 || jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 14)
                         {
                             couleurChangee = false;
+                            cout << "casPart " << jeu.casPart << endl;
                             if ((jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 13 && jeu.casPart % 2 != 0) || jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 14)
                             {
                                 couleur = choixCouleur();
@@ -2008,10 +2009,11 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                             }
                         }
                         cout << jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() << " " << jeu.joueurs[jeu.joueurActif].main[indiceCarte].getCouleur() << endl;
-
+                        // pour la variante cumul
                         if (jeu.casPart % 2 == 0)
                             indiceJoueur = jeu.joueurActif;
                         jeu.poserCarte(indiceCarte, messageErreur);
+                        // pour les variantes doublon, echange et suite 
                         if (jeu.casPart == 5)
                             sdlSuite(jeu, indiceCarte);
                         if (jeu.casPart == 3)
@@ -2022,8 +2024,6 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                         if (couleur != 0 && couleurChangee)
                         {
                             sdlAffCouleurChoisie(couleur);
-                            couleur = 0;
-                            couleurChangee = false;
                         }
                         cout << "Dans le Poll" << endl;
                         if (jeu.joueurs[indiceJoueur].main.size() == 1)
@@ -2039,6 +2039,7 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
         }
         cout << "Apres Poll Event" << endl;
         SDL_Delay(500);
+        // Teste s'il y a un gagnant
         if (jeu.joueurActif < jeu.nombreJoueurs)
         {
             if (jeu.joueurs[jeu.joueurActif].main.size() == 0)
