@@ -1559,39 +1559,45 @@ void sdlJeu::situationContreUno(Jeu &jeu)
     bool attendre = true;
     SDL_Event event;
     int temps0 = SDL_GetTicks();
-    while (attendre)
-    {
-        if (SDL_GetTicks() - temps0 < 3000) // temps inférieur à 2000 ms pour cliquer sur Uno
+    if (jeu.joueurActif >= jeu.nombreJoueurs)
+    { // Si c'est le tour d'un des bots il fait un contre Uno direct.
+        jeu.statut_Uno = false;
+    }
+    else
+    { // C'est un Joueur Humain qui doit faire Contre Uno.
+        while (attendre)
         {
-            while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN)
+            if (SDL_GetTicks() - temps0 < 3000) // temps inférieur à 2000 ms pour cliquer sur Uno
             {
-                int sourisX = event.button.x;
-                int sourisY = event.button.y;
-                cout << "Contre Uno" << endl;
-                if (sourisX > (LargeurEcran * (127 / 192)) && sourisX < (LargeurEcran * 0.7432) && sourisY > (HauteurEcran * 0.299) && sourisY < (HauteurEcran * 0.40)) // clic sur Contre Uno
+                while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN)
                 {
-                    jeu.statut_Uno = false;
-                    cout << jeu.statut_Uno << "après clic" << endl;
-                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                    SDL_RenderClear(renderer);
-                    SDL_Rect texte;
-                    texte.x = LargeurEcran * 5 / 24;
-                    texte.y = HauteurEcran * 5 / 18;
-                    texte.w = LargeurEcran * 0.625;
-                    texte.h = HauteurEcran * 10 / 27;
-                    font_im.setSurface(TTF_RenderText_Solid(font, "Contre UNOoooooo", jaune));
-                    font_im.loadFromCurrentSurface(renderer);
-                    SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
-                    SDL_RenderPresent(renderer);
-                    SDL_Delay(1000);
-                    attendre = false;
+                    int sourisX = event.button.x;
+                    int sourisY = event.button.y;
+                    cout << "Contre Uno" << endl;
+                    if (sourisX > (LargeurEcran * (127 / 192)) && sourisX < (LargeurEcran * 0.7432) && sourisY > (HauteurEcran * 0.299) && sourisY < (HauteurEcran * 0.40)) // clic sur Contre Uno
+                    {
+                        jeu.statut_Uno = false;
+                        cout << jeu.statut_Uno << "après clic" << endl;
+                        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                        SDL_RenderClear(renderer);
+                        SDL_Rect texte;
+                        texte.x = LargeurEcran * 5 / 24;
+                        texte.y = HauteurEcran * 5 / 18;
+                        texte.w = LargeurEcran * 0.625;
+                        texte.h = HauteurEcran * 10 / 27;
+                        font_im.setSurface(TTF_RenderText_Solid(font, "Contre UNOoooooo", jaune));
+                        font_im.loadFromCurrentSurface(renderer);
+                        SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
+                        SDL_RenderPresent(renderer);
+                        SDL_Delay(1000);
+                        attendre = false;
+                    }
                 }
             }
-        }
-        else
-        {
-            cout << "Fin du temps contre Uno " << endl;
-            attendre = false;
+            else
+            {
+                attendre = false;
+            }
         }
     }
 }
@@ -1861,27 +1867,38 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
         {
             jeu.joueursBot[jeu.joueurActif - jeu.nombreJoueurs].choixJeu(jeu);
             if (jeu.talon.back().getValeur() == 13 || jeu.talon.back().getValeur() == 14)
-            {
+            { // On affiche la nouvelle couleur posé par le bot quand c'est un +4 ou joker.
                 couleur = jeu.talon.back().getCouleur();
                 couleurChangee = true;
             }
             if (jeu.statut_Uno)
-            {
+            {                                   // Si on est dans une situation de Uno pour le bot quand il a posé la carte.
+                indiceJoueur = jeu.joueurActif; // On save l'indice du bot qui est en Uno.
+                jeu.termineTour();              // On termine le tour pour que ce soit un autre bot ou un joueur qui puisse faire Contre Uno.
                 cout << jeu.statut_Uno << "avant situation Contre Uno" << endl;
-                situationContreUno(jeu);
+                if (jeu.joueurActif >= jeu.nombreJoueurs)
+                { // Le joueur suivant est un bot.
+                    if (compteurBotUno != 1)
+                    {                            // Si le bot suivant n'a jamais fait un contre Uno automatique.
+                        situationContreUno(jeu); // Il contre Uno direct.
+                        compteurBotUno++;
+                    }
+                    // Si il a déjà fait un contre Uno on laisse couler.
+                }
+                else
+                { // C'est un joueur Humain, il devra donc faire un contre Uno si il peut.
+                    situationContreUno(jeu);
+                }
                 cout << jeu.statut_Uno << "après situation Contre Uno" << endl;
                 if (!jeu.statut_Uno)
-                {
-                    if (jeu.joueurActif >= jeu.nombreJoueurs)
-                    {
-                        jeu.joueursBot[indiceJoueur].main.push_back(jeu.pioche.top());
-                        jeu.pioche.pop();
-                        jeu.joueursBot[indiceJoueur].main.push_back(jeu.pioche.top());
-                        jeu.pioche.pop();
-                    }
-                    else
-                        jeu.statut_Uno = false;
+                { // Si le statut est passé à false (on a appuyé sur le contre Uno)
+                    jeu.joueursBot[indiceJoueur].main.push_back(jeu.pioche.top());
+                    jeu.pioche.pop();
+                    jeu.joueursBot[indiceJoueur].main.push_back(jeu.pioche.top());
+                    jeu.pioche.pop();
                 }
+                else // Si le statut est encore à true alors on a pas appuyé donc on ne le fait pas piocher.
+                    jeu.statut_Uno = false;
             }
             continue;
         }
@@ -1906,13 +1923,16 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 cout << jeu.statut_Uno << "après situation Contre Uno" << endl;
                 if (!jeu.statut_Uno)
                 {
-                    jeu.joueurs[jeu.joueurActif].main.push_back(jeu.pioche.top());
+                    cout << "Fait piocher" << endl;
+                    jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
                     jeu.pioche.pop();
-                    jeu.joueurs[jeu.joueurActif].main.push_back(jeu.pioche.top());
+                    jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
                     jeu.pioche.pop();
                 }
                 else
+                {
                     jeu.statut_Uno = false;
+                }
             }
             // on exclut le cas particulier de la version cumul
             if (jeu.casPart % 2 == 1)
@@ -2005,12 +2025,9 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                             couleur = 0;
                             couleurChangee = false;
                         }
-                        cout << "Dans le Poll"<< endl;
-                        if(jeu.joueurs[jeu.joueurActif].main.size() == 1)
-                            cout << "Wut " << endl;
-                        if (jeu.testUno())
+                        cout << "Dans le Poll" << endl;
+                        if (jeu.joueurs[indiceJoueur].main.size() == 1)
                         {
-                            cout << "Situation Uno" << endl;
                             situationUno(jeu);
                         }
                     }
