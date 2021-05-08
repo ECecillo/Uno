@@ -1955,7 +1955,6 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 break;
             case SDL_MOUSEBUTTONDOWN: // Si le bouton de la souris est appuyé
                 joueurChange = true;
-                cout << "Clique" << endl;
                 if (sourisX > (LargeurEcran * 5 / 12) && sourisX < (LargeurEcran * 91 / 192) && sourisY > (HauteurEcran * 5 / 18) && sourisY < (HauteurEcran * 457 / 1080)) // clic sur la pioche
                 {
                     jeu.piocherCarte();
@@ -1968,13 +1967,12 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                         couleurChangee = true;
                         jeu.talon.back().setCouleur(couleur);
                     }
-                    if (jeu.casPart % 2 == 1)
-                        jeu.casPart = -1;
-                    else
-                    {// variante cumul
+                    if (jeu.casPart % 2 == 0) // variante cumul
+                    {
                         jeu.casPart = 0;
                         indiceJoueur = jeu.joueurActif;
                     }
+                    else jeu.casPart = -1;
                     cout << "casPart après pioche" << jeu.casPart << endl;
                     jeu.termineTour();
 
@@ -1992,15 +1990,12 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                         indiceCarte = sourisX / 110;
                     if (sourisY > HauteurEcran / 1.35)
                         indiceCarte = 17 + sourisX / 110;
-                    cout << "indice carte " << indiceCarte << endl;
                     if (jeu.carteValide(jeu.joueurs[jeu.joueurActif].main[indiceCarte]))
                     {
-                        cout << "coucou" << jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() << endl;
                         couleurChangee = false;
                         if (jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 13 || jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 14)
                         {
                             couleurChangee = false;
-                            cout << "casPart " << jeu.casPart << endl;
                             if ((jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 13 && jeu.casPart % 2 != 0) || jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 14)
                             {
                                 couleur = choixCouleur();
@@ -2008,7 +2003,6 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                                 jeu.joueurs[jeu.joueurActif].main[indiceCarte].setCouleur(couleur);
                             }
                         }
-                        cout << jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() << " " << jeu.joueurs[jeu.joueurActif].main[indiceCarte].getCouleur() << endl;
                         // pour la variante cumul
                         if (jeu.casPart % 2 == 0)
                             indiceJoueur = jeu.joueurActif;
@@ -2025,8 +2019,7 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                         {
                             sdlAffCouleurChoisie(couleur);
                         }
-                        cout << "Dans le Poll" << endl;
-                        if (jeu.joueurs[indiceJoueur].main.size() == 1)
+                        if (jeu.statut_Uno)
                         {
                             situationUno(jeu);
                         }
@@ -2040,9 +2033,9 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
         cout << "Apres Poll Event" << endl;
         SDL_Delay(500);
         // Teste s'il y a un gagnant
-        if (jeu.joueurActif < jeu.nombreJoueurs)
+        if (indiceJoueur < jeu.nombreJoueurs)
         {
-            if (jeu.joueurs[jeu.joueurActif].main.size() == 0)
+            if (jeu.joueurs[indiceJoueur].main.size() == 0)
             {
                 cout << "Joueur gagnant ?" << endl;
                 cout << indiceJoueur << endl;
