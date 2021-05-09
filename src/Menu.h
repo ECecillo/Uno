@@ -8,6 +8,11 @@
 
 using namespace std;
 
+/**
+* @brief
+* Classe gérant le menu et les choix d'options.
+* 
+*/
 class Menu
 {
 private:

@@ -3,7 +3,11 @@
 
 #include "Jeu.h"
 
-
+/**
+* @brief
+* Classe gérant le jeu avec la variante doublon.
+* 
+*/
 class VarianteDoublon : public Jeu
 {
 private:

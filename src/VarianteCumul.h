@@ -3,6 +3,11 @@
 
 #include "Jeu.h"
 
+/**
+* @brief
+* Classe gérant le jeu avec la variante cumul.
+* 
+*/
 class VarianteCumul : public Jeu
 {
 private:
