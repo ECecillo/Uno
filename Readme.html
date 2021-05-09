@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Readme</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="uno">UNO</h1>
+<p>Uno sur ordinateur, jeu qui s’adresse au grand public, en version classique ou avec l’une des 5 variantes proposées.</p>
+<p>Il s’agit de la réalisation finale de l’UE de L2 Informatique “Conception et Développement d’application”.<br>
+Le but était de mener un projet de conception et de développement d’application de bout en bout. Le thème étant choisi, il fallait concevoir l’application en choisissant les bons outils, des classes pertinentes, les bonnes librairies, séparer le fonctionnement du jeu et l’affichage, gérer la communication dans l’équipe, tenir les délais et le cahier des charges.</p>
+<h1 id="auteurs">Auteurs</h1>
+<p>@<strong>CECILLON Enzo</strong>  11805901<br>
+<strong>mail</strong> : <a href="mailto:enzo.cecillon@etu.univ-lyon1.fr">enzo.cecillon@etu.univ-lyon1.fr</a></p>
+<hr>
+<p>@<strong>RAMPON Ildès</strong>  89064800<br>
+<strong>mail</strong> : <a href="mailto:ildes.rampon@etu.univ-lyon1.fr">ildes.rampon@etu.univ-lyon1.fr</a></p>
+<hr>
+<p><strong>Projet complet</strong><br>
+<strong>GitLab</strong> : 17422</p>
+<h1 id="compiler-le-projet-avec-le-makefile">Compiler le projet avec le makefile</h1>
+
+<table>
+<thead>
+<tr>
+<th>Fichier</th>
+<th>Fonctionnalité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>src/mainTest.cpp</td>
+<td>Teste les fonctions et procédures de Jeu et Bot</td>
+</tr>
+<tr>
+<td>src/mainTxt.cpp</td>
+<td>Version texte du jeu</td>
+</tr>
+<tr>
+<td>src/mainSDL.cpp</td>
+<td>Version graphique du jeu</td>
+</tr>
+</tbody>
+</table><h1 id="librairie">Librairie</h1>
+<p>Pour pouvoir compiler et exécuter <strong>mainSDL.cpp</strong> il faudra se munir des fichiers sources de <strong>SDL2</strong> que vous pouvez retrouver sur leur site <a href="https://www.libsdl.org/download-2.0.php">ici</a> et les placer dans le dossier extern à la racine du Projet.</p>
+<p>Si vous êtes sous linux veuillez télécharger les paquets suivant :</p>
+<pre><code>$&gt; sudo apt-get install libsdl2-dev libsdl2-image-dev 
+
+
+# Pour compiler tous les execs :
+make
+
+# Compiler les fichiers un à un :
+make (NomFichierMain)
+</code></pre>
+<p><strong>Remplacer (NomFichierMain) par un des fichiers présent dans le tableau ci-dessus.</strong></p>
+<h1 id="exécutables">Exécutables</h1>
+
+<table>
+<thead>
+<tr>
+<th>Exécutable</th>
+<th>Fonctionnalité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bin/test</td>
+<td>Pour teste les fonctions et procédures de Jeu et Bot</td>
+</tr>
+<tr>
+<td>uno_txt</td>
+<td>Pour jouer en version texte</td>
+</tr>
+<tr>
+<td>uno_sdl</td>
+<td>Pour jouer en version graphique</td>
+</tr>
+</tbody>
+</table><h1 id="règles-du-jeu-et-des-variantes">Règles du jeu et des variantes</h1>
+<p>Jeu d’ambiance de 2 à 10 joueurs à partir de 7 ans.</p>
+<h2 id="matériel">Matériel</h2>
+<p>108 cartes réparties en :<br>
+19 cartes numérotés de 0 à 9 par couleur (bleues, vertes, rouges et jaunes)<br>
+2 cartes +2 de chaque couleur<br>
+2 cartes Inversion par couleur<br>
+2 cartes Passer par couleur<br>
+1 Joker par couleur<br>
+1 Super Joker par couleur</p>
+<h2 id="but-du-jeu">But du jeu</h2>
+<p>Pour gagner au Uno, vous devez être le 1er à vous débarrasser de toutes vos cartes.</p>
+<h2 id="préparation">Préparation</h2>
+<p>On distribue 7 par joueur. Les autres cartes sont placées faces cachées et forment la PIOCHE.<br>
+La carte du dessus de la PIOCHE est retournée pour constituer le TALON.</p>
+<h2 id="le-principe">Le principe</h2>
+<p>Les joueurs doivent recouvrir la carte visible du TALON par une carte : de même<br>
+couleur, ou portant le même numéro ou le même symbole que celle-ci (les symboles<br>
+représentent des Cartes Action. Voir le chapitre FONCTIONS DES CARTES ACTION.<br>
+Si le joueur ne peut pas ou ne veut pas jouer, il PIOCHE une carte. Il passe son tour et conserve cette carte supplémentaire.</p>
+<h2 id="fonctions-des-cartes-action">Fonctions des cartes action</h2>
+<h3 id="carte-2">Carte +2</h3>
+<p><img src="https://jeu-uno.info/wp-content/uploads/2015/03/carte-plus2.jpg" alt="❤ Règle du uno, apprendre à jouer rapidement !"><br>
+Lorsque cette carte est jouée, le joueur suivant doit piocher 2 cartes et passer son tour.<br>
+Cette carte ne peut être jouée que sur une carte de la même couleur ou sur une autre carte<br>
++2. Si cette carte est retournée en début de jeu, la même règle s’applique.</p>
+<h3 id="carte-passer">Carte Passer</h3>
+<p><img src="https://jeu-uno.info/wp-content/uploads/2015/03/carte-pass.jpg" alt="❤ Règle du uno, apprendre à jouer rapidement !"><br>
+Lorsque cette carte est jouée, le joueur suivant doit passer son tour. Cette carte ne peut<br>
+être jouée que sur une carte de même couleur ou sur une autre carte Passer. Si cette carte<br>
+est retournée en début de jeu, le joueur à la gauche du donneur passe son tour et c’est au<br>
+joueur suivant de commencer.</p>
+<h3 id="carte-inversion">Carte Inversion</h3>
+<p><img src="https://jeu-uno.info/wp-content/uploads/2015/03/carte-inversion.jpg" alt="Règle du Uno - aperçu de la carte inversion uno"><br>
+Lorsque cette carte est jouée, le sens du jeu change. Cette carte ne peut être jouée que sur une<br>
+carte de la même couleur ou sur une autre carte Inversion. Si cette carte est retournée en<br>
+début de jeu, le donneur joue en premier, puis le jeu continue vers la droite au lieu de la<br>
+gauche.<br>
+Lors d’une partie à deux joueurs, cette carte a le même effet que la carte Passer.</p>
+<h3 id="carte-joker">Carte Joker</h3>
+<p><img src="https://jeu-uno.info/wp-content/uploads/2015/03/carte-joker.jpg" alt="Image carte joker uno"><br>
+Celui qui joue cette carte peut choisir de changer la couleur (il annonce son choix en<br>
+posant la carte) ou de continuer dans la couleur demandée. Cette carte peut être jouée<br>
+après n’importe quelle autre carte, même si le joueur a une autre carte qu’il peut jouer. Si<br>
+c’est la première carte de la pioche, le joueur placé à gauche du donneur choisit la couleur<br>
+de départ et joue la première carte.</p>
+<h3 id="carte-super-joker">Carte Super Joker</h3>
+<p><img src="https://jeu-uno.info/wp-content/uploads/2015/03/carte-plus4.jpg" alt="Image carte joker Uno"><br>
+Celui qui joue cette carte peut choisir de changer la couleur ET oblige le joueur suivant à<br>
+piocher 4 cartes et à passer son tour.<br>
+Attention !<br>
+Un joueur ne peut jouer cette carte que s’il ne possède AUCUNE carte de la couleur<br>
+demandée COULEUR DEMANDÉE (mais il peut l’utiliser s’il possède une carte Action ou<br>
+une carte de chiffre identique).</p>
+<h2 id="fin-de-la-partie">Fin de la partie</h2>
+<p>Lorsqu’un joueur pose son avant-dernière carte, il doit immédiatement annoncer à voix<br>
+haute « UNO » (qui signifie « un ») pour indiquer à ses adversaires qu’il n’a plus qu’une seule<br>
+carte en main.<br>
+S’il oublie et que l’un de ses adversaires le lui fait remarquer (en criant CONTRE UNO)<br>
+avant que le joueur suivant n’ait joué, il doit piocher deux cartes de pénalité.</p>
+<p>Si la PIOCHE est épuisée avant la fin d’une manche, le TALON est mélangé et le jeu<br>
+continue.</p>
+<h2 id="variantes">Variantes</h2>
+<h3 id="variante-«cumul»">Variante «Cumul»</h3>
+<p>On peut jouer une carte +2 ou +4 sur une carte +2 et une carte +4 sur une carte +4. Le<br>
+joueur qui ne peut pas jouer pioche autant de cartes que la somme des +4 et +2 qui<br>
+viennent d’être joués.</p>
+<h3 id="variante-«-doublon-»">Variante « Doublon »</h3>
+<p>Si le joueur joue une carte alors qu’il a la deuxième carte identique dans sa main, il peut<br>
+jouer le doublon dans le même tour.</p>
+<h3 id="variante-«echange-»">Variante «Echange »</h3>
+<p>Quand un joueur pose un 7 sur le talon, il peut échanger son jeu avec n’importe quel autre<br>
+joueur.</p>
+<h3 id="variante-«suites»">Variante «Suites»</h3>
+<p>Si un joueur dispose dans son jeu d’une suite de cartes numérotés (de 0 à 7 de même<br>
+couleur, il pourra les enchaîner à son tour de jeu tant que sa suite tient. Par exemple : poser<br>
+un 3 jaune puis un 4 puis 5 ainsi de suite.</p>
+<h3 id="variante-«tourne-»">Variante «Tourne »</h3>
+<p>Dès qu’un joueur joue un 0 sur le talon, tous les joueurs doivent passer leur jeu au voisin<br>
+suivant selon le sens du jeu.</p>
+<h1 id="utilisation-du-jeu">Utilisation du jeu</h1>
+<h2 id="version-texte">Version texte</h2>
+<p>Tout au clavier:<br>
+a: gauche<br>
+d: droite<br>
+t: haut<br>
+b: bas<br>
+e: entrée<br>
+p: passer, piocher<br>
+u: uno<br>
+c: contre uno<br>
+r: rouge<br>
+v: vert<br>
+j: jaune<br>
+b: bleu<br>
+q: quitter</p>
+<h2 id="version-graphique">Version graphique</h2>
+<p>A la souris</p>
+<h1 id="organisation-du-code">Organisation du code</h1>
+<p><strong>/bin</strong>  Répertoire où les executables (exemple, test et affichage) seront compilés.<br>
+<strong>/data</strong>  Les images, sons.<br>
+<strong>/doc</strong>  Le fichier doxygen qui permet de générer la documentation du code.<br>
+<strong>/obj</strong>  Répertoire comportant les compilations intermédiaires (.o).<br>
+<strong>/src</strong>  Les classes (.h et .cpp) AffichageSDL, AffichageTxt, Bot, Carte, Fenetre, Jeu, Joueur, Menu, SalleAttente, VarianteCumul, VarianteDoublon, VarianteEchange, VarianteSuite, VarianteTourne, et les 3 main (mainTest.cpp, mainTxt.cpp, mainSDL.cpp)</p>
+<h1 id="documentation-du-code">Documentation du code</h1>
+<p>Pour générer la doc sous doxygen il faudra vous munir des paquets nécessaires sous linux:</p>
+<pre><code># Installer Doxygen:
+sudo apt install doxygen
+
+# Generer la documentation:
+doxygen doc/image.doxy
+
+# La page principale générée avec Firefox (ou autre browser):
+firefox doc/html/index.html
+</code></pre>
+<p>Vous pouvez modifier les propriétés de la doc en allant dans le fichier <strong>doc/image.doxy</strong></p>
+</div>
+</body>
+
+</html>

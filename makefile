@@ -1,6 +1,6 @@
-CORE = Joueur.cpp Jeu.cpp Bot.cpp Carte.cpp VarianteTourne.cpp VarianteDoublon.cpp VarianteEchange.cpp VarianteSuite.cpp VarianteCumul.cpp Menu.cpp# Pacman.cpp core/Terrain.cpp core/Jeu.cpp core/Fantome.cpp
+CORE = Joueur.cpp Jeu.cpp Bot.cpp Carte.cpp VarianteTourne.cpp VarianteDoublon.cpp VarianteEchange.cpp VarianteSuite.cpp VarianteCumul.cpp Menu.cpp mainTest.cpp
 
-SRCS_TXT = $(CORE) AffichageTxt.cpp Fenetre.cpp SalleAttente.cpp main.cpp #txt/txtJeu.cpp txt/winTxt.cpp txt/main_txt.cpp
+SRCS_TXT = $(CORE) AffichageTxt.cpp Fenetre.cpp SalleAttente.cpp mainTxt.cpp 
 FINAL_TARGET_TXT = uno_txt
 DEFINE_TXT = -DJEU_TXT
 

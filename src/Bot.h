@@ -11,6 +11,11 @@
 
 class Jeu;
 
+/**
+* @brief
+* Classe gérant les bots.
+* 
+*/
 class Bot
 {
 public:

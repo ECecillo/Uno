@@ -3,7 +3,11 @@
 
 #include "Jeu.h"
 
-
+/**
+* @brief
+* Classe gérant le jeu avec la variante echange.
+* 
+*/
 class VarianteEchange : public Jeu
 {
 private:

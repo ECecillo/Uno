@@ -9,7 +9,7 @@ using namespace std;
 
 /**
 * @brief
-* Classe gérant chaque joueur.
+* Classe gérant les choix pour la partie.
 * 
 */
 class SalleAttente
@@ -35,8 +35,26 @@ public:
 		*/
 		unsigned int haut;
 
+		/**
+		* @brief
+		* Nombre de joueurs de la partie.
+		* 
+		*/
 		unsigned int nombreJoueurs;
+
+		/**
+		* @brief
+		* Nombre de bots de la partie.
+		* 
+		*/
 		unsigned int nombreIA;
+
+		/**
+		* @brief
+		* Variante choisie.
+		* 1 classique, 2 cumul, 3 doublon, 4 echange, 5 suite, 6 tourne
+		* 
+		*/
 		unsigned int variante;
 		/**
 		* @brief

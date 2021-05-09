@@ -70,9 +70,6 @@ public:
 		*/
 		unsigned int indiceEtoile;
 
-
-
-		
 		/**
 		* @brief 
 		* Constructeur par défaut. Initialise numeroJoueur à 1 et nom à Joueur 1.
