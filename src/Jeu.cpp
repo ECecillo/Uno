@@ -308,8 +308,7 @@ void Jeu::piocherCarte()
         joueursBot[indexBot].trierMain();
         return;
     }
-    //cout << "Valeur :" << pioche.top().getValeur() << " et la couleur " << pioche.top().getCouleur() << endl;
-    //termineTour();
+    
     else
     {
         joueurs[joueurActif].main.push_back(pioche.top());
@@ -395,8 +394,6 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                     annonceGagnant();
                 return;
             }
-            /* if (carteSpeciale && testUno() != false)
-                termineTour(); */
         }
         else
         {
@@ -473,25 +470,18 @@ void Jeu::actionJoueur(const char action) // Fenêtre
     switch (action)
     {
     case 'r':
-        //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
-        /* if(joueurActif >= nombreJoueurs)
-            joueursBot[joueurActif].main[] */
-
         joueurs[joueurActif].main[indiceCarte].setCouleur(1);
 
         break;
     case 'v':
-        //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
         joueurs[joueurActif].main[indiceCarte].setCouleur(2);
 
         break;
     case 'b':
-        //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
         joueurs[joueurActif].main[indiceCarte].setCouleur(3);
 
         break;
     case 'j':
-        //if ((talon.front()).getValeur() == 13 || (talon.front()).getValeur() == 14)
         joueurs[joueurActif].main[indiceCarte].setCouleur(4);
 
         break;
@@ -528,13 +518,10 @@ void Jeu::actionJoueur(const char action) // Fenêtre
         piocherCarte();
         piocherCarte();
         termineTour();
-        // Passer un bool statut_Uno en vraie pour se barrer d'une boucle attendre touche.
-
         break;
     case 'p':
         // On Pioche.
-        piocherCarte();
-        termineTour();
+            piocherCarte();
         break;
     case 'e':
     {
@@ -687,18 +674,6 @@ void Jeu::modifAdversairesTxt()
 void Jeu::MaJTableJoueurActifDebutTour()
 {
     assert(sensJeu == 0 || sensJeu == 1);
-    /* 
-    int i = 0;
-    while (joueurs[joueurActif].nom[i]!='\0') 
-    {
-        joueurs[joueurActif].tableJoueur[20][i]=joueurs[joueurActif].nom[i];
-        i++;
-    }
-    joueurs[joueurActif].modifMainTxt();
-    modifAdversairesTxt();
-    joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche); 
-    */
-    // Ancien
     if (joueurActif >= nombreJoueurs)
     {
         joueurs[0].modifTalonPiocheTxt(talon, pioche);
