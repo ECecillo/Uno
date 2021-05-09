@@ -68,6 +68,42 @@ int Bot::carteMemeCouleurTalon(const Jeu &jeu) const
         break;
     }
 }
+int Bot::cartePourCumul(const Jeu &jeu, int &c, int &indiceCarte)
+{
+    int indexBot = numeroBot - 1;
+
+    int i = 0;
+    bool aTrouveValeur = false;
+    do
+    {
+        if ((jeu.talon.back().getValeur() == 12) && (jeu.joueursBot[indexBot].main[i].getValeur() == 13 || jeu.joueursBot[indexBot].main[i].getValeur() == 12))
+        { // On regarde si on est en train de jouer une variante Cumul et si la valeur du talon est donc un +2 ou +4.
+            cout << "Le bot doit jouer un +2 ou +4" << endl;
+            aTrouveValeur = true;
+            indiceCarte = i;
+            c = rand() % 3 + 1;
+            return 100; // C'est une valeur max pour dire que ce sera elle qui sera joué en prio.
+        }
+        else if ((jeu.casPart % 2 == 0) && (jeu.talon.back().getValeur() == 13) && (jeu.joueursBot[indexBot].main[i].getValeur() == 13))
+        { // Si la carte du talon est un +4 on doit obligatoirement jouer un +4.
+            cout << "Le bot doit jouer un +4" << endl;
+            aTrouveValeur = true;
+            indCartePlus4 = i;
+            indiceCarte = indCartePlus4;
+            c = rand() % 3 + 1;
+            return 100; // C'est une valeur max pour dire que ce sera elle qui sera joué en prio.
+        }
+        else
+        {
+            i++;
+        }
+    } while (i < jeu.joueursBot[indexBot].main.size() || aTrouveValeur);
+    if (aTrouveValeur == false)
+    {
+        cout << "On a pas de carte +2 ou +4." << endl;
+        return 0;
+    }
+}
 
 int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c, int &indiceCarte)
 {
@@ -77,17 +113,16 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c, int &indiceCarte)
     // On créer une nouvelle variable pour mettre le bonne indice du bot que l'on regarde.
     int indexBot = numeroBot - 1;
     //cout << " CARTE MEME VALEUR ########### L'actuel carte du talon est : " << jeu.talon.back().getValeur() << " et sa couleur est : " << (jeu.talon.back()).getCouleur() << endl;
+    if ((jeu.casPart % 2 == 0 && jeu.casPart != 0) && jeu.talon.back().getValeur() == 13 || jeu.talon.back().getValeur() == 12)
+    {
+        return cartePourCumul(jeu, c, indiceCarte);
+    }
     for (int i = 0; i < jeu.joueursBot[indexBot].main.size(); i++)
     {
-        /* if(typeid(jeu) != typeid(VarianteCumul) && (jeu.talon.back().getValeur() == 14 || jeu.talon.back().getValeur() == 12) && (jeu.joueursBot[indexBot].main[i].getValeur() == 13 || jeu.joueursBot[indexBot].main[i].getValeur() == 12))
-        {  // On regarde si on est en train de jouer une variante Cumul et si la valeur du talon est donc un +2 ou +4.
-            indiceCarte = i;
-            c = rand() % 3 + 1;
-            return 100; // C'est une valeur max pour dire que ce sera elle qui sera joué en prio.
-        } */
+        cout << "On visite la main du Bot" << endl;
         if (jeu.joueursBot[indexBot].main[i].getValeur() == 13)
         { // On regarde si la carte est un +4 et si on a pas déjà un autre +4 dans la main.
-            // edit : Si on a déjà un joker on en prend pas un autre.
+            // edit : Si on a déjà un +4 on en prend pas un autre.
             indCartePlus4 = i;
         }
         else if (jeu.joueursBot[indexBot].main[i].getValeur() == 14)
@@ -457,25 +492,33 @@ void Bot::choixJeu(Jeu &jeu)
     //VarianteCumul cumul; // Ne sert pas à grand chose à part comparer avec jeu.
     cout << "La taille de la main du Bot est : " << main.size() << endl;
     // Affiche les cartes dans la main du bot.
-    for (auto &i : main)
-    {
-        cout << "La valeur est " << i.getValeur() << " et la couleur " << i.getCouleur() << endl;
-    }
     int nbCarteCouleur, nbCarteValeur;
     int maxNbCouleur = couleurAvecPlusDeCarte(); // Renvoie la couleur avec le plus de carte.
     nbCarteCouleur = carteMemeCouleurTalon(jeu); // Nombre de carte meme couleur que talon.
     int couleur;                                 // Entier qui permettra de savoir quelle couleur a le plus de carte.
     int indiceCarteMemeValeur;
     nbCarteValeur = carteMemeValeurTalon(jeu, couleur, indiceCarteMemeValeur);
+    for (auto &i : main)
+    {
+        cout << "La valeur est " << i.getValeur() << " et la couleur " << i.getCouleur() << endl;
+    }
     cout << "L'indice de la carte du joker est : " << indCarteJoker << endl;
     cout << "L'indice de la carte du Plus 4 est : " << indCartePlus4 << endl;
     assert(nbCarteCouleur >= 0 || nbCarteValeur >= 0);
     // On compare les deux en prenant en compte que c'est mieux de finir une couleur avant d'en changer
-    /* if(typeid(VarianteCumul) != typeid(jeu))
+    if (jeu.casPart % 2 == 0 && jeu.talon.back().getValeur() == 12 || jeu.talon.back().getValeur() == 13)
     {
-        joueCouleurSelonEntier(jeu, couleur, indiceCarteMemeValeur); // Ce n'est pas vraiment la même valeur à proprement parler mais ça permetera de jouer le cumul.
-    } */
-    if (!(nbCarteCouleur == 0) && nbCarteValeur == 0) // Cas où on peut jouer que les cartes mêmes couleurs.
+        if (nbCarteValeur == 0)
+        { // On est dans le cas où le bot ne peut pas jouer car il n'a pas de carte +2 ou +4 ou parce qu'il n'a pas de +4.
+            jeu.piocherCarte();
+            jeu.termineTour();
+        }
+        else
+        {                                                                // On peut jouer dans un des deux cas cités dans la fonction CarteMemeValeurTalon.
+            joueCouleurSelonEntier(jeu, couleur, indiceCarteMemeValeur); // Ce n'est pas vraiment la même valeur à proprement parler mais ça permetera de jouer le cumul.
+        }
+    }
+    else if (!(nbCarteCouleur == 0) && nbCarteValeur == 0) // Cas où on peut jouer que les cartes mêmes couleurs.
     {
         cout << "Joue carte meme couleur" << endl;
         joueCouleurSelonEntier(jeu, jeu.talon.back().getCouleur(), -1);

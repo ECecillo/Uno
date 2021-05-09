@@ -100,6 +100,10 @@ void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messag
         {                                                       // La carte qu'il veut poser est valide
             talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
             joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
+            cout << "Test Uno" << endl;
+            testUno();
+            cout << "Succes" << endl;
+
             // si la carte posée est un 7, le joueur échange sa main avec un autre joueur
             if (talon.back().getValeur() == 7)
             {

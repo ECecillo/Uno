@@ -1628,7 +1628,7 @@ void sdlJeu::sdlEchange(Jeu &jeu)
     font_im.loadFromCurrentSurface(rendererEchange);
     SDL_RenderCopy(rendererEchange, font_im.getTexture(), NULL, &texte);
     int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs - 1)) / 2;
-    for (int i = 0; i < jeu.nombreJoueurs - 1; i++)
+    for (int i = 0; i < jeu.nombreJoueurs + jeu.nombreIA - 1; i++)
     {
         texte.x = pos + (LargeurEcran * 5 / 96) * i;
         texte.y = HauteurEcran * 25 / 216;
@@ -1636,11 +1636,21 @@ void sdlJeu::sdlEchange(Jeu &jeu)
         texte.h = HauteurEcran * 5 / 108;
         if (i < jeu.joueurActif)
         {
+            cout << "Affiche avant le joueur actuel" << endl;
             font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[i].nom.c_str(), noir));
         }
         else
         {
-            font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[i + 1].nom.c_str(), noir));
+            if (i < jeu.nombreJoueurs)
+            {
+                cout << "Affiche le nom des joueurs après celui actuel" << endl;
+                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[i + 1].nom.c_str(), noir));
+            }
+            else if (i >= jeu.nombreJoueurs)
+            {
+                cout << "Affichel les noms des bots après celui actuel" << end;
+                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[i + 1].nom.c_str(), noir));
+            }
         }
         font_im.loadFromCurrentSurface(rendererEchange);
         SDL_RenderCopy(rendererEchange, font_im.getTexture(), NULL, &texte);
@@ -1868,16 +1878,34 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
         cout << jeu.joueurActif << endl;
         if (jeu.joueurActif >= jeu.nombreJoueurs)
         {
-            jeu.joueursBot[jeu.joueurActif - jeu.nombreJoueurs].choixJeu(jeu);
-            if (jeu.talon.back().getValeur() == 13 || jeu.talon.back().getValeur() == 14)
-            { // On affiche la nouvelle couleur posé par le bot quand c'est un +4 ou joker.
-                couleur = jeu.talon.back().getCouleur();
-                couleurChangee = true;
+            if (jeu.joueursBot[jeu.joueurActif].main.size() == 0)
+            {
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                SDL_RenderClear(renderer);
+                SDL_Rect texte;
+                texte.x = 400;
+                texte.y = 100;
+                texte.w = 1200;
+                texte.h = 400;
+                font_im.setSurface(TTF_RenderText_Solid(font, "Good Game", jaune));
+                font_im.loadFromCurrentSurface(renderer);
+                SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
+                texte.x = 500;
+                texte.y = 500;
+                texte.w = 800;
+                texte.h = 400;
+                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[jeu.joueurActif].nom.c_str(), jaune));
+                font_im.loadFromCurrentSurface(renderer);
+                SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
+                SDL_RenderPresent(renderer);
+                SDL_Delay(2000);
+                quit = true;
             }
             if (jeu.statut_Uno)
             {
                 if (indiceJoueur < jeu.nombreJoueurs)
-                {                            // C'était un joueur Humain qui jouait juste avant.
+                { // C'était un joueur Humain qui jouait juste avant.
+                    cout << "Bot contre Uno le joueur" << endl;
                     situationContreUno(jeu); // Le bot va Contre Uno direct.
                 }
                 else // Le joueur d'avant était un bot.
@@ -1892,8 +1920,15 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                     }
                 }
                 cout << jeu.statut_Uno << "après situation Contre Uno" << endl;
-                if (!jeu.statut_Uno)
+                if (!jeu.statut_Uno && indiceJoueur < jeu.nombreJoueurs)
                 { // Si le statut est passé à false (on a appuyé sur le contre Uno)
+                    jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
+                    jeu.pioche.pop();
+                    jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
+                    jeu.pioche.pop();
+                }
+                else if (!jeu.statut_Uno && indiceJoueur >= jeu.nombreJoueurs)
+                {
                     jeu.joueursBot[indiceJoueur].main.push_back(jeu.pioche.top());
                     jeu.pioche.pop();
                     jeu.joueursBot[indiceJoueur].main.push_back(jeu.pioche.top());
@@ -1902,11 +1937,17 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 else // Si le statut est encore à true alors on a pas appuyé donc on ne le fait pas piocher.
                     jeu.statut_Uno = false;
             }
+            cout << "Bot choix Jeu" << endl;
+            jeu.joueursBot[jeu.joueurActif - jeu.nombreJoueurs].choixJeu(jeu);
+            if (jeu.talon.back().getValeur() == 13 || jeu.talon.back().getValeur() == 14)
+            { // On affiche la nouvelle couleur posé par le bot quand c'est un +4 ou joker.
+                couleur = jeu.talon.back().getCouleur();
+                couleurChangee = true;
+            }
             continue;
         }
         if (joueurChange) // pour éviter le clignotement de la carte couleur, ne pas actualiser l'affichage
         {
-            cout << "Boucle " << endl;
             if (jeu.joueurActif < jeu.nombreJoueurs)
             {
                 sdlAffJoueur(jeu, jeu.joueurActif);
@@ -1966,18 +2007,21 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                         couleurChangee = true;
                         jeu.talon.back().setCouleur(couleur);
                     }
-                    if (jeu.casPart % 2 == 0) // variante cumul
+                    if (jeu.casPart % 2 == 1)
+                        jeu.casPart = -1;
+                    else if (jeu.casPart % 2 == 0)
                     {
                         jeu.casPart = 0;
                         indiceJoueur = jeu.joueurActif;
                     }
-                    else jeu.casPart = -1;
-                    cout << "casPart après pioche" << jeu.casPart << endl;
+                    cout << "casPart après pioche " << jeu.casPart << endl;
                     jeu.termineTour();
 
                     if (couleur != 0 && couleurChangee)
                     {
                         sdlAffCouleurChoisie(couleur);
+                        couleur = 0;
+                        couleurChangee = false;
                     }
                 }
                 if (sourisX > 0 && sourisX < LargeurEcran / 1.05 && sourisY > HauteurEcran / 1.8 && sourisY < HauteurEcran / 1.15) // clic sur une carte de la main
@@ -2002,24 +2046,32 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                                 jeu.joueurs[jeu.joueurActif].main[indiceCarte].setCouleur(couleur);
                             }
                         }
+                        indiceJoueur = jeu.joueurActif;
+                        cout << "L'indice du joueur est " << indiceJoueur << endl;
                         // pour la variante cumul
                         if (jeu.casPart % 2 == 0)
                             indiceJoueur = jeu.joueurActif;
                         jeu.poserCarte(indiceCarte, messageErreur);
-                        // pour les variantes doublon, echange et suite 
+                        // pour les variantes doublon, echange et suite
                         if (jeu.casPart == 5)
                             sdlSuite(jeu, indiceCarte);
                         if (jeu.casPart == 3)
+                        {
+                            cout << "Debut affichage echange" << endl;
                             sdlEchange(jeu);
+                        }
                         if (jeu.casPart == 1)
                             sdlDoublon(jeu);
                         sdlAffJoueur(jeu, indiceJoueur);
                         if (couleur != 0 && couleurChangee)
                         {
                             sdlAffCouleurChoisie(couleur);
+                            couleur = 0;
+                            couleurChangee = false;
                         }
                         if (jeu.statut_Uno)
                         {
+                            cout << "Situation Uno" << endl;
                             situationUno(jeu);
                         }
                     }
@@ -2032,34 +2084,31 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
         cout << "Apres Poll Event" << endl;
         SDL_Delay(500);
         // Teste s'il y a un gagnant
-        if (indiceJoueur < jeu.nombreJoueurs)
+        if (jeu.joueurs[indiceJoueur].main.size() == 0 && indiceJoueur < jeu.nombreJoueurs)
         {
-            if (jeu.joueurs[indiceJoueur].main.size() == 0)
-            {
-                cout << "Joueur gagnant ?" << endl;
-                cout << indiceJoueur << endl;
-                cout << jeu.joueurs[jeu.joueurActif].main.size() << endl;
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                SDL_RenderClear(renderer);
-                SDL_Rect texte;
-                texte.x = 400;
-                texte.y = 100;
-                texte.w = 1200;
-                texte.h = 400;
-                font_im.setSurface(TTF_RenderText_Solid(font, "Good Game", jaune));
-                font_im.loadFromCurrentSurface(renderer);
-                SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
-                texte.x = 500;
-                texte.y = 500;
-                texte.w = 800;
-                texte.h = 400;
-                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[indiceJoueur].nom.c_str(), jaune));
-                font_im.loadFromCurrentSurface(renderer);
-                SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
-                SDL_RenderPresent(renderer);
-                SDL_Delay(2000);
-                quit = true;
-            }
+            cout << "Joueur gagnant ?" << endl;
+            cout << indiceJoueur << endl;
+            cout << jeu.joueurs[jeu.joueurActif].main.size() << endl;
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderClear(renderer);
+            SDL_Rect texte;
+            texte.x = 400;
+            texte.y = 100;
+            texte.w = 1200;
+            texte.h = 400;
+            font_im.setSurface(TTF_RenderText_Solid(font, "Good Game", jaune));
+            font_im.loadFromCurrentSurface(renderer);
+            SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
+            texte.x = 500;
+            texte.y = 500;
+            texte.w = 800;
+            texte.h = 400;
+            font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[indiceJoueur].nom.c_str(), jaune));
+            font_im.loadFromCurrentSurface(renderer);
+            SDL_RenderCopy(renderer, font_im.getTexture(), NULL, &texte);
+            SDL_RenderPresent(renderer);
+            SDL_Delay(2000);
+            quit = true;
         }
     }
 }

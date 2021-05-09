@@ -110,6 +110,7 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
             talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
             joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
             // si le joueur a le doublon de la carte qu'il vient de jouer, on lui propose de la jouer
+            testUno();
             casPart = 1;
             
             // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
