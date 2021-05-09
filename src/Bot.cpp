@@ -46,6 +46,7 @@ void Bot::trierMain()
     }
 }
 
+// Compte le nombre de cartes qui ont la couleur du talon
 int Bot::carteMemeCouleurTalon(const Jeu &jeu) const
 {
     // Selon la couleur de la carte du talon on retourne les variables.
@@ -69,6 +70,7 @@ int Bot::carteMemeCouleurTalon(const Jeu &jeu) const
     }
 }
 
+// Compte le nombre de cartes de même valeur que le talon
 int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c, int &indiceCarte)
 {
     //cout << "Fonction Carte meme valeur talon " << endl;
