@@ -2,7 +2,7 @@
 
 VarianteCumul::VarianteCumul() : Jeu() {}
 
-VarianteCumul::VarianteCumul(const unsigned int nbjoueurs, const unsigned int nbIA = 0) : Jeu(nbjoueurs, nbIA) 
+VarianteCumul::VarianteCumul(const unsigned int nbjoueurs, const unsigned int nbIA = 0) : Jeu(nbjoueurs, nbIA)
 {
     casPart = 0;
 }
@@ -11,15 +11,20 @@ VarianteCumul::~VarianteCumul()
 {
     delete[] joueurs;
     joueurs = NULL;
+
+    delete[] joueursBot;
+    joueursBot = NULL;
+
     sensJeu = 1;
     joueurActif = 0;
     nombreJoueurs = 0;
+    nombreIA = 0;
 }
 // On compare la carte que l'on a passé en paramètre à celle qui est actuellement retourné sur le talon.
 bool VarianteCumul::carteValide(const Carte c) const
 {
     bool chercheCouleur = false;
-    if (c.getValeur() == 13)
+    /* if (c.getValeur() == 13)
     {
         unsigned int i = 0;
         while (i < joueurs[joueurActif].main.size() && !chercheCouleur)
@@ -28,12 +33,12 @@ bool VarianteCumul::carteValide(const Carte c) const
                 chercheCouleur = true;
             i++;
         }
-    }
+    } */
     return (c.getValeur() == talon.back().getValeur()) ||
            (c.getCouleur() == talon.back().getCouleur() && (talon.back().getValeur() != 12 || casPart % 2 != 0 || casPart <= 0)) || // bloquer le cas du +2 sur le talon
-           (c.getValeur() == 12 && (talon.back().getValeur() != 13 && casPart % 2 != 0)) || // bloquer le +2 sur +4
-           (c.getValeur() == 14 && talon.back().getValeur() != 13 && talon.back().getValeur() != 12) || // le joker ne peut pas se poser sur un +2 ou un +4
-           (c.getValeur() == 13 && talon.back().getValeur() != 13 && (talon.back().getValeur() == 12 || chercheCouleur == false)); //on peut jouer +4 sur n'importe quelle carte si on n'a pas la couleur ou sur +2
+           (c.getValeur() == 12 && (talon.back().getValeur() != 13 && casPart % 2 != 0)) ||                                         // bloquer le +2 sur +4
+           (c.getValeur() == 14 && talon.back().getValeur() != 13 && talon.back().getValeur() != 12) ||                             // le joker ne peut pas se poser sur un +2 ou un +4
+           (c.getValeur() == 13 && talon.back().getValeur() != 13 && (talon.back().getValeur() == 12 || chercheCouleur == false));  //on peut jouer +4 sur n'importe quelle carte si on n'a pas la couleur ou sur +2
 }
 
 void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
@@ -89,6 +94,7 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                     //termineTour();
 
                     casPart += 4;
+                    cout << "Bot pose +4 dans poserCarte Cumul" << endl;
                     termineTour();
 
                     break;
@@ -96,7 +102,7 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                     joueursBot[indexBot].setCarteJoker(newIndice);
                     termineTour();
                     carteSpeciale = true;
-
+                    cout << "Bot pose joker dans poserCarte Cumul" << endl;
                     break;
                 }
                 termineTour();
@@ -104,7 +110,6 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                     annonceGagnant();
                 return;
             }
-            termineTour(); 
         }
         else
         {
@@ -122,6 +127,7 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
             joueurs[joueurActif].modifMainTxt();
             // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
             joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
+            bool carteSpeciale = false;
 
             // gestion des cartes spéciales
             switch ((talon.back()).getValeur())
@@ -134,17 +140,32 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                     sensJeu = 1;
                 break;
             case 11:
+                if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
+                    joueurActif = 0;
+                else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
+                {
+                    joueurActif--;
+                }
+                else if (joueurActif == 0 && sensJeu == 0)
+                    joueurActif = nombreIA + nombreJoueurs - 1;
+                joueurActif++;
+
                 termineTour();
                 break;
             case 12:
                 casPart += 2;
+                carteSpeciale = true;
+
                 cout << casPart << "après +2" << endl;
                 break;
             case 13:
+                carteSpeciale = true;
                 casPart += 4;
                 cout << casPart << "après +4" << endl;
+
                 break;
             case 14:
+                carteSpeciale = true;
                 break;
             }
             termineTour();
@@ -161,6 +182,7 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
 
 void VarianteCumul::piocherCarte()
 {
+    cout << "PIOCHER CUMUL" << endl;
     cout << casPart << "dans piocherCarte" << endl;
     if (casPart == 0) // cas classique, 1 carte à piocher
     {
@@ -180,14 +202,12 @@ void VarianteCumul::piocherCarte()
                 if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
                 {
                     indCarte = joueursBot[indexBot].getCarteRouge() - 1;
-                    sleep(1);
                     joueursBot[indexBot].setCarteJoker(indCarte);
                 }
 
                 else if (pioche.top().getValeur() == 13)
                 {
                     indCarte = joueursBot[indexBot].getCarteRouge() - 1;
-                    sleep(1);
                     joueursBot[indexBot].setCartePlus4(indCarte);
                 }
                 break;
@@ -200,14 +220,12 @@ void VarianteCumul::piocherCarte()
                 if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
                 {
                     indCarte = joueursBot[indexBot].getCarteVert() - 1;
-                    sleep(1);
                     joueursBot[indexBot].setCarteJoker(indCarte);
                 }
 
                 else if (pioche.top().getValeur() == 13)
                 {
                     indCarte = joueursBot[indexBot].getCarteVert() - 1;
-                    sleep(1);
                     joueursBot[indexBot].setCartePlus4(indCarte);
                 }
                 break;
@@ -220,14 +238,12 @@ void VarianteCumul::piocherCarte()
                 if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
                 {
                     indCarte = joueursBot[indexBot].getCarteBleu() - 1;
-                    sleep(1);
                     joueursBot[indexBot].setCarteJoker(indCarte);
                 }
 
                 else if (pioche.top().getValeur() == 13)
                 {
                     indCarte = joueursBot[indexBot].getCarteBleu() - 1;
-                    sleep(1);
                     joueursBot[indexBot].setCartePlus4(indCarte);
                 }
                 break;
@@ -240,14 +256,12 @@ void VarianteCumul::piocherCarte()
                 if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
                 {
                     indCarte = joueursBot[indexBot].getCarteJaune() - 1;
-                    sleep(1);
                     joueursBot[indexBot].setCarteJoker(indCarte);
                 }
 
                 else if (pioche.top().getValeur() == 13)
                 {
                     indCarte = joueursBot[indexBot].getCarteJaune() - 1;
-                    sleep(1);
                     joueursBot[indexBot].setCartePlus4(indCarte);
                 }
                 break;
@@ -273,9 +287,10 @@ void VarianteCumul::piocherCarte()
         {
             int indexBot = joueurActif - nombreJoueurs;
             unsigned int indCarte;
-            joueursBot[indexBot].main.push_back(pioche.top());
             for (int i = 0; i < casPart; i++)
             {
+                cout << "Cas part valeur : " << casPart << endl;
+                joueursBot[indexBot].main.push_back(pioche.top());
                 switch (pioche.top().getCouleur())
                 {
                 case 1:
@@ -287,14 +302,12 @@ void VarianteCumul::piocherCarte()
                     if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
                     {
                         indCarte = joueursBot[indexBot].getCarteRouge() - 1;
-                        sleep(1);
                         joueursBot[indexBot].setCarteJoker(indCarte);
                     }
 
                     else if (pioche.top().getValeur() == 13)
                     {
                         indCarte = joueursBot[indexBot].getCarteRouge() - 1;
-                        sleep(1);
                         joueursBot[indexBot].setCartePlus4(indCarte);
                     }
                     break;
@@ -307,14 +320,12 @@ void VarianteCumul::piocherCarte()
                     if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
                     {
                         indCarte = joueursBot[indexBot].getCarteVert() - 1;
-                        sleep(1);
                         joueursBot[indexBot].setCarteJoker(indCarte);
                     }
 
                     else if (pioche.top().getValeur() == 13)
                     {
                         indCarte = joueursBot[indexBot].getCarteVert() - 1;
-                        sleep(1);
                         joueursBot[indexBot].setCartePlus4(indCarte);
                     }
                     break;
@@ -327,14 +338,12 @@ void VarianteCumul::piocherCarte()
                     if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
                     {
                         indCarte = joueursBot[indexBot].getCarteBleu() - 1;
-                        sleep(1);
                         joueursBot[indexBot].setCarteJoker(indCarte);
                     }
 
                     else if (pioche.top().getValeur() == 13)
                     {
                         indCarte = joueursBot[indexBot].getCarteBleu() - 1;
-                        sleep(1);
                         joueursBot[indexBot].setCartePlus4(indCarte);
                     }
                     break;
@@ -347,14 +356,12 @@ void VarianteCumul::piocherCarte()
                     if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
                     {
                         indCarte = joueursBot[indexBot].getCarteJaune() - 1;
-                        sleep(1);
                         joueursBot[indexBot].setCarteJoker(indCarte);
                     }
 
                     else if (pioche.top().getValeur() == 13)
                     {
                         indCarte = joueursBot[indexBot].getCarteJaune() - 1;
-                        sleep(1);
                         joueursBot[indexBot].setCartePlus4(indCarte);
                     }
                     break;
@@ -364,9 +371,8 @@ void VarianteCumul::piocherCarte()
                 }
                 pioche.pop();
                 joueursBot[indexBot].trierMain();
-                return;
             }
-            casPart = -1;
+            casPart = 0;
         }
         else
         {
@@ -375,7 +381,7 @@ void VarianteCumul::piocherCarte()
                 joueurs[joueurActif].main.push_back(pioche.top());
                 pioche.pop();
             }
-            if (casPart % 2 == 1) casPart = 0;
+            casPart = 0;
             joueurs[joueurActif].modifMainTxt();
             joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
         }

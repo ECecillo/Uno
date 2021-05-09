@@ -193,7 +193,7 @@ bool Jeu::carteValide(const Carte c) const
     cout << "valide jeu" << endl;
     bool chercheCouleur = false;
     //si carte +4, on regarde dans la main du joueur s'il y a une carte de la même couleur que celle du talon
-    if (c.getValeur() == 13)
+    /* if (c.getValeur() == 13)
     {
         unsigned int i = 0;
         while (i < joueurs[joueurActif].main.size() && !chercheCouleur)
@@ -202,7 +202,8 @@ bool Jeu::carteValide(const Carte c) const
                 chercheCouleur = true;
             i++;
         }
-    }
+    } */
+    cout << "Avant return" << endl;
     return (c.getValeur() == talon.back().getValeur()) ||
            (c.getCouleur() == talon.back().getCouleur()) ||
            (c.getValeur() == 14) ||
