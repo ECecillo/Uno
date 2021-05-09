@@ -1,4 +1,4 @@
-CORE = Joueur.cpp Jeu.cpp Bot.cpp Carte.cpp VarianteTourne.cpp VarianteDoublon.cpp VarianteEchange.cpp VarianteSuite.cpp VarianteCumul.cpp Menu.cpp mainTest.cpp
+CORE = Joueur.cpp Jeu.cpp Bot.cpp Carte.cpp VarianteTourne.cpp VarianteDoublon.cpp VarianteEchange.cpp VarianteSuite.cpp VarianteCumul.cpp Menu.cpp #mainTest.cpp
 
 SRCS_TXT = $(CORE) AffichageTxt.cpp Fenetre.cpp SalleAttente.cpp mainTxt.cpp 
 FINAL_TARGET_TXT = uno_txt
