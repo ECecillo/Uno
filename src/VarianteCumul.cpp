@@ -111,7 +111,7 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
             messageErreur = "Cette carte ne peut pas être déposée.";
         }
     }
-    else
+    else // joueur humain
     {
         if (carteValide(joueurs[joueurActif].main[indiceCarte]))
         {                                                       // La carte qu'il veut poser est valide

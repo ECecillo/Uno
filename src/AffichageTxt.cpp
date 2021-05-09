@@ -14,42 +14,39 @@ void changeCouleurCarte(Jeu &jeu, Fenetre win)
     int numeroCarte = jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur();
     int c;
 
-    if (numeroCarte == 13 || numeroCarte == 14)
+    bool choixCouleur = true;
+    cout << "### Vous devez choisir une nouvelle couleur sur laquelle vous jouerez ###" << endl;
+    while (choixCouleur)
     {
-        bool choixCouleur = true;
-        cout << "### Vous devez choisir une nouvelle couleur sur laquelle vous jouerez ###" << endl;
-        while (choixCouleur)
+        c = win.getCh();
+        switch (c)
         {
-            c = win.getCh();
-            switch (c)
-            {
-            case 'r':
-                cout << "Je suis la touche R" << endl;
-                //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
-                jeu.actionJoueur('r');
-                choixCouleur = false;
-                break;
-            case 'v':
-                cout << "Je suis la touche V" << endl;
-                //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
-                jeu.actionJoueur('v');
-                choixCouleur = false;
-                break;
+        case 'r':
+            cout << "Je suis la touche R" << endl;
+            //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+            jeu.actionJoueur('r');
+            choixCouleur = false;
+            break;
+        case 'v':
+            cout << "Je suis la touche V" << endl;
+            //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+            jeu.actionJoueur('v');
+            choixCouleur = false;
+            break;
 
-            case 'b':
-                cout << "Je suis la touche B" << endl;
-                //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
-                jeu.actionJoueur('b');
-                choixCouleur = false;
-                break;
+        case 'b':
+            cout << "Je suis la touche B" << endl;
+            //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+            jeu.actionJoueur('b');
+            choixCouleur = false;
+            break;
 
-            case 'j':
-                cout << "Je suis la touche J" << endl;
-                //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
-                jeu.actionJoueur('j');
-                choixCouleur = false;
-                break;
-            }
+        case 'j':
+            cout << "Je suis la touche J" << endl;
+            //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+            jeu.actionJoueur('j');
+            choixCouleur = false;
+            break;
         }
     }
 }
@@ -174,10 +171,8 @@ void txtBoucle(Jeu &jeu) //
     char touche;
     int c;
     int c2;
-    // On affiche la salle d'attente.
-    //txtAffSalleAttente(win,)
-
-    //txtAff(win, jeu); // On initialise le jeu avec les éléments principaux.
+    
+    unsigned int indiceJoueur; // utile dans le cas de la variante cumul
 
     do
     {
@@ -198,42 +193,111 @@ void txtBoucle(Jeu &jeu) //
             return;
         while (jeu.finTour == false || jeu.finPartie == false) // Tant que l'on a pas terminé le tour.
         {
+            indiceJoueur = jeu.joueurActif;
             c = win.getCh();  // On récupère le caractère de la touche appuyé et on le met dans c.
             sprintf(&touche, "%c", c);
             printf(&touche, win);
-            //cout << "Joueur Actif " << jeu.joueurActif << endl;
-
-            //c = win.getCh(); // On récupère le caractère de la touche appuyé et on le met dans c.
+            
             switch (c)
             {
-            case 'a':
-                //cout << "Indice etoile " << jeu.joueurs[jeu.joueurActif].indiceEtoile << endl;
-                jeu.actionJoueur('a');
-                break;
-            case 'd':
-                //cout << "Indice etoile " << jeu.joueurs[jeu.joueurActif].indiceEtoile << endl;
+                case 'a':
+                    jeu.actionJoueur('a');
+                    break;
+                case 'd':
+                    jeu.actionJoueur('d');
+                    break;
+                case 'p':
+                    jeu.actionJoueur('p');
+                    if (jeu.casPart % 2 == 0 && jeu.casPart > 0 && jeu.talon.back().getValeur() == 13)
+                        {
+                            int jActifTmp = jeu.joueurActif;
+                            jeu.joueurActif = indiceJoueur; // on revient au joueur précédent pour qu'il coisisse la couleur
+                            txtAff(win, jeu);
+                            changeCouleurCarte(jeu, win);
+                            jeu.joueurActif = jActifTmp;
+                        }
+                    if (jeu.casPart % 2 == 0) // variante cumul
+                    {
+                        jeu.casPart = 0;
+                        indiceJoueur = jeu.joueurActif;
+                    }
+                    else jeu.casPart = -1;
+                    jeu.termineTour();
+                    break;
+                case 'e':
+                    {int indiceCarte = jeu.joueurs[jeu.joueurActif].indiceEtoile;
+                    if ((jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 13 && jeu.casPart % 2 != 0) || jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur() == 14)
+                    {
+                        changeCouleurCarte(jeu, win);
+                    }
+                    jeu.actionJoueur('e');
+                    if (jeu.casPart == 5) // variante suite
+                    {
+                        char reponse = 'O';
+                        int sourisY;
+                        int carteTalon = jeu.talon.back().getValeur();
 
-                jeu.actionJoueur('d');
-                break;
-            case 'p':
-                cout << "Je suis la touche P" << endl;
-                jeu.actionJoueur('p');
-                break;
-            case 'e':
-                cout << "Je suis la touche E" << endl;
-                changeCouleurCarte(jeu, win);
-                jeu.actionJoueur('e');
-
-                break;
-            case 'q':
-                jeu.finTour = true;
-                ok = false;
-                jeu.finPartie = true;
-                break;
+                        while (reponse == 'O' && jeu.talon.back().getValeur() < 7)
+                        {
+                            cout << "Veux-tu jouer la carte suivante? saisir O/N puis entrer";
+                            cin >> reponse;
+                            cout << endl;
+                            if (reponse == 'O')
+                            {
+                                jeu.talon.push(jeu.joueurs[jeu.joueurActif].main[jeu.joueurs[jeu.joueurActif].indiceEtoile]); 
+                                jeu.joueurs[jeu.joueurActif].main.erase(jeu.joueurs[jeu.joueurActif].main.begin() + jeu.joueurs[jeu.joueurActif].indiceEtoile);
+                            }
+                        }
+                        jeu.casPart = -1;
+                        jeu.termineTour();
+                    }
+                    if (jeu.casPart == 3) // variante echange
+                    {
+                        unsigned int numJoueur;
+                        cout << "indique le numéro du joueur avec lequel tu veux échanger ta main: ";
+                        cin >> numJoueur;
+                        jeu.joueurs[jeu.joueurActif].main.swap(jeu.joueurs[numJoueur - 1].main);
+                        jeu.joueurs[jeu.joueurActif].modifMainTxt();
+                        jeu.joueurs[numJoueur-1].modifMainTxt();
+                        jeu.termineTour();
+                    }
+                    if (jeu.casPart == 1) // variante doublon
+                    {
+                        int indice = -1;
+                        for (int i = 0; i < jeu.joueurs[jeu.joueurActif].main.size(); i++)
+                        {
+                            if ((jeu.talon.back().getValeur() == 13 && jeu.joueurs[jeu.joueurActif].main[i].getValeur() == 13) || (jeu.talon.back().getValeur() == 14 && jeu.joueurs[jeu.joueurActif].main[i].getValeur() == 14)) //cas joker et +4, pas besoin de tester la couleur
+                            {
+                                indice = i;
+                            }
+                            else if (jeu.talon.back().getValeur() == jeu.joueurs[jeu.joueurActif].main[i].getValeur() && jeu.talon.back().getCouleur() == jeu.joueurs[jeu.joueurActif].main[i].getCouleur())
+                            {
+                                indice = i;
+                            }
+                        }
+                        if (indice >= 0) 
+                        {
+                            char reponse;
+                            cout << "Veux-tu jouer la carte doublon? O/N" << endl;
+                            cin >> reponse;
+                            if (reponse == 'O')
+                            {
+                                jeu.talon.push(jeu.joueurs[jeu.joueurActif].main[indice]); // On pousse le doublon.
+                                jeu.joueurs[jeu.joueurActif].main.erase(jeu.joueurs[jeu.joueurActif].main.begin() + indice);
+                            }
+                        }
+                        jeu.termineTour();
+                    }
+                    break;}
+                case 'q':
+                    jeu.finTour = true;
+                    ok = false;
+                    jeu.finPartie = true;
+                    break;
             }
             
             jeu.MaJTableJoueurActifDebutTour(); // Modif rendu main joueur, adversaire et talon.
-            txtAff(win, jeu);                   // On initialise le jeu avec les éléments principaux.
+            txtAff(win, jeu);
 
             if (jeu.joueurActif >= jeu.nombreJoueurs)
             {
