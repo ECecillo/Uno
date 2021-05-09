@@ -1872,22 +1872,21 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 couleurChangee = true;
             }
             if (jeu.statut_Uno)
-            {                                   // Si on est dans une situation de Uno pour le bot quand il a posé la carte.
-                indiceJoueur = jeu.joueurActif; // On save l'indice du bot qui est en Uno.
-                jeu.termineTour();              // On termine le tour pour que ce soit un autre bot ou un joueur qui puisse faire Contre Uno.
-                cout << jeu.statut_Uno << "avant situation Contre Uno" << endl;
-                if (jeu.joueurActif >= jeu.nombreJoueurs)
-                { // Le joueur suivant est un bot.
+            {
+                if (indiceJoueur < jeu.nombreJoueurs)
+                {                            // C'était un joueur Humain qui jouait juste avant.
+                    situationContreUno(jeu); // Le bot va Contre Uno direct.
+                }
+                else // Le joueur d'avant était un bot.
+                {
+                    indiceJoueur = jeu.joueurActif; // On save l'indice du bot qui est en Uno.
+                    jeu.termineTour();              // On termine le tour pour que ce soit un autre bot ou un joueur qui puisse faire Contre Uno.
+                    cout << jeu.statut_Uno << "avant situation Contre Uno" << endl;
                     if (compteurBotUno != 1)
                     {                            // Si le bot suivant n'a jamais fait un contre Uno automatique.
                         situationContreUno(jeu); // Il contre Uno direct.
                         compteurBotUno++;
                     }
-                    // Si il a déjà fait un contre Uno on laisse couler.
-                }
-                else
-                { // C'est un joueur Humain, il devra donc faire un contre Uno si il peut.
-                    situationContreUno(jeu);
                 }
                 cout << jeu.statut_Uno << "après situation Contre Uno" << endl;
                 if (!jeu.statut_Uno)

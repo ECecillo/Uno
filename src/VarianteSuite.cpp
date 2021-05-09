@@ -159,6 +159,7 @@ bool VarianteSuite::testSuite(unsigned int ind, vector<Carte> main)
             test = false;
         else if (main[i].getCouleur() == main[ind].getCouleur() && main[i].getValeur() == carteSerie)
             carteSerie++;
+        i++;
     }
     if (carteSerie <= 7) test = false;
     return test;
