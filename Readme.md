@@ -12,8 +12,12 @@ Le but était de mener un projet de conception et de développement d'applicatio
 **mail** : enzo.cecillon@etu.univ-lyon1.fr
 
 ----
-@**RAMPON Ildès** 89064800
+@**RAMPON Ildès**  89064800
 **mail** : ildes.rampon@etu.univ-lyon1.fr
+
+----
+**Projet complet** 
+**GitLab** : 17422
 
 
 # Compiler le projet avec le makefile
