@@ -367,7 +367,7 @@ void sdlJeu::sdlUno()
     unsigned int variante = 1;      // entre 1 et 6
     unsigned int nombreJoueurs = 2; // entre 1 et 9
     unsigned int nombreIA = 0;      //entre 0 et 2
-    bool choix;
+    //bool choix;
     int sourisX;
     int sourisY;
 
@@ -793,7 +793,7 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
         texte.w = LargeurEcran / 17.5;
         texte.h = HauteurEcran / 21.5;
         // Calcul l'indice différent du joueur actif pour afficher les noms et nb cartes.
-        int indiceAffiche = (jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs + jeu.nombreIA);
+        unsigned int indiceAffiche = (jeu.joueurActif + 1 + i) % (jeu.nombreJoueurs + jeu.nombreIA);
         if (indiceAffiche >= jeu.nombreJoueurs)
         {
             font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[indiceAffiche - jeu.nombreJoueurs].nom.c_str(), jaune));
@@ -879,7 +879,7 @@ void sdlJeu::sdlAffJoueur(Jeu &jeu, unsigned int indiceJoueur)
 
         // la main
         unsigned int tailleMain = jeu.joueurs[indiceJoueur].main.size();
-        for (int i = 0; i < tailleMain; i++)
+        for (unsigned int i = 0; i < tailleMain; i++)
         {
             sdlAffCarte(jeu.joueurs[indiceJoueur].main[i], (LargeurEcran / 17.5) * (i % 17), (LargeurEcran / 3.2) + (LargeurEcran / 9.6) * (i / 17));
         }
@@ -1589,8 +1589,8 @@ void sdlJeu::sdlEchange(Jeu &jeu)
     font_im.setSurface(TTF_RenderText_Solid(font, "Echange avec le joueur", noir));
     font_im.loadFromCurrentSurface(rendererEchange);
     SDL_RenderCopy(rendererEchange, font_im.getTexture(), NULL, &texte);
-    int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs - 1)) / 2;
-    for (int i = 0; i < jeu.nombreJoueurs + jeu.nombreIA - 1; i++)
+    unsigned int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs - 1)) / 2;
+    for (unsigned int i = 0; i < jeu.nombreJoueurs + jeu.nombreIA - 1; i++)
     {
         texte.x = pos + (LargeurEcran * 5 / 96) * i;
         texte.y = HauteurEcran * 25 / 216;
@@ -1610,7 +1610,11 @@ void sdlJeu::sdlEchange(Jeu &jeu)
             }
             else if (i >= jeu.nombreJoueurs)
             {
+<<<<<<< HEAD
                 
+=======
+                cout << "Affichel les noms des bots après celui actuel" << endl;
+>>>>>>> SDL_MENU_FIX_WARNINGS
                 font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[i + 1].nom.c_str(), noir));
             }
         }
@@ -1621,7 +1625,7 @@ void sdlJeu::sdlEchange(Jeu &jeu)
 
     SDL_Event event;
     bool choixFait = false;
-    int sourisX;
+    unsigned int sourisX;
     int sourisY;
     unsigned int indice;
 
@@ -1633,7 +1637,7 @@ void sdlJeu::sdlEchange(Jeu &jeu)
             sourisY = event.button.y;
             if (event.type == SDL_MOUSEBUTTONDOWN)
             {
-                if (sourisX > pos && sourisX < pos + (LargeurEcran * 25 / 192) * (jeu.nombreJoueurs - 1) && sourisY > (HauteurEcran * 25 / 216) && sourisY < (HauteurEcran * 35 / 216)) // clic sur un nom
+                if ((sourisX > pos && sourisX < pos + (LargeurEcran * 25 / 192) * (jeu.nombreJoueurs - 1)) && (sourisY > (HauteurEcran * 25 / 216) && sourisY < (HauteurEcran * 35 / 216))) // clic sur un nom
                 {
                     indice = (sourisX - pos) / (LargeurEcran * 25 / 192);
                     if (indice >= jeu.joueurActif)
@@ -1653,7 +1657,7 @@ void sdlJeu::sdlEchange(Jeu &jeu)
 void sdlJeu::sdlDoublon(Jeu &jeu)
 {
     int indice = -1;
-    for (int i = 0; i < jeu.joueurs[jeu.joueurActif].main.size(); i++)
+    for (unsigned int i = 0; i < jeu.joueurs[jeu.joueurActif].main.size(); i++)
     {
         if ((jeu.talon.back().getValeur() == 13 && jeu.joueurs[jeu.joueurActif].main[i].getValeur() == 13) || (jeu.talon.back().getValeur() == 14 && jeu.joueurs[jeu.joueurActif].main[i].getValeur() == 14)) //cas joker et +4, pas besoin de tester la couleur
         {
@@ -1687,7 +1691,7 @@ void sdlJeu::sdlDoublon(Jeu &jeu)
         font_im.setSurface(TTF_RenderText_Solid(font, "Jouer le doublon", noir));
         font_im.loadFromCurrentSurface(rendererDoublon);
         SDL_RenderCopy(rendererDoublon, font_im.getTexture(), NULL, &texte);
-        int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs - 1)) / 2;
+        //int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs - 1)) / 2;
         texte.x = LargeurEcran * 35 / 192;
         texte.y = HauteurEcran * 125 / 108;
         texte.w = (LargeurEcran * 5 / 96);
@@ -1757,7 +1761,7 @@ void sdlJeu::sdlSuite(Jeu &jeu, unsigned int indice)
     font_im.setSurface(TTF_RenderText_Solid(font, "Suite: Jouer la carte suivante", noir));
     font_im.loadFromCurrentSurface(rendererSuite);
     SDL_RenderCopy(rendererSuite, font_im.getTexture(), NULL, &texte);
-    int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs - 1)) / 2;
+    //int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs - 1)) / 2;
     texte.x = LargeurEcran * 9 / 128;
     texte.y = HauteurEcran * 25 / 215;
     texte.w = LargeurEcran * 5 / 96;
@@ -1779,7 +1783,7 @@ void sdlJeu::sdlSuite(Jeu &jeu, unsigned int indice)
     bool choixFait = false;
     int sourisX;
     int sourisY;
-    int carteTalon = jeu.talon.back().getValeur();
+    unsigned int carteTalon = jeu.talon.back().getValeur();
 
     while (!choixFait && jeu.talon.back().getValeur() < 7)
     {
