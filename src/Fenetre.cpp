@@ -143,7 +143,6 @@ void Fenetre::pause() {
 // Renvoie une touche
 char Fenetre::getCh() { // lire un caractere si une touche a ete pressee
     char touche=0;
-    //c = wgetch();
 #ifdef _WIN32
     if (kbhit())
     {
@@ -159,7 +158,6 @@ char Fenetre::getCh() { // lire un caractere si une touche a ete pressee
     if (kbhit())
     {
         touche = fgetc(stdin);
-        //printf(&touche, ter[180]);
     }
 #endif
     return touche;

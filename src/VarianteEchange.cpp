@@ -15,7 +15,7 @@ VarianteEchange::~VarianteEchange()
 
 void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
-    if (joueurActif >= nombreJoueurs)
+    if (joueurActif >= nombreJoueurs) // bot
     {
         int indexBot = joueurActif - nombreJoueurs;
         if (carteValide(joueursBot[indexBot].main[indiceCarte]))
@@ -34,14 +34,13 @@ void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messag
                 // gestion des cartes spéciales
                 switch ((talon.back()).getValeur())
                 {
-                case 10:
-                    cout << "Inverse" << endl;
+                case 10: // inverse
                     if (sensJeu == 1)
                         sensJeu = 0;
                     else
                         sensJeu = 1;
                     break;
-                case 11:
+                case 11: // passe
                     if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
                         joueurActif = 0;
                     else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
@@ -54,7 +53,7 @@ void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messag
 
                     carteSpeciale = true;
                     termineTour();
-                case 12:
+                case 12: // +2
                     termineTour();
 
                     piocherCarte();
@@ -62,7 +61,7 @@ void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messag
                     carteSpeciale = true;
                     termineTour();
                     break;
-                case 13:
+                case 13: // +4
                     carteSpeciale = true;
                     joueursBot[indexBot].setCartePlus4(newIndice);
                     termineTour();
@@ -72,7 +71,7 @@ void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messag
                     termineTour();
 
                     break;
-                case 14:
+                case 14: // joker
                     joueursBot[indexBot].setCarteJoker(newIndice);
                     termineTour();
                     carteSpeciale = true;
@@ -94,52 +93,49 @@ void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messag
             }
         }
     }
-    else
+    else // humain
     {
         if (carteValide(joueurs[joueurActif].main[indiceCarte]))
         {                                                       // La carte qu'il veut poser est valide
             talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
             joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
-            cout << "Test Uno" << endl;
             testUno();
-            cout << "Succes" << endl;
 
-            // si la carte posée est un 7, le joueur échange sa main avec un autre joueur
+            // si la carte posée est un 7, le joueur échangera sa main avec un autre joueur
             if (talon.back().getValeur() == 7)
             {
                 casPart = 3;
             }
-            // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
+            // On appelle la procédure qui efface le cadre de la carte et le texte.
             joueurs[joueurActif].modifMainTxt();
-            // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
+            // On appelle la procédure qui met à jour la carte sur laquelle on joue.
             joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 
             // gestion des cartes spéciales
             switch ((talon.back()).getValeur())
             {
-            case 10:
-                cout << "Inverse" << endl;
+            case 10: // inverse
                 if (sensJeu == 1)
                     sensJeu = 0;
                 else
                     sensJeu = 1;
                 break;
-            case 11:
+            case 11: // passe
                 termineTour();
                 break;
-            case 12:
+            case 12: // +2
                 termineTour();
 
                 piocherCarte();
                 piocherCarte();
                 break;
-            case 13:
+            case 13: // +4
                 termineTour();
 
                 for (unsigned int i = 0; i < 4; i++)
                     piocherCarte();
                 break;
-            case 14:
+            case 14: // joker
                 break;
             }
             if (casPart != 3) termineTour();
@@ -153,6 +149,8 @@ void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messag
         }
     }
 }
+
+// echange la main du bot avec un autre joueur
 void VarianteEchange::echangeJeuVersionBot()
 {
     unsigned int indexBot = joueurActif - nombreJoueurs;
@@ -161,7 +159,7 @@ void VarianteEchange::echangeJeuVersionBot()
     unsigned int numJoueur = rand() % nombreJoueurMax;
     assert(numJoueur < nombreJoueurMax);
     if (numJoueur == joueurActif)
-    { // On test quand même si on est pas avec le même indice que le bot qui joue.
+    { // On teste quand même si on est pas avec le même indice que le bot qui joue.
         numJoueur = rand() % nombreJoueurMax;
     }
     if (numJoueur >= nombreJoueurs && numJoueur != joueurActif)

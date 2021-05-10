@@ -8,6 +8,7 @@
 
 #include "Jeu.h"
 
+// change la couleur de la carte quand +4 ou joker
 void changeCouleurCarte(Jeu &jeu, Fenetre win)
 {
     int indiceCarte = jeu.joueurs[jeu.joueurActif].indiceEtoile;
@@ -21,29 +22,21 @@ void changeCouleurCarte(Jeu &jeu, Fenetre win)
         c = win.getCh();
         switch (c)
         {
-        case 'r':
-            cout << "Je suis la touche R" << endl;
-            //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+        case 'r': // choix rouge
             jeu.actionJoueur('r');
             choixCouleur = false;
             break;
-        case 'v':
-            cout << "Je suis la touche V" << endl;
-            //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+        case 'v': // choix vert
             jeu.actionJoueur('v');
             choixCouleur = false;
             break;
 
-        case 'b':
-            cout << "Je suis la touche B" << endl;
-            //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+        case 'b': // choix bleu
             jeu.actionJoueur('b');
             choixCouleur = false;
             break;
 
-        case 'j':
-            cout << "Je suis la touche J" << endl;
-            //if ((jeu.talon.front()).getValeur() == 13 || (jeu.talon.front()).getValeur() == 14)
+        case 'j': // choix jaune
             jeu.actionJoueur('j');
             choixCouleur = false;
             break;
@@ -162,10 +155,8 @@ int txtBoucleDebut(SalleAttente &s)
 // boucle de jeu
 void txtBoucle(Jeu &jeu) //
 {
-
     // Creation d'une nouvelle fenetre en mode texte
     // => fenetre de dimension et position (WIDTH,HEIGHT,STARTX,STARTY)
-    //Fenetre win(jeu.joueurs[jeu.joueurActif].getHaut(), jeu.joueurs[jeu.joueurActif].getLarg());
     Fenetre win(38, 180);
     bool ok = true;
     char touche;
@@ -208,10 +199,12 @@ void txtBoucle(Jeu &jeu) //
                     break;
                 case 'p':
                     jeu.actionJoueur('p');
+                    // cas de la variante cumul
                     if (jeu.casPart % 2 == 0 && jeu.casPart > 0 && jeu.talon.back().getValeur() == 13)
                         {
                             int jActifTmp = jeu.joueurActif;
                             jeu.joueurActif = indiceJoueur; // on revient au joueur précédent pour qu'il coisisse la couleur
+                            jeu.MaJTableJoueurActifDebutTour();
                             txtAff(win, jeu);
                             changeCouleurCarte(jeu, win);
                             jeu.joueurActif = jActifTmp;
@@ -333,11 +326,6 @@ void txtBoucle(Jeu &jeu) //
                     }
                 }
             }
-            
-            /* if (jeu.finTour)
-                cout << "Fin du tour" << endl; */
-            /* if(ok)
-                cout << "ok = true ?" << endl; */
         }
     } while (ok || !jeu.finPartie);
 }

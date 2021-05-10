@@ -676,19 +676,12 @@ void Bot::testRegression(Jeu &jeu)
     {
         cout << "La valeur est " << i.getValeur() << " et la couleur " << i.getCouleur() << endl;
     }
-    //cout << "Nombre de carte de couleur Rouge " << nbCarteRouge << endl;
-    //cout << "Nombre de carte de couleur Vert" << nbCarteVert << endl;
-    //cout << "Nombre de carte de couleur Bleu" << nbCarteBleu << endl;
-    //cout << "Nombre de carte de couleur Jaune" << nbCarteJaune << endl;
 
-    cout << "La carte du talon est " << jeu.talon.back().getValeur() << " et la couleur est " << jeu.talon.back().getCouleur() << endl;
     int CouleurTalon = carteMemeCouleurTalon(jeu);
     int c;
     int indv;
     int nbValeur = carteMemeValeurTalon(jeu, c, indv);
 
-    cout << "Le nombre de carte qui ont la couleur du talon : " << CouleurTalon << endl;
-    cout << "Le nombre de carte qui ont la valeur du talon : " << nbValeur << endl;
     switch (c)
     {
     case 1:

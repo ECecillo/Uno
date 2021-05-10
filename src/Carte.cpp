@@ -99,14 +99,12 @@ Carte::~Carte() {}
 // récupère la valeur de la carte
 unsigned int Carte::getValeur() const
 {
-    cout << "La valeur est " << valeur << endl; 
     return valeur;
 }
 
 // récupère la couleur de la carte
 unsigned int Carte::getCouleur() const
 {
-    cout << "La couleur est " << couleur << endl; 
     return couleur;
 }
 

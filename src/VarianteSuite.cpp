@@ -20,7 +20,7 @@ void VarianteSuite::poserCarte(const unsigned int &indiceCarte, string &messageE
         int indexBot = joueurActif - nombreJoueurs;
         if (carteValide(joueursBot[indexBot].main[indiceCarte]))
         {
-            //cout << "La carte du bot est valide" << endl;          // La carte qu'il veut poser est valide
+            // La carte qu'il veut poser est valide
             talon.push(joueursBot[indexBot].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
             testSuite(indiceCarte, joueursBot[indexBot].main);
             joueursBot[indexBot].main.erase(joueursBot[indexBot].main.begin() + indiceCarte);
@@ -82,60 +82,56 @@ void VarianteSuite::poserCarte(const unsigned int &indiceCarte, string &messageE
                     annonceGagnant();
                 return;
             }
-            /* if (carteSpeciale && testUno() != false)
-                termineTour(); */
         }
         else
         {
             messageErreur = "Cette carte ne peut pas être déposée.";
         }
     }
-    else
+    else // humain
     {
         if (carteValide(joueurs[joueurActif].main[indiceCarte]))
         { // La carte qu'il veut poser est valide
-            //char reponse = 'O';
             talon.push(joueurs[joueurActif].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
             // la carte fait partie d'une suite de 0 à 7, et qu'elle est plus petite que 7, au delà le joueur ne pourra pas jouer plusieurs cartes
             if (testSuite(indiceCarte, joueurs[joueurActif].main) && talon.back().getValeur() < 7) casPart = 5; 
             joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
 
 
-            // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
+            // On appelle la procédure qui efface le cadre de la carte et le texte.
             joueurs[joueurActif].modifMainTxt();
-            // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
+            // On appelle la procédure qui met à jour la carte sur laquelle on joue.
             joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 
             // gestion des cartes spéciales
             switch ((talon.back()).getValeur())
             {
-            case 10:
-                cout << "Inverse" << endl;
+            case 10: // inverse
                 if (sensJeu == 1)
                     sensJeu = 0;
                 else
                     sensJeu = 1;
                 break;
-            case 11:
+            case 11: // passe
                 termineTour();
                 break;
-            case 12:
+            case 12: // +2
                 termineTour();
 
                 piocherCarte();
                 piocherCarte();
                 break;
-            case 13:
+            case 13: // +4
                 termineTour();
 
                 for (unsigned int i = 0; i < 4; i++)
                     piocherCarte();
                 termineTour();
                 break;
-            case 14:
+            case 14: // joker
                 break;
             }
-            if (casPart != 5) termineTour();
+            if (casPart != 5) termineTour(); 
         }
         else
         {
@@ -163,45 +159,4 @@ bool VarianteSuite::testSuite(unsigned int ind, vector<Carte> main)
     }
     if (carteSerie <= 7) test = false;
     return test;
-/*
-    char reponse = 'O';
-    int k = 0;
-    // Si on a bien 2 chiffres au moins à la suite
-    //cout <<main[ind].getValeur() << endl;
-    bool test = (main[ind].getValeur() <= 7) && (main[ind].getValeur() + 1 == main[ind + 1].getValeur());
-    if (test) // Si la valeur est bien entre 0 et 7.
-    {
-        for (int i = ind; i < main.size() - 1; i++)
-        { // On parcours la main du joueur.
-            if (main[ind].getCouleur() == main[i].getCouleur())
-            { // On est dans le cas où on va parcourir les cartes de même couleur à partir de l'indice choisis.
-                if (main[ind].getValeur() == main[i].getValeur())
-                {
-                    k = i; // Je récupère l'indice à partir duquel je vais regarder la suite.
-                    while ((main[k + 1].getValeur() == main[k].getValeur() + 1) && (main[k + 1].getValeur() <= 7) && reponse == 'O')
-                    { // La valeur à i + 1 suit bien l'ordre croissant.
-                        if (joueurActif >= nombreJoueurs)
-                        { // Si on est un bot
-                            reponse = 'O';
-                        }
-                        else if (joueurActif < nombreJoueurs)
-                        { // On est un joueur donc on doit saisir notre choix.
-                            cout << "Veux-tu jouer la carte suivante? saisir O/N puis entrer";
-                            cin >> reponse;
-                            cout << endl;
-                        }
-                        if (toupper(reponse) == 'O')
-                        {
-                            cout << "On met la carte " << main[k + 1].getValeur() << endl;
-                            // On pose la carte suivante.
-                            talon.push(main[k + 1]);
-                            main.erase(main.begin() + (k + 1));
-                            k++; // On incrémente le k pour continuer à regarder si on a une série.
-                        }
-                    }
-                    return;
-                }
-            }
-        }
-    }*/
 }

@@ -15,7 +15,7 @@ VarianteTourne::~VarianteTourne()
 
 void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
-    if (joueurActif >= nombreJoueurs)
+    if (joueurActif >= nombreJoueurs) // bot
     {
         int indexBot = joueurActif - nombreJoueurs;
         if (carteValide(joueursBot[indexBot].main[indiceCarte]))
@@ -25,10 +25,6 @@ void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &message
             // si la carte posée est 0, on fait tourner les mains
             if (talon.back().getValeur() == 0)
                 tournerMains();
-            // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
-            //joueurs[joueurActif].modifMainTxt();
-            // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
-            //joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
             bool carteSpeciale = false;
             if (testUno() == false) // Si on est pas dans le cas du Uno
             {
@@ -36,14 +32,13 @@ void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &message
                 // gestion des cartes spéciales
                 switch ((talon.back()).getValeur())
                 {
-                case 10:
-                    cout << "Inverse" << endl;
+                case 10: // inverse
                     if (sensJeu == 1)
                         sensJeu = 0;
                     else
                         sensJeu = 1;
                     break;
-                case 11:
+                case 11: // passe
                     if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
                         joueurActif = 0;
                     else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
@@ -56,7 +51,7 @@ void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &message
 
                     carteSpeciale = true;
                     termineTour();
-                case 12:
+                case 12: // +2
                     termineTour();
 
                     piocherCarte();
@@ -64,7 +59,7 @@ void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &message
                     carteSpeciale = true;
                     termineTour();
                     break;
-                case 13:
+                case 13: // +4
                     carteSpeciale = true;
                     joueursBot[indexBot].setCartePlus4(newIndice);
                     termineTour();
@@ -74,7 +69,7 @@ void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &message
                     termineTour();
 
                     break;
-                case 14:
+                case 14:// joker
                     joueursBot[indexBot].setCarteJoker(newIndice);
                     termineTour();
                     carteSpeciale = true;
@@ -96,7 +91,7 @@ void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &message
             }
         }
     }
-    else
+    else // humain
     {
         if (carteValide(joueurs[joueurActif].main[indiceCarte]))
         {                                                       // La carte qu'il veut poser est valide
@@ -113,36 +108,34 @@ void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &message
             // gestion des cartes spéciales
             switch ((talon.back()).getValeur())
             {
-            case 10:
-                cout << "Inverse" << endl;
+            case 10: // inverse
                 if (sensJeu == 1)
                     sensJeu = 0;
                 else
                     sensJeu = 1;
                 break;
-            case 11:
+            case 11: // passe
                 termineTour();
                 break;
-            case 12:
+            case 12: // +2
                 termineTour();
 
                 piocherCarte();
                 piocherCarte();
                 break;
-            case 13:
+            case 13: // +4
                 termineTour();
 
                 for (unsigned int i = 0; i < 4; i++)
                     piocherCarte();
                 break;
-            case 14:
+            case 14: // joker
                 break;
             }
             termineTour();
         }
         else
         {
-
             messageErreur = "Cette carte ne peut pas être déposée.";
             // Voir si on ajoute d'autre message.
             cout << messageErreur << endl;
@@ -150,13 +143,13 @@ void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &message
     }
 }
 
+// Fait tourner les mains des joueurs
 void VarianteTourne::tournerMains()
 {
     if (sensJeu == 1)
     {
         for (int i = nombreJoueurs + nombreIA - 1; i > 0; i--)
         {
-            //cout << i << " I de tourneMain " << endl;
             if (i > nombreJoueurs)
             { // On échange les jeux entre les bots
 

@@ -148,9 +148,6 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
     LargeurEcran = 0;
     lireFichierRes(); // Lis le fichier et initialise les données membres pour la fenêtre.
 
-    //HauteurEcran = 1080;
-    //LargeurEcran = 1920;
-
     cout << HauteurEcran << endl;
     cout << LargeurEcran << endl;
 
@@ -178,9 +175,6 @@ sdlJeu::sdlJeu() : window(nullptr), renderer(nullptr), font(nullptr)
         exit(1);
     }
     fontTexte = TTF_OpenFont("data/DejaVuSansCondensed.ttf", 60);
-
-    //SDL_SetRenderDrawColor(renderer, 168, 230, 255, 255);
-    //SDL_RenderClear(renderer);
 
     // Son
     Mix_AllocateChannels(3);                     // Alloue 3 cannaux
@@ -262,8 +256,6 @@ void sdlJeu::modifFichierRes(int largeur, int hauteur)
 // Affiche la salle d'attente
 void sdlJeu::sdlAffSalleAttente(unsigned int variante, unsigned int nombreJoueurs, unsigned int nombreIA)
 {
-    //SDL_SetRenderDrawColor(rendererParam, 0, 0, 0, 255);
-    //SDL_RenderClear(rendererParam);
     //Remplir l'écran de noir
     SDL_SetRenderDrawColor(renderer, 254, 254, 254, 255);
     SDL_RenderClear(renderer);
@@ -368,21 +360,9 @@ void sdlJeu::sdlUno()
 
     fondMenu.draw(renderer, 0, 0, LargeurEcran, HauteurEcran);
     SDL_RenderPresent(renderer);
-    //SDL_RenderClear(renderer);
-    //SDL_Window *param = SDL_CreateWindow("Paramètres du jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    /* if (param == NULL)
-    {
-        cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << endl;
-        SDL_Quit();
-        exit(1);
-    } */
-    /* SDL_Renderer *rendererParam = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    SDL_RenderClear(rendererParam);
- */
+
     SDL_Event event;
     bool quit = false;
-
-    /*Uint32 t = SDL_GetTicks(), nt;*/
 
     unsigned int variante = 1;      // entre 1 et 6
     unsigned int nombreJoueurs = 2; // entre 1 et 9
@@ -400,8 +380,6 @@ void sdlJeu::sdlUno()
         {
             sourisX = event.button.x;
             sourisY = event.button.y;
-            //cout << sourisX << " " << sourisY << endl;
-            //cout << "debut while Uno" << endl;
             switch (event.type)
             {
             case SDL_WINDOWEVENT:                                // On clique sur la fenêtre.
@@ -419,18 +397,15 @@ void sdlJeu::sdlUno()
                     variante = sdlAffChoixJeu();
                     sdlAffSalleAttente(variante, nombreJoueurs, nombreIA);
                     SDL_RenderClear(renderer);
-                    cout << "variante=" << variante << endl;
                 }
                 if (sourisX > 100 && sourisX < 470 && sourisY > 150 && sourisY < 200) // clic sur la ligne "Nombre de joueurs"
                 {
                     nombreJoueurs = sdlAffChoixJoueurs();
-                    cout << "nombre joueurs " << nombreJoueurs << endl;
                     sdlAffSalleAttente(variante, nombreJoueurs, nombreIA);
                 }
                 if (event.button.x > 100 && event.button.x < 470 && event.button.y > 250 && event.button.y < 300) // clic sur la ligne "Nombre d'ordinateurs"
                 {
                     nombreIA = sdlAffChoixOrdinateurs();
-                    cout << "nombre bots " << nombreIA << endl;
                     sdlAffSalleAttente(variante, nombreJoueurs, nombreIA);
                     SDL_RenderClear(renderer);
                 }
@@ -1124,13 +1099,6 @@ void sdlJeu::sdlMenu()
                 SDL_Log("+clic");
                 posSourisX = events.button.x;
                 posSourisY = events.button.y;
-                //int posReglageX = positionReglage.x;
-                //int posReglageY = positionReglage.y;
-
-                //posReglageY += +HAUTEUR_ECRAN<int> / 12;
-
-                //cout << posReglageX << " " << posReglageY << endl;
-                //cout << posSourisX << " " << posSourisY << endl;
 
                 // On clique sur jouer et ça lance la salle d'attente (voir si il faut pas enlever des trucs).
                 if ((posSourisX > positionTexte[1].x && posSourisY > positionTexte[1].y) &&                              // Point en haut à gauche
@@ -1149,7 +1117,6 @@ void sdlJeu::sdlMenu()
                     (posSourisX < (positionTexte[2].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionTexte[2].y)) && // Point en haut à droite
                     (posSourisX < (positionTexte[2].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[2].y + HAUTEUR_ECRAN<int> / 12)))
                 {
-                    cout << "Je clique sur réglage" << endl;
                     isOpen = false; // On quitte la boucle.
                     openReglage = true;
                     Mix_PlayChannel(1, sons[2], 0); // On joue le son selection 1 fois.
@@ -1169,7 +1136,6 @@ void sdlJeu::sdlMenu()
                     (posSourisX < (positionTexte[4].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionTexte[4].y)) && // Point en haut à droite
                     (posSourisX < (positionTexte[4].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[4].y + HAUTEUR_ECRAN<int> / 12)))
                 {
-                    cout << "Je clique Quitter" << endl;
                     isOpen = false;
                 }
                 break;
@@ -1181,8 +1147,6 @@ void sdlJeu::sdlMenu()
         SDL_RenderClear(renderer);
 
         fondMenu.draw(renderer, 0, 0, LargeurEcran, HauteurEcran);
-        // Affichage texte, ici du titre.
-        //SDL_RenderClear(renderer); // On change sur quelle rendu on fait.
         // Affichage des Textes
         for (int i = 0; i < 5; i++)
         {
@@ -1472,9 +1436,7 @@ void sdlJeu::sdlReglage(Menu &menu)
             SDL_RenderClear(renderer);
 
             fondMenu.draw(renderer, 0, 0, LargeurEcran, HauteurEcran);
-            //SDL_RenderCopy(renderer, fondMenu, nullptr, nullptr); // Affichage du texte.
-
-            //SDL_RenderClear(renderer); // On change sur quelle rendu on fait.
+            
             for (int i = 0; i < 4; i++)
             {
                 SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                            // On passe sur la couleur du texte.
@@ -1648,7 +1610,7 @@ void sdlJeu::sdlEchange(Jeu &jeu)
             }
             else if (i >= jeu.nombreJoueurs)
             {
-                cout << "Affichel les noms des bots après celui actuel" << end;
+                
                 font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[i + 1].nom.c_str(), noir));
             }
         }
@@ -1669,7 +1631,6 @@ void sdlJeu::sdlEchange(Jeu &jeu)
         {
             sourisX = event.button.x;
             sourisY = event.button.y;
-            cout << "choix joueurs " << sourisX << " " << sourisY << endl;
             if (event.type == SDL_MOUSEBUTTONDOWN)
             {
                 if (sourisX > pos && sourisX < pos + (LargeurEcran * 25 / 192) * (jeu.nombreJoueurs - 1) && sourisY > (HauteurEcran * 25 / 216) && sourisY < (HauteurEcran * 35 / 216)) // clic sur un nom
@@ -1869,12 +1830,10 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
     unsigned int indiceJoueur = jeu.joueurActif;
     int compteurBotUno = 0;
 
-    cout << "Boucle Jeu " << endl;
     cout << jeu.joueurActif << endl;
     // tant que ce n'est pas la fin ...
     while (!quit)
     {
-        cout << "Joueur actif" << endl;
         cout << jeu.joueurActif << endl;
         if (jeu.joueurActif >= jeu.nombreJoueurs)
         {
@@ -1905,21 +1864,18 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
             {
                 if (indiceJoueur < jeu.nombreJoueurs)
                 { // C'était un joueur Humain qui jouait juste avant.
-                    cout << "Bot contre Uno le joueur" << endl;
                     situationContreUno(jeu); // Le bot va Contre Uno direct.
                 }
                 else // Le joueur d'avant était un bot.
                 {
                     indiceJoueur = jeu.joueurActif; // On save l'indice du bot qui est en Uno.
                     jeu.termineTour();              // On termine le tour pour que ce soit un autre bot ou un joueur qui puisse faire Contre Uno.
-                    cout << jeu.statut_Uno << "avant situation Contre Uno" << endl;
                     if (compteurBotUno != 1)
                     {                            // Si le bot suivant n'a jamais fait un contre Uno automatique.
                         situationContreUno(jeu); // Il contre Uno direct.
                         compteurBotUno++;
                     }
                 }
-                cout << jeu.statut_Uno << "après situation Contre Uno" << endl;
                 if (!jeu.statut_Uno && indiceJoueur < jeu.nombreJoueurs)
                 { // Si le statut est passé à false (on a appuyé sur le contre Uno)
                     jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
@@ -1937,7 +1893,6 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 else // Si le statut est encore à true alors on a pas appuyé donc on ne le fait pas piocher.
                     jeu.statut_Uno = false;
             }
-            cout << "Bot choix Jeu" << endl;
             jeu.joueursBot[jeu.joueurActif - jeu.nombreJoueurs].choixJeu(jeu);
             if (jeu.talon.back().getValeur() == 13 || jeu.talon.back().getValeur() == 14)
             { // On affiche la nouvelle couleur posé par le bot quand c'est un +4 ou joker.
@@ -1958,9 +1913,7 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
             }
             if (jeu.statut_Uno)
             {
-                cout << jeu.statut_Uno << "avant situation Contre Uno" << endl;
                 situationContreUno(jeu);
-                cout << jeu.statut_Uno << "après situation Contre Uno" << endl;
                 if (!jeu.statut_Uno)
                 {
                     cout << "Fait piocher" << endl;

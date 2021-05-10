@@ -130,7 +130,7 @@ void Jeu::initCarte()
 void Jeu::initTalon()
 {
     talon.push(pioche.top()); // Carte mis dans la talon, celle sur laquelle on va jouer.
-    pioche.pop();             // Elle dans la file, on la supprime de la pile.
+    pioche.pop();             // Celle dans la file, on la supprime de la pile.
     for (int i = 0; i < nombreJoueurs; i++)
         joueurs[i].modifTalonPiocheTxt(talon, pioche);
 }
@@ -190,20 +190,7 @@ void Jeu::definieCouleurBot(Bot &tabJoueursBot, Carte &c)
 // true si la carte est valide
 bool Jeu::carteValide(const Carte c) const
 {
-    cout << "valide jeu" << endl;
     bool chercheCouleur = false;
-    //si carte +4, on regarde dans la main du joueur s'il y a une carte de la même couleur que celle du talon
-    /* if (c.getValeur() == 13)
-    {
-        unsigned int i = 0;
-        while (i < joueurs[joueurActif].main.size() && !chercheCouleur)
-        {
-            if (talon.back().getCouleur() == joueurs[joueurActif].main[i].getCouleur())
-                chercheCouleur = true;
-            i++;
-        }
-    } */
-    cout << "Avant return" << endl;
     return (c.getValeur() == talon.back().getValeur()) ||
            (c.getCouleur() == talon.back().getCouleur()) ||
            (c.getValeur() == 14) ||
@@ -213,7 +200,6 @@ bool Jeu::carteValide(const Carte c) const
 // Met une carte de la pioche dans la main du joueur
 void Jeu::piocherCarte()
 {
-    cout << "piocher jeu" << endl;
     if (joueurActif >= nombreJoueurs) // Si on a un bot pas besoin de modif affichage.
     {
         int indexBot = joueurActif - nombreJoueurs;
@@ -222,10 +208,7 @@ void Jeu::piocherCarte()
         switch (pioche.top().getCouleur())
         {
         case 1:
-            cout << "On pioche une carte Rouge" << endl;
-            cout << "Nombre de carte avant ajout : " << joueursBot[indexBot].getCarteRouge() << endl;
             joueursBot[indexBot].setCarteRouge();
-            cout << "Nombre de carte après ajout : " << joueursBot[indexBot].getCarteRouge() << endl;
 
             if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
             {
@@ -242,10 +225,7 @@ void Jeu::piocherCarte()
             }
             break;
         case 2:
-            cout << "On pioche une carte Vert" << endl;
-            cout << "Nombre de carte avant ajout : " << joueursBot[indexBot].getCarteVert() << endl;
             joueursBot[indexBot].setCarteVert();
-            cout << "Nombre de carte après ajout : " << joueursBot[indexBot].getCarteVert() << endl;
 
             if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
             {
@@ -262,10 +242,7 @@ void Jeu::piocherCarte()
             }
             break;
         case 3:
-            cout << "On pioche une carte Bleu" << endl;
-            cout << "Nombre de carte avant ajout : " << joueursBot[indexBot].getCarteBleu() << endl;
             joueursBot[indexBot].setCarteBleu();
-            cout << "Nombre de carte après ajout : " << joueursBot[indexBot].getCarteBleu() << endl;
 
             if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
             {
@@ -282,10 +259,7 @@ void Jeu::piocherCarte()
             }
             break;
         case 4:
-            cout << "On pioche une carte Jaune" << endl;
-            cout << "Nombre de carte avant ajout : " << joueursBot[indexBot].getCarteJaune() << endl;
             joueursBot[indexBot].setCarteJaune();
-            cout << "Nombre de carte après ajout : " << joueursBot[indexBot].getCarteJaune() << endl;
 
             if (pioche.top().getValeur() == 14) // On ajoute l'indice du joker.
             {
@@ -309,8 +283,7 @@ void Jeu::piocherCarte()
         joueursBot[indexBot].trierMain();
         return;
     }
-    
-    else
+    else // humain
     {
         joueurs[joueurActif].main.push_back(pioche.top());
         pioche.pop();
@@ -319,24 +292,19 @@ void Jeu::piocherCarte()
     }
 }
 
+// fait poser une carte sur le talon
 void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
     assert(indiceCarte >= 0);
-    if (joueurActif >= nombreJoueurs) // alors on a affaire à un bot.
+    if (joueurActif >= nombreJoueurs) // on a affaire à un bot.
     {
         int indexBot = joueurActif - nombreJoueurs;
-        cout << "L'actuel carte du talon est : " << talon.back().getValeur() << " et sa couleur est : " << (talon.back()).getCouleur() << endl;
-        cout << indiceCarte << endl;
-        cout << "Le bot " << indexBot << " joue" << endl;
-        cout << "La carte choisit a pour valeur : " << joueursBot[indexBot].main[indiceCarte].getValeur() << " et pour couleur " << joueursBot[indexBot].main[indiceCarte].getCouleur() << endl;
         if (carteValide(joueursBot[indexBot].main[indiceCarte]))
         {
-
-            //cout << "La carte du bot est valide" << endl;          // La carte qu'il veut poser est valide
+            // La carte qu'il veut poser est valide
             talon.push(joueursBot[indexBot].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
 
             joueursBot[indexBot].main.erase(joueursBot[indexBot].main.begin() + indiceCarte);
-            cout << "La nouvelle carte du talon est : " << talon.back().getValeur() << " et sa couleur est : " << (talon.back()).getCouleur() << endl;
             bool carteSpeciale = false;
             if (testUno() == false) // Si on est pas dans le cas du Uno
             {
@@ -344,14 +312,13 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                 // gestion des cartes spéciales
                 switch ((talon.back()).getValeur())
                 {
-                case 10:
-                    cout << "Inverse" << endl;
+                case 10: // inverse
                     if (sensJeu == 1)
                         sensJeu = 0;
                     else
                         sensJeu = 1;
                     break;
-                case 11:
+                case 11: // passe
                     if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
                         joueurActif = 0;
                     else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
@@ -364,7 +331,7 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 
                     termineTour();
                     break;
-                case 12:
+                case 12: // +2
                     termineTour();
 
                     piocherCarte();
@@ -372,7 +339,7 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
                     carteSpeciale = true;
                     termineTour();
                     break;
-                case 13:
+                case 13: // +4
                     carteSpeciale = true;
                     joueursBot[indexBot].setCartePlus4(newIndice);
                     termineTour();
@@ -409,38 +376,38 @@ void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
             joueurs[joueurActif].main.erase(joueurs[joueurActif].main.begin() + indiceCarte);
             testUno();
 
-            // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
+            // On appelle la procédure qui efface le cadre de la carte et le texte.
             joueurs[joueurActif].modifMainTxt();
-            // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
+            // On appelle la procédure qui met à jour la carte sur laquelle on joue.
             joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
             bool carteSpeciale = false;
                 // gestion des cartes spéciales
             switch ((talon.back()).getValeur())
             {
-            case 10:
+            case 10: // inverse
                 if (sensJeu == 1)
                     sensJeu = 0;
                 else
                     sensJeu = 1;
                 break;
-            case 11:
+            case 11: // passe
                 termineTour();
 
                 break;
-            case 12:
+            case 12: // +2
                 termineTour();
 
                 piocherCarte();
                 piocherCarte();
                 carteSpeciale = true;
                 break;
-            case 13:
+            case 13: // +4
                 termineTour();
 
                 for (unsigned int i = 0; i < 4; i++)
                     piocherCarte();
                 break;
-            case 14:
+            case 14: // joker
                 termineTour();
                 carteSpeciale = true;
 
@@ -470,23 +437,23 @@ void Jeu::actionJoueur(const char action) // Fenêtre
 
     switch (action)
     {
-    case 'r':
+    case 'r': // choix rouge
         joueurs[joueurActif].main[indiceCarte].setCouleur(1);
 
         break;
-    case 'v':
+    case 'v': // choix vert
         joueurs[joueurActif].main[indiceCarte].setCouleur(2);
 
         break;
-    case 'b':
+    case 'b': // choix bleu
         joueurs[joueurActif].main[indiceCarte].setCouleur(3);
 
         break;
-    case 'j':
+    case 'j': // choix jaune
         joueurs[joueurActif].main[indiceCarte].setCouleur(4);
 
         break;
-    case 'a':
+    case 'a': // gauche
         if (joueurs[joueurActif].indiceEtoile == 0) // Si on est déjà à l'indice 0 on bouge pas.
         {
             break;
@@ -497,7 +464,7 @@ void Jeu::actionJoueur(const char action) // Fenêtre
             break;
         }
         break;
-    case 'd':
+    case 'd': // droite
         // On déplace le curseur * à droite.
         if (joueurs[joueurActif].indiceEtoile == joueurs[joueurActif].main.size() - 1) // Si on est déjà à l'indice 0 on bouge pas.
         {
@@ -527,8 +494,7 @@ void Jeu::actionJoueur(const char action) // Fenêtre
     case 'e':
     {
         // On appuie sur la touche e = poser carte.
-        // Fonction qui renvoie l'indice où est l'étoile.
-        unsigned int indiceCarte = joueurs[joueurActif].indiceEtoile; // Indice de de la carte qui sera joué.
+        unsigned int indiceCarte = joueurs[joueurActif].indiceEtoile; // Indice de de la carte qui sera jouée, repérée par l'étoile.
         string er;                                                    //Message d'erreur à afficher.
         poserCarte(indiceCarte, er);
 
@@ -544,6 +510,7 @@ bool Jeu::piocheVide()
 {
     return pioche.empty() == true;
 }
+
 // Réinitialisation de la pioche avec le talon
 void Jeu::relancePiocheJeu()
 {
@@ -606,9 +573,6 @@ void Jeu::Uno(int c)
 // Change le joueur actif, et metTour à true
 void Jeu::termineTour()
 {
-    cout << "Fin du tour" << endl;
-    cout << "Sens du Jeu" << sensJeu << endl;
-
     switch (sensJeu)
     {
     case 1: // On joue à gauche.
@@ -640,6 +604,8 @@ void Jeu::termineTour()
         break;
     }
 }
+
+// annonce le gagnant, càd celui dont la main est vide
 void Jeu::annonceGagnant()
 {
     if (joueurActif >= nombreJoueurs && joueursBot[joueurActif - nombreJoueurs].main.size() == 0)
@@ -725,7 +691,6 @@ void Jeu::testRegression()
     assert(carteValide(c2));
     assert(!carteValide(c3) || !carteValide(c4) || !carteValide(c5));
 
-    // test de poserCarte
 
     // test de termineTour
     joueurActif = 0;
@@ -734,7 +699,4 @@ void Jeu::testRegression()
     joueurActif = 2;
     termineTour();
     assert(joueurActif == 0);
-
-    // relancePiocheJeu
-
 }
