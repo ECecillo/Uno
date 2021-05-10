@@ -43,8 +43,7 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
 
             talon.push(joueursBot[indexBot].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
             joueursBot[indexBot].main.erase(joueursBot[indexBot].main.begin() + indiceCarte);
-            
-            bool carteSpeciale = false;
+            cout << "La nouvelle carte du talon est : " << talon.back().getValeur() << " et sa couleur est : " << (talon.back()).getCouleur() << endl;
             if (testUno() == false) // Si on est pas dans le cas du Uno
             {
                 int newIndice = -1;
@@ -74,11 +73,9 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                     termineTour();
                     // on augmente le compteur de 2 pour les cartes à piocher
                     casPart += 2;
-                    carteSpeciale = true;
                     termineTour();
                     break;
-                case 13: // +4
-                    carteSpeciale = true;
+                case 13:
                     joueursBot[indexBot].setCartePlus4(newIndice);
                     // on augmente le compteur de 2 pour les cartes à piocher
                     casPart += 4;
@@ -88,7 +85,6 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                 case 14: // joker
                     joueursBot[indexBot].setCarteJoker(newIndice);
                     termineTour();
-                    carteSpeciale = true;
                     cout << "Bot pose joker dans poserCarte Cumul" << endl;
                     break;
                 }
@@ -114,7 +110,6 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
             joueurs[joueurActif].modifMainTxt();
             // On appelle la procédure qui met à jour la carte sur laquelle on joue.
             joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
-            bool carteSpeciale = false;
 
             // gestion des cartes spéciales
             switch ((talon.back()).getValeur())
@@ -138,20 +133,17 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
 
                 termineTour();
                 break;
-            case 12: // +2
-                casPart += 2; // on augmente de 2 le compteur de cartes à piocher
-                carteSpeciale = true;
+            case 12:
+                casPart += 2;
 
                 cout << casPart << "après +2" << endl;
                 break;
-            case 13: // +4
-                carteSpeciale = true;
-                casPart += 4; // on augmente de 4 le compteur de cartes à piocher
+            case 13:
+                casPart += 4;
                 cout << casPart << "après +4" << endl;
 
                 break;
             case 14:
-                carteSpeciale = true;
                 break;
             }
             termineTour();
