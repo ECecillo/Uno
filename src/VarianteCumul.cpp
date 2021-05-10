@@ -54,7 +54,6 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
             talon.push(joueursBot[indexBot].main[indiceCarte]); // On pousse la carte que le joueur voulait jouer.
             joueursBot[indexBot].main.erase(joueursBot[indexBot].main.begin() + indiceCarte);
             cout << "La nouvelle carte du talon est : " << talon.back().getValeur() << " et sa couleur est : " << (talon.back()).getCouleur() << endl;
-            bool carteSpeciale = false;
             if (testUno() == false) // Si on est pas dans le cas du Uno
             {
                 int newIndice = -1;
@@ -85,11 +84,9 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                     termineTour();
 
                     casPart += 2;
-                    carteSpeciale = true;
                     termineTour();
                     break;
                 case 13:
-                    carteSpeciale = true;
                     joueursBot[indexBot].setCartePlus4(newIndice);
                     //termineTour();
 
@@ -101,7 +98,6 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                 case 14:
                     joueursBot[indexBot].setCarteJoker(newIndice);
                     termineTour();
-                    carteSpeciale = true;
                     cout << "Bot pose joker dans poserCarte Cumul" << endl;
                     break;
                 }
@@ -127,7 +123,6 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
             joueurs[joueurActif].modifMainTxt();
             // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
             joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
-            bool carteSpeciale = false;
 
             // gestion des cartes spéciales
             switch ((talon.back()).getValeur())
@@ -154,18 +149,15 @@ void VarianteCumul::poserCarte(const unsigned int &indiceCarte, string &messageE
                 break;
             case 12:
                 casPart += 2;
-                carteSpeciale = true;
 
                 cout << casPart << "après +2" << endl;
                 break;
             case 13:
-                carteSpeciale = true;
                 casPart += 4;
                 cout << casPart << "après +4" << endl;
 
                 break;
             case 14:
-                carteSpeciale = true;
                 break;
             }
             termineTour();

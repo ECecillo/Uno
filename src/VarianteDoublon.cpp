@@ -37,7 +37,6 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
             //joueursBot[indexBot].modifTalonPiocheTxt(talon, pioche);
 
             // gestion des cartes spéciales
-            bool carteSpeciale = false;
             if (!testUno()) // Si on est pas dans le cas du Uno
             {
                 int newIndice = -1;
@@ -69,11 +68,9 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
 
                     piocherCarte();
                     piocherCarte();
-                    carteSpeciale = true;
                     termineTour();
                     break;
                 case 13:
-                    carteSpeciale = true;
                     joueursBot[indexBot].setCartePlus4(newIndice);
                     termineTour();
 
@@ -85,7 +82,6 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
                 case 14:
                     joueursBot[indexBot].setCarteJoker(newIndice);
                     termineTour();
-                    carteSpeciale = true;
 
                     break;
                 }
@@ -160,7 +156,7 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
 // retourne l'indice dans m du doublon de la carte c, -1 sinon
 int VarianteDoublon::indiceDoublon(Carte c, vector<Carte> m)
 {
-    for (int i = 0; i < m.size(); i++)
+    for (unsigned int i = 0; i < m.size(); i++)
     {
         if ((c.getValeur() == 13 && m[i].getValeur() == 13) || (c.getValeur() == 14 && m[i].getValeur() == 14)) //cas joker et +4, pas besoin de tester la couleur
         {

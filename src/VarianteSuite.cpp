@@ -25,7 +25,6 @@ void VarianteSuite::poserCarte(const unsigned int &indiceCarte, string &messageE
             testSuite(indiceCarte, joueursBot[indexBot].main);
             joueursBot[indexBot].main.erase(joueursBot[indexBot].main.begin() + indiceCarte);
             cout << "La nouvelle carte du talon est : " << talon.back().getValeur() << " et sa couleur est : " << (talon.back()).getCouleur() << endl;
-            bool carteSpeciale = false;
             if (testUno() == false) // Si on est pas dans le cas du Uno
             {
                 int newIndice = -1;
@@ -57,11 +56,9 @@ void VarianteSuite::poserCarte(const unsigned int &indiceCarte, string &messageE
 
                     piocherCarte();
                     piocherCarte();
-                    carteSpeciale = true;
                     termineTour();
                     break;
                 case 13:
-                    carteSpeciale = true;
                     joueursBot[indexBot].setCartePlus4(newIndice);
                     termineTour();
 
@@ -73,7 +70,6 @@ void VarianteSuite::poserCarte(const unsigned int &indiceCarte, string &messageE
                 case 14:
                     joueursBot[indexBot].setCarteJoker(newIndice);
                     termineTour();
-                    carteSpeciale = true;
 
                     break;
                 }
@@ -152,7 +148,7 @@ bool VarianteSuite::testSuite(unsigned int ind, vector<Carte> main)
 {
     bool test = (main[ind].getValeur() <= 7);
     unsigned int carteSerie = 0; //1ère valeur de la série à tester
-    int i = 0;
+    unsigned int i = 0;
     while (i < main.size() && test && carteSerie <= 7)
     {
         if (main[i].getCouleur() > main[ind].getCouleur())

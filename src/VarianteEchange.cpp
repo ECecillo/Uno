@@ -177,7 +177,7 @@ void VarianteEchange::echangeJeuVersionBot()
         // On remet à 0 les données du bot.
         joueursBot[indexBot].remetNbCarteZero();
         // On met les nouveaux nombres de carte dans le joueursBot qui va recevoir les cartes du joueur.
-        for (int j = 0; j < joueurs[numJoueur].main.size(); j++)
+        for (unsigned int j = 0; j < joueurs[numJoueur].main.size(); j++)
         {
             definieCouleurBot(joueursBot[indexBot], joueurs[numJoueur].main[j]);
         }

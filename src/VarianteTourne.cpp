@@ -154,7 +154,7 @@ void VarianteTourne::tournerMains()
 {
     if (sensJeu == 1)
     {
-        for (int i = nombreJoueurs + nombreIA - 1; i > 0; i--)
+        for (unsigned int i = nombreJoueurs + nombreIA - 1; i > 0; i--)
         {
             //cout << i << " I de tourneMain " << endl;
             if (i > nombreJoueurs)
@@ -171,7 +171,7 @@ void VarianteTourne::tournerMains()
                 // On remet à 0 les données du bot.
                 joueursBot[(i - nombreJoueurs)].remetNbCarteZero();
                 // On met les nouveaux nombres de carte dans le joueursBot qui va recevoir les cartes du joueur.
-                for (int j = 0; j < joueurs[i - 1].main.size(); j++)
+                for (unsigned int j = 0; j < joueurs[i - 1].main.size(); j++)
                 {
                     definieCouleurBot(joueursBot[(i - nombreJoueurs)], joueurs[i - 1].main[j]);
                 }
@@ -186,7 +186,7 @@ void VarianteTourne::tournerMains()
     }
     else // Sens du jeu = 0 donc on inverse vers la gauche.
     {
-        for (int i = 0; i < nombreJoueurs + nombreIA - 2; i++)
+        for (unsigned int i = 0; i < nombreJoueurs + nombreIA - 2; i++)
         {
             if (i > nombreJoueurs - 1) // Si on passe sur un indice qui n'est plus valide pour joueurs
             {
@@ -200,7 +200,7 @@ void VarianteTourne::tournerMains()
                 // On remet à 0 les données du bot.
                 joueursBot[(i - nombreJoueurs) + 1].remetNbCarteZero();
                 // On met les nouveaux nombres de carte dans le joueursBot qui va recevoir les cartes du joueur.
-                for (int j = 0; j < joueurs[i].main.size(); j++)
+                for (unsigned int j = 0; j < joueurs[i].main.size(); j++)
                 {
                     definieCouleurBot(joueursBot[(i - nombreJoueurs) + 1], joueurs[i].main[j]);
                 }

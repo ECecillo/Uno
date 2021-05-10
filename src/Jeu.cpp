@@ -131,7 +131,7 @@ void Jeu::initTalon()
 {
     talon.push(pioche.top()); // Carte mis dans la talon, celle sur laquelle on va jouer.
     pioche.pop();             // Elle dans la file, on la supprime de la pile.
-    for (int i = 0; i < nombreJoueurs; i++)
+    for (unsigned int i = 0; i < nombreJoueurs; i++)
         joueurs[i].modifTalonPiocheTxt(talon, pioche);
 }
 
@@ -579,6 +579,7 @@ bool Jeu::testUno()
             return statut_Uno;
         }
     }
+    return false;
 }
 
 // Actions Uno et contreUno
@@ -701,7 +702,7 @@ void Jeu::testRegression()
     assert(talon.size() == 1);
 
     //distribueCarte();
-    for (int i = 0; i < nombreJoueurs; i++)
+    for (unsigned int i = 0; i < nombreJoueurs; i++)
         assert(joueurs[i].main.size() == 7);
 
     // test de piocheVide
