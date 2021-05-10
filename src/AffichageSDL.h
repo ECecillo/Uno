@@ -226,7 +226,7 @@ public:
 	 * Procédure qui créer une nouvelle fenêtre sdl pour demander au joueur si il veut jouer 
 	 * la suite de carte possible dans sa main.
 	 * @param jeu
-	 * @param indice :  
+	 * @param indice : indice de la carte jouée dans la main du joueur 
 	 */
 	void sdlSuite(Jeu &jeu, unsigned int indice);
 
