@@ -19,130 +19,172 @@ class Jeu;
 class Bot
 {
 public:
-  /**
+   /**
          * @brief
          * Numéro du bot
          */
-  unsigned int numeroBot;
+   unsigned int numeroBot;
 
-  /**
+   /**
      * @brief
      * Nom du bot.
      */
-  string nom;
+   string nom;
 
-  /**
+   /**
 		* @brief
 		* Tableau dynamique contenant les cartes du bot.
 		*
 		*/
-  vector<Carte> main;
+   vector<Carte> main;
 
-  /**
+   /**
      * @brief Construit un nouvelle objet Bot.
      *
      */
-  Bot();
+   Bot();
 
-  /**
+   /**
      * @brief Construit un nouvelle objet Bot avec le numéro du bot.
      *
      * @param num : Numéro du bot.
      */
-  Bot(const unsigned int num);
+   Bot(const unsigned int num);
 
-  /**
+   /**
       * @brief 
       * Trie le vecteur main du bot.
       * 
       */
-  void trierMain();
+   void trierMain();
 
-  /**
+   /**
          * @brief 
          * Procédure qui posera la carte que l'on aura choisit dans choix Jeu.
          */
-  void poserCarte() const;
+   void poserCarte() const;
 
-  /**
-      * @brief 
-      * Compte le nombre de carte qui ont la couleur du talon.
-      * @return entier.
-      */
-  int carteMemeCouleurTalon(const Jeu &) const;
+   /**
+   * @brief 
+   * Compte le nombre de carte qui ont la couleur du talon.
+   * @return entier
+   */
+   int carteMemeCouleurTalon(const Jeu &) const;
 
-  int cartePourCumul(const Jeu &jeu, int &c, int &indiceCarte);
+   /**
+    * @brief 
+    * Dans le cas où on est en train de faire une partie avec la variante Cumul on doit regarder la valeur du talon pour voir si le bot peut jouer par dessus ou non.
+    * @param jeu : L'objet Jeu qui nous permet de récupérer les infos sur le talon.
+    * @param c : Couleur de la carte que l'on donnera.
+    * @param indiceCarte : Indice de la carte qui devra être Jouer.
+    * @return entier ayant soit 100, 0 ou -1 pour erreur.
+    */
+   int cartePourCumul(const Jeu &jeu, int &c, int &indiceCarte);
 
-  /**
-      * @brief 
-      * Compte le nombre de Carte de la couleur de la carte qui a la même valeur que celle du Talon.
-      * @param tab : tableau dans lequelle on met le nombre de carte par couleur.
-      */
-  int carteMemeValeurTalon(const Jeu &, int &c, int &indiceCarte);
+   /**
+    * @brief 
+    * Compte le nombre de Carte de la couleur de la carte qui a la même valeur que celle du Talon.
+    * @param c : Couleur de la carte qui a la même valeur que celle du talon.
+    * @param indiceCarte : Indice de cette carte.
+    * @return int 
+    */
+   int carteMemeValeurTalon(const Jeu &, int &c, int &indiceCarte);
 
-  /**
+   /**
      * @brief 
      * Fonction qui renvoie la couleur avec le plus de carte.
      * @return int 
      */
-  int couleurAvecPlusDeCarte() const;
+   int couleurAvecPlusDeCarte() const;
 
-  /**
-     * @brief 
-     * D'après les fonctions carteMemeCouleur et CarteMemeValeur on dit à l'ordinateur quelle carte il va jouer.
-     */
-  void choixJeu(Jeu &);
+   /**
+    * @brief 
+    * D'après les fonctions carteMemeCouleur et CarteMemeValeur on dit à l'ordinateur quelle carte il va jouer.
+    * @param jeu : L'objet Jeu dans lequel le bot est en train d'intéragir.
+    */
+   void choixJeu(Jeu &jeu);
 
-  /**
+   /**
      * @brief 
      * Selon l'entier passé en paramètre on déclenchera poserCarte().
      * @param couleur : Couleur de la carte qui sera joué.
      * @param valeurCarteSpeciale : Dans le cas où on va jouer une carte 13 ou 14.
      */
-  void joueCouleurSelonEntier(Jeu &jeu, int couleur, int valeurCarteSpeciale);
+   void joueCouleurSelonEntier(Jeu &jeu, int couleur, int valeurCarteSpeciale);
 
-  void changeCouleurCarte(Jeu &jeu, const int);
+   /**
+    * @brief 
+    * Change les indices des cartes Joker et +4 qui sont forcément modifiés quand on va piocher ou poser une carte dans le Jeu.
+    * @param indiceCarte 
+    */
+   void changeIndiceCarteSpeciale(int indiceCarte);
 
-  void changeIndiceCarteSpeciale(int indiceCarte);
+   /**
+    * @brief 
+    * Test de regression pour voir si les fonctions et procédures sont fonctionnels.
+    */
+   void testRegression(Jeu &);
 
-  void testRegression(Jeu &);
-
-  /**
+   /**
      * @brief 
      * Remet à 0 le nombre de carte Rouge, Vert, Rouge, Jaune .... utile quand on doit changer les jeux.
      */
-  void remetNbCarteZero();
-  /**
+   void remetNbCarteZero();
+   /**
      * @brief 
      * Procédure permettant de transférer les données nbCarte entre Bot.
      * @param bot : Bot qui va transféré ces infos. 
      */
-  void copieNbCarte(Bot &bot);
+   void copieNbCarte(Bot &bot);
 
-  // Mutateur
-  void setCarteRouge();
-  void setCarteVert();
-  void setCarteBleu();
-  void setCarteJaune();
-  void setCarteJoker(int i);
-  void setCartePlus4(int i);
+   // Mutateur
+   void setCarteRouge();
+   void setCarteVert();
+   void setCarteBleu();
+   void setCarteJaune();
+   void setCarteJoker(int i);
+   void setCartePlus4(int i);
 
-  // Accesseur
-  int getCarteRouge();
-  int getCarteVert();
-  int getCarteBleu();
-  int getCarteJaune();
-  int getCarteJoker();
-  int getCartePlus4();
+   // Accesseur
+   int getCarteRouge();
+   int getCarteVert();
+   int getCarteBleu();
+   int getCarteJaune();
+   int getCarteJoker();
+   int getCartePlus4();
 
 private:
-  int nbCarteRouge;
-  int nbCarteVert;
-  int nbCarteBleu;
-  int nbCarteJaune;
-  int indCarteJoker; //
-  int indCartePlus4;
-  unsigned int indChoixCarte; // Indice qui dit quelle carte le bot a joué.
+   /**
+    * @brief 
+    * le nombre de cartes Rouge dans la main du bot.
+    */
+   int nbCarteRouge;
+   /**
+    * @brief 
+    * le nombre de cartes Vertes dans la main du bot.
+    */
+   int nbCarteVert;
+   /**
+    * @brief 
+    * le nombre de cartes Bleues dans la main du bot.
+    */
+   int nbCarteBleu;
+   /**
+    * @brief 
+    * le nombre de cartes Jaunes dans la main du bot.
+    */
+   int nbCarteJaune;
+   /**
+    * @brief 
+    * L'indice de la carte Joker dans la main du bot.
+    */
+   int indCarteJoker;
+   /**
+    * @brief 
+    * L'indice de la carte +4 dans la main du bot.
+    */
+   int indCartePlus4;
+   unsigned int indChoixCarte; // Indice qui dit quelle carte le bot a joué.
 };
 
 #endif
