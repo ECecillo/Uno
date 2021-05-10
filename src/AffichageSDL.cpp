@@ -1729,6 +1729,7 @@ void sdlJeu::sdlDoublon(Jeu &jeu)
     jeu.termineTour();
 }
 
+// la procédure est appelée parce que la carte dont l'indice est passé en paramètre fait bien partie d'une suite de 0 à 7
 void sdlJeu::sdlSuite(Jeu &jeu, unsigned int indice)
 {
     SDL_Window *choixSuite = SDL_CreateWindow("Suite", 0, HauteurEcran * 27 / 7, LargeurEcran * 19 / 64, HauteurEcran * 5 / 27, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
@@ -1775,7 +1776,7 @@ void sdlJeu::sdlSuite(Jeu &jeu, unsigned int indice)
     int sourisY;
     unsigned int carteTalon = jeu.talon.back().getValeur();
 
-    while (!choixFait && jeu.talon.back().getValeur() < 7)
+    while (!choixFait && jeu.talon.back().getValeur() < 7) // le joueur peut jouer la carte suivante jusqu'à 7
     {
         while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN)
         {
