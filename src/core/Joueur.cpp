@@ -1,11 +1,4 @@
 #include <Joueur.h>
-#include <iostream>
-#include <cassert>
-#include <vector>
-#include <Carte.h>
-#include <unistd.h>
-
-using namespace std;
 
 const int largeur = 180;
 

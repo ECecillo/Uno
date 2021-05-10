@@ -1,13 +1,4 @@
-#include <cassert>
-#include <time.h>
-#include <stdlib.h>
-#include "VarianteDoublon.h"
-#include "VarianteEchange.h"
-#include "VarianteTourne.h"
-#include "VarianteSuite.h"
-#include "VarianteCumul.h"
 #include "AffichageSDL.h"
-#include <iostream>
 
 #define Mix_LoadWAV(file) Mix_LoadWAV_RW(SDL_RWFromFile(file, "rb"), 1)
 #define Mix_PlayChannel(channel, chunk, loops) Mix_PlayChannelTimed(channel, chunk, loops, -1)

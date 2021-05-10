@@ -3,9 +3,10 @@
 
 
 #include <string.h>
+#include <unistd.h>
+#include <cassert>
 #include <vector>
 #include <Carte.h>
-//#include <Jeu.h>
 #include <queue>
 #include <stack>
 #include <iostream>

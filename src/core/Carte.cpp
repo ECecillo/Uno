@@ -1,8 +1,4 @@
 #include "Carte.h"
-#include <iostream>
-#include <cassert>
-
-using namespace std;
 
 // intialisation de valeur et couleur à 0 et du tableau vierge pour l'affichage txt
 Carte::Carte()
