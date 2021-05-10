@@ -187,11 +187,6 @@ public:
 	*
 	* @param 
 	* [in] caractère: touche qui a été appuyée.
-	* @param 
-	* [in].
-	* @param 
-	* [in].
-	*
 	*/
 	void actionJoueur(const char action);
 
@@ -226,6 +221,7 @@ public:
 	* @brief 
 	* Le joueur a appuyé avant sur ESPACE ce qui provoque le UNO,
 	* on termine le tour et les autres joueurs ne peuvent plus dire contre Uno.
+	* @param c : caractère entrée dans la boucle Jeu de Affichage Txt.
 	*/
 	void Uno(int c);
 

@@ -116,7 +116,7 @@ public:
 		* @param
 		* [in] entier naturel inférieur à 180, position sur la ligne.
 		* @param
-		* [in] entier naturel, numéro de l'adversaire.
+		* [in/out] entier naturel, numéro de l'adversaire.
 		*/
 		void insererCarteAdversairePositionJ(const unsigned int indj, const Joueur & j);
 
@@ -153,8 +153,8 @@ public:
 		* Actualise le talon et la pioche dans tableJoueur pour la version txt.
 		* 
 		* @param
-		* [in] queue de Carte pour le talon.
-		* [in] stack de Carte pour la pioche.
+		* [in/out] queue de Carte pour le talon.
+		* [in/out] stack de Carte pour la pioche.
 		*/
 		void modifTalonPiocheTxt(const queue<Carte> & t, const stack<Carte> & p);
 		

@@ -20,7 +20,15 @@ class Image
 {
 
 private:
+	/**
+ 	* @brief 
+ 	* Structure qui permet de faire le traitement de ce que l'on affichera.
+ 	*/
 	SDL_Surface *surface;
+	/**
+	 * @brief 
+	 * Structure qui fait le traitement et la représentation d'une surface.
+	 */
 	SDL_Texture *texture;
 	bool has_changed;
 
@@ -37,17 +45,45 @@ class sdlJeu
 {
 
 private:
+	/**
+	 * @brief 
+	 * Structure dans laquelle on créer nos fenêtres.
+	 */
 	SDL_Window *window;
+	/**
+	 * @brief 
+	 * Structure qui permet de faire le rendu de nos fenêtres.
+	 */
 	SDL_Renderer *renderer;
 
+	/**
+	 * @brief 
+	 * Font que l'on utilise pour le texte dans la partie.
+	 */
 	TTF_Font *font;
+	/**
+	 * @brief 
+	 * Font que l'on utilise essentiellement dans les parties Menu, Reglage et Salle Attente.
+	 */
 	TTF_Font *fontTexte;
 
 	Image font_im;
 	SDL_Color font_color;
 
+	/**
+	 * @brief 
+	 * L'image que l'on charge qui fait office d'image de fond pour le Menu.
+	 */
 	Image fondMenu;
+	/**
+	 * @brief 
+	 * Image de fond pour la partie Uno.
+	 */
 	Image fondPartie;
+	/**
+	 * @brief 
+	 * L'image des cartes que l'on charge.
+	 */
 	Image im_carte;
 
 	Mix_Chunk *sons[3]; // Tableau dans lequel on charge nos fichiers audio.
@@ -56,11 +92,16 @@ private:
 	int volume;			  // Volume Sons.
 	Mix_Music *selection; // son pour la sélection d'un paramètre.
 
-	int HauteurEcran; // Résolution de la fenêtre.
-	int LargeurEcran; // Résolution de la fenêtre.
-
-	//template <typename T> T HauteurEcran;
-	//template <typename T> T LargeurEcran;
+	/**
+	 * @brief 
+	 * Pour la Resolution de la fenêtre.
+	 */
+	int HauteurEcran;
+	/**
+	 * @brief 
+	 * Pour la Resolution de la fenêtre.
+	 */
+	int LargeurEcran;
 
 public:
 	sdlJeu();
@@ -71,8 +112,10 @@ public:
 	 */
 	void lireFichierRes();
 	/**
-	 * @brief Ecris la nouvelle résolution en remplaçant l'ancienne.
-	 * 
+	 * @brief 
+	 * Ecris la nouvelle résolution en remplaçant l'ancienne.
+	 * @param largeur : Nouvelle Largeur de la fenêtre.
+	 * @param hauteur : Nouvelle Hauteur de la fenêtre.
 	 */
 	void modifFichierRes(int largeur, int hauteur);
 
@@ -158,9 +201,33 @@ public:
 	 * @return unsigned int entre [] chaque entier correspond à une Couleur.
 	 */
 	unsigned int choixCouleur();
+	/**
+	 * @brief 
+	 * Procédure qui gère le mouse click, affichage du texte Contre Uno et de changer le statut de contre Uno.
+	 * @param jeu : Objet Jeu sur lequel on est en train jouer.
+	 */
 	void situationContreUno(Jeu &jeu);
+	/**
+	 * @brief 
+	 * Procédure qui créer une nouvelle fenêtre sdl pour demander au joueur qui a mis la carte 7
+	 * avec quelle joueur il veut changer son Jeu.
+	 * @param jeu 
+	 */
 	void sdlEchange(Jeu &jeu);
+	/**
+	 * @brief 
+	 * Procédure qui créer une nouvelle fenêtre sdl pour demander au joueur qui a mis une carte dont le 
+	 * doublon est égalment présent dans sa main si il veut jouer les deux.
+	 * @param jeu 
+	 */
 	void sdlDoublon(Jeu &jeu);
+	/**
+	 * @brief 
+	 * Procédure qui créer une nouvelle fenêtre sdl pour demander au joueur si il veut jouer 
+	 * la suite de carte possible dans sa main.
+	 * @param jeu
+	 * @param indice :  
+	 */
 	void sdlSuite(Jeu &jeu, unsigned int indice);
 
 	/**

@@ -12,12 +12,6 @@
 #define Mix_LoadWAV(file) Mix_LoadWAV_RW(SDL_RWFromFile(file, "rb"), 1)
 #define Mix_PlayChannel(channel, chunk, loops) Mix_PlayChannelTimed(channel, chunk, loops, -1)
 
-template <typename T>
-constexpr T LARGEUR_ECRAN{1920};
-
-template <typename T>
-constexpr T HAUTEUR_ECRAN{1080};
-
 const int TAILLE_SPRITE = 32;
 
 const SDL_Color noir = {0, 0, 0};
