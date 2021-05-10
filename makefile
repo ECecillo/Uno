@@ -1,9 +1,10 @@
 CORE = core/Joueur.cpp core/Jeu.cpp core/Bot.cpp core/Carte.cpp core/VarianteTourne.cpp core/VarianteDoublon.cpp core/VarianteEchange.cpp core/VarianteSuite.cpp core/VarianteCumul.cpp core/Menu.cpp
+
 SRCS_TEST = $(CORE) core/mainTest.cpp
 FINAL_TARGET_TEST = main_test
 DEFINE_TEST = -DJEU_TEST
 
-SRCS_TXT = $(CORE) txt/AffichageTxt.cpp txt/Fenetre.cpp txt/SalleAttente.cpp mainTxt.cpp 
+SRCS_TXT = $(CORE) txt/AffichageTxt.cpp txt/Fenetre.cpp txt/SalleAttente.cpp txt/mainTxt.cpp 
 FINAL_TARGET_TXT = uno_txt
 DEFINE_TXT = -DJEU_TXT
 
@@ -36,7 +37,7 @@ CPPFLAGS 			= -Wall -ggdb   #-O2   # pour optimiser
 OBJ_DIR 			= obj
 SRC_DIR 			= src
 BIN_DIR 			= bin
-INCLUDE_DIR			= -Isrc -Isrc/core -Isrc/sdl2 -Itxt
+INCLUDE_DIR			= -Isrc -Isrc/core -Isrc/sdl -Itxt
 
 
 
@@ -44,9 +45,9 @@ default: make_dir $(BIN_DIR)/$(FINAL_TARGET_TXT) $(BIN_DIR)/$(FINAL_TARGET_SDL) 
 
 make_dir:
 ifeq ($(OS),Windows_NT)
-	if not exist $(OBJ_DIR) mkdir $(OBJ_DIR) $(BIN_DIR) $(OBJ_DIR)\txt $(OBJ_DIR)\sdl2 $(OBJ_DIR)\core
+	if not exist $(OBJ_DIR) mkdir $(OBJ_DIR) $(BIN_DIR) $(OBJ_DIR)\txt $(OBJ_DIR)\sdl $(OBJ_DIR)\core
 else
-	test -d $(OBJ_DIR) || mkdir -p $(OBJ_DIR) $(BIN_DIR) $(OBJ_DIR)/txt $(OBJ_DIR)/sdl2 $(OBJ_DIR)/core
+	test -d $(OBJ_DIR) || mkdir -p $(OBJ_DIR) $(BIN_DIR) $(OBJ_DIR)/txt $(OBJ_DIR)/sdl $(OBJ_DIR)/core
 endif
 
 $(BIN_DIR)/$(FINAL_TARGET_TXT): $(SRCS_TXT:%.cpp=$(OBJ_DIR)/%.o)
@@ -66,7 +67,7 @@ docu: doc/image.doxy
 
 clean:
 ifeq ($(OS),Windows_NT)
-	del /f $(OBJ_DIR)\txt\*.o $(OBJ_DIR)\sdl2\*.o $(OBJ_DIR)\core\*.o $(BIN_DIR)\$(FINAL_TARGET_TXT).exe $(BIN_DIR)\$(FINAL_TARGET_SDL).exe
+	del /f $(OBJ_DIR)\txt\*.o $(OBJ_DIR)\sdl\*.o $(OBJ_DIR)\core\*.o $(BIN_DIR)\$(FINAL_TARGET_TXT).exe $(BIN_DIR)\$(FINAL_TARGET_SDL).exe
 else
-	rm -rf $(OBJ_DIR) $(BIN_DIR)/$(FINAL_TARGET_TXT) $(BIN_DIR)/$(FINAL_TARGET_SDL) doc/html
+	rm -rf $(OBJ_DIR) $(BIN_DIR)/$(FINAL_TARGET_TXT) $(BIN_DIR)/$(FINAL_TARGET_SDL) doc/html doc/latex
 endif
