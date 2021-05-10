@@ -155,6 +155,9 @@ q: quitter
 ## Version graphique
 A la souris
 
+### Changement de la résolution de la fenêtre
+Lorsque vous changez la résolution dans la version SDL, il est nécessaire de redémarrer le jeu pour que les changements soit pris en compte.
+
 # Organisation du code
 
 **/bin**  Répertoire où les executables (exemple, test et affichage) seront compilés. 
