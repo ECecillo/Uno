@@ -1096,9 +1096,9 @@ void sdlJeu::sdlMenu()
 
                 // On clique sur jouer et ça lance la salle d'attente (voir si il faut pas enlever des trucs).
                 if ((posSourisX > positionTexte[1].x && posSourisY > positionTexte[1].y) &&                              // Point en haut à gauche
-                    (posSourisX > positionTexte[1].x && posSourisY < positionTexte[1].y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
-                    (posSourisX < (positionTexte[1].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionTexte[1].y)) && // Point en haut à droite
-                    (posSourisX < (positionTexte[1].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[1].y + HAUTEUR_ECRAN<int> / 12)))
+                    (posSourisX > positionTexte[1].x && posSourisY < positionTexte[1].y + HauteurEcran / 12) &&    // Point en bas à gauche
+                    (posSourisX < (positionTexte[1].x + LargeurEcran / 8) && (posSourisY > positionTexte[1].y)) && // Point en haut à droite
+                    (posSourisX < (positionTexte[1].x + LargeurEcran / 8) && (posSourisY < positionTexte[1].y + HauteurEcran / 12)))
                 {
                     cout << "je clique sur Jouer." << endl;
                     Mix_PlayChannel(1, sons[1], 0); // On joue le son salleAttente.
@@ -1107,9 +1107,9 @@ void sdlJeu::sdlMenu()
                 }
                 // On clique sur Reglage
                 if ((posSourisX > positionTexte[2].x && posSourisY > positionTexte[2].y) &&                              // Point en haut à gauche
-                    (posSourisX > positionTexte[2].x && posSourisY < positionTexte[2].y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
-                    (posSourisX < (positionTexte[2].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionTexte[2].y)) && // Point en haut à droite
-                    (posSourisX < (positionTexte[2].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[2].y + HAUTEUR_ECRAN<int> / 12)))
+                    (posSourisX > positionTexte[2].x && posSourisY < positionTexte[2].y + HauteurEcran / 12) &&    // Point en bas à gauche
+                    (posSourisX < (positionTexte[2].x + LargeurEcran / 8) && (posSourisY > positionTexte[2].y)) && // Point en haut à droite
+                    (posSourisX < (positionTexte[2].x + LargeurEcran / 8) && (posSourisY < positionTexte[2].y + HauteurEcran / 12)))
                 {
                     isOpen = false; // On quitte la boucle.
                     openReglage = true;
@@ -1117,18 +1117,18 @@ void sdlJeu::sdlMenu()
                 }
                 // On clique sur Regles
                 if ((posSourisX > positionTexte[3].x && posSourisY > positionTexte[3].y) &&                              // Point en haut à gauche
-                    (posSourisX > positionTexte[3].x && posSourisY < positionTexte[3].y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
-                    (posSourisX < (positionTexte[3].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionTexte[3].y)) && // Point en haut à droite
-                    (posSourisX < (positionTexte[3].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[3].y + HAUTEUR_ECRAN<int> / 12)))
+                    (posSourisX > positionTexte[3].x && posSourisY < positionTexte[3].y + HauteurEcran / 12) &&    // Point en bas à gauche
+                    (posSourisX < (positionTexte[3].x + LargeurEcran / 8) && (posSourisY > positionTexte[3].y)) && // Point en haut à droite
+                    (posSourisX < (positionTexte[3].x + LargeurEcran / 8) && (posSourisY < positionTexte[3].y + HauteurEcran / 12)))
                 {
                     cout << "Je clique sur Regles" << endl;
                     Mix_PlayChannel(1, sons[2], 0); // On joue le son selection 1 fois.
                 }
                 // On clique sur quitter
                 if ((posSourisX > positionTexte[4].x && posSourisY > positionTexte[4].y) &&                              // Point en haut à gauche
-                    (posSourisX > positionTexte[4].x && posSourisY < positionTexte[4].y + HAUTEUR_ECRAN<int> / 12) &&    // Point en bas à gauche
-                    (posSourisX < (positionTexte[4].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > positionTexte[4].y)) && // Point en haut à droite
-                    (posSourisX < (positionTexte[4].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < positionTexte[4].y + HAUTEUR_ECRAN<int> / 12)))
+                    (posSourisX > positionTexte[4].x && posSourisY < positionTexte[4].y + HauteurEcran / 12) &&    // Point en bas à gauche
+                    (posSourisX < (positionTexte[4].x + LargeurEcran / 8) && (posSourisY > positionTexte[4].y)) && // Point en haut à droite
+                    (posSourisX < (positionTexte[4].x + LargeurEcran / 8) && (posSourisY < positionTexte[4].y + HauteurEcran / 12)))
                 {
                     isOpen = false;
                 }
@@ -1323,16 +1323,16 @@ void sdlJeu::sdlReglage(Menu &menu)
                 SDL_Log("+clic");
                 posSourisX = events.button.x;
                 posSourisY = events.button.y;
-                int posResX = positionEchelle[0].x + LARGEUR_ECRAN<int> / 50;
+                int posResX = positionEchelle[0].x + LargeurEcran / 50;
                 int posResY = positionEchelle[0].y;
 
                 cout << posResX << " " << posResY << endl;
                 cout << posSourisX << " " << posSourisY << endl;
 
                 if ((posSourisX > tabPositionTitre[3].x && posSourisY > tabPositionTitre[3].y) &&                                                      // Point en haut à gauche
-                    (posSourisX < (tabPositionTitre[3].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > tabPositionTitre[3].y)) &&                         // Point en haut à droite
-                    (posSourisX > tabPositionTitre[3].x && posSourisY < tabPositionTitre[3].y + HAUTEUR_ECRAN<int> / 18) &&                            // Point en bas à gauche
-                    (posSourisX < (tabPositionTitre[3].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < tabPositionTitre[3].y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
+                    (posSourisX < (tabPositionTitre[3].x + LargeurEcran / 8) && (posSourisY > tabPositionTitre[3].y)) &&                         // Point en haut à droite
+                    (posSourisX > tabPositionTitre[3].x && posSourisY < tabPositionTitre[3].y + HauteurEcran / 18) &&                            // Point en bas à gauche
+                    (posSourisX < (tabPositionTitre[3].x + LargeurEcran / 8) && (posSourisY < tabPositionTitre[3].y + HauteurEcran / 18))) // Point en bas à droite.
                 {
                     openMenu = true;
                     isOpen = false;
@@ -1340,27 +1340,27 @@ void sdlJeu::sdlReglage(Menu &menu)
 
                 // Pour les résolutions
                 if ((posSourisX > tabPositionRes[0].x && posSourisY > tabPositionRes[0].y) &&                                                      // Point en haut à gauche
-                    (posSourisX < (tabPositionRes[0].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > tabPositionRes[0].y)) &&                         // Point en haut à droite
-                    (posSourisX > tabPositionRes[0].x && posSourisY < tabPositionRes[0].y + HAUTEUR_ECRAN<int> / 18) &&                            // Point en bas à gauche
-                    (posSourisX < (tabPositionRes[0].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < tabPositionRes[0].y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
+                    (posSourisX < (tabPositionRes[0].x + LargeurEcran / 8) && (posSourisY > tabPositionRes[0].y)) &&                         // Point en haut à droite
+                    (posSourisX > tabPositionRes[0].x && posSourisY < tabPositionRes[0].y + HauteurEcran / 18) &&                            // Point en bas à gauche
+                    (posSourisX < (tabPositionRes[0].x + LargeurEcran / 8) && (posSourisY < tabPositionRes[0].y + HauteurEcran / 18))) // Point en bas à droite.
                 {
                     modifFichierRes(800, 800);
                     Mix_PlayChannel(1, sons[2], 0); // On joue le son valider 1 fois.
                     // Afficher : La résolution sera changé au redémarrage.
                 }
                 if ((posSourisX > tabPositionRes[1].x && posSourisY > tabPositionRes[1].y) &&                                                      // Point en haut à gauche
-                    (posSourisX < (tabPositionRes[1].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > tabPositionRes[1].y)) &&                         // Point en haut à droite
-                    (posSourisX > tabPositionRes[1].x && posSourisY < tabPositionRes[1].y + HAUTEUR_ECRAN<int> / 18) &&                            // Point en bas à gauche
-                    (posSourisX < (tabPositionRes[1].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < tabPositionRes[1].y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
+                    (posSourisX < (tabPositionRes[1].x + LargeurEcran / 8) && (posSourisY > tabPositionRes[1].y)) &&                         // Point en haut à droite
+                    (posSourisX > tabPositionRes[1].x && posSourisY < tabPositionRes[1].y + HauteurEcran / 18) &&                            // Point en bas à gauche
+                    (posSourisX < (tabPositionRes[1].x + LargeurEcran / 8) && (posSourisY < tabPositionRes[1].y + HauteurEcran / 18))) // Point en bas à droite.
                 {
                     // Afficher : La résolution sera changé au redémarrage.
                     modifFichierRes(1280, 720);
                     Mix_PlayChannel(1, sons[2], 0); // On joue le son valider 1 fois.
                 }
                 if ((posSourisX > tabPositionRes[2].x && posSourisY > tabPositionRes[2].y) &&                                                      // Point en haut à gauche
-                    (posSourisX < (tabPositionRes[2].x + LARGEUR_ECRAN<int> / 8) && (posSourisY > tabPositionRes[2].y)) &&                         // Point en haut à droite
-                    (posSourisX > tabPositionRes[2].x && posSourisY < tabPositionRes[2].y + HAUTEUR_ECRAN<int> / 18) &&                            // Point en bas à gauche
-                    (posSourisX < (tabPositionRes[2].x + LARGEUR_ECRAN<int> / 8) && (posSourisY < tabPositionRes[2].y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
+                    (posSourisX < (tabPositionRes[2].x + LargeurEcran / 8) && (posSourisY > tabPositionRes[2].y)) &&                         // Point en haut à droite
+                    (posSourisX > tabPositionRes[2].x && posSourisY < tabPositionRes[2].y + HauteurEcran / 18) &&                            // Point en bas à gauche
+                    (posSourisX < (tabPositionRes[2].x + LargeurEcran / 8) && (posSourisY < tabPositionRes[2].y + HauteurEcran / 18))) // Point en bas à droite.
                 {
                     // Afficher : La résolution sera changé au redémarrage.
                     modifFichierRes(1920, 1080);
@@ -1371,9 +1371,9 @@ void sdlJeu::sdlReglage(Menu &menu)
                     for (int i = 0; i < 11; i++)
                     {
                         if ((posSourisX > positionEchelle[i].x && posSourisY > positionEchelle[i].y) &&                                                       // Point en haut à gauche
-                            (posSourisX < (positionEchelle[i].x + LARGEUR_ECRAN<int> / 50) && (posSourisY > positionEchelle[i].y)) &&                         // Point en haut à droite
-                            (posSourisX > positionEchelle[i].x && posSourisY < positionEchelle[i].y + HAUTEUR_ECRAN<int> / 18) &&                             // Point en bas à gauche
-                            (posSourisX < (positionEchelle[i].x + LARGEUR_ECRAN<int> / 50) && (posSourisY < positionEchelle[i].y + HAUTEUR_ECRAN<int> / 18))) // Point en bas à droite.
+                            (posSourisX < (positionEchelle[i].x + LargeurEcran / 50) && (posSourisY > positionEchelle[i].y)) &&                         // Point en haut à droite
+                            (posSourisX > positionEchelle[i].x && posSourisY < positionEchelle[i].y + HauteurEcran / 18) &&                             // Point en bas à gauche
+                            (posSourisX < (positionEchelle[i].x + LargeurEcran / 50) && (posSourisY < positionEchelle[i].y + HauteurEcran / 18))) // Point en bas à droite.
                         {
                             choixVolume = i;
                             if (i == 10)

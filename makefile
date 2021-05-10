@@ -1,4 +1,7 @@
-CORE = Joueur.cpp Jeu.cpp Bot.cpp Carte.cpp VarianteTourne.cpp VarianteDoublon.cpp VarianteEchange.cpp VarianteSuite.cpp VarianteCumul.cpp Menu.cpp #mainTest.cpp
+CORE = Joueur.cpp Jeu.cpp Bot.cpp Carte.cpp VarianteTourne.cpp VarianteDoublon.cpp VarianteEchange.cpp VarianteSuite.cpp VarianteCumul.cpp Menu.cpp
+SRCS_TEST = $(CORE) mainTest.cpp
+FINAL_TARGET_TEST = main_test
+DEFINE_TEST = -DJEU_TEST
 
 SRCS_TXT = $(CORE) AffichageTxt.cpp Fenetre.cpp SalleAttente.cpp mainTxt.cpp 
 FINAL_TARGET_TXT = uno_txt
@@ -37,7 +40,7 @@ INCLUDE_DIR			= -Isrc -Isrc/core -Isrc/sdl2 -Itxt
 
 
 
-default: make_dir $(BIN_DIR)/$(FINAL_TARGET_TXT) $(BIN_DIR)/$(FINAL_TARGET_SDL)
+default: make_dir $(BIN_DIR)/$(FINAL_TARGET_TXT) $(BIN_DIR)/$(FINAL_TARGET_SDL) $(BIN_DIR)/$(FINAL_TARGET_TEST)
 
 make_dir:
 ifeq ($(OS),Windows_NT)
@@ -52,11 +55,14 @@ $(BIN_DIR)/$(FINAL_TARGET_TXT): $(SRCS_TXT:%.cpp=$(OBJ_DIR)/%.o)
 $(BIN_DIR)/$(FINAL_TARGET_SDL): $(SRCS_SDL:%.cpp=$(OBJ_DIR)/%.o)
 	$(LD) $+ -o $@ $(LDFLAGS) $(LIBS_SDL)
 
+$(BIN_DIR)/$(FINAL_TARGET_TEST): $(SRCS_TEST:%.cpp=$(OBJ_DIR)/%.o)
+	$(LD) $+ -o $@ $(LDFLAGS)
+
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) -c $(CPPFLAGS) $(INCLUDE_DIR_SDL) $(INCLUDE_DIR) $< -o $@
 
-docu: doc/pacman.doxy
-	cd doc ; doxygen pacman.doxy
+docu: doc/image.doxy
+	cd doc ; doxygen image.doxy
 
 clean:
 ifeq ($(OS),Windows_NT)

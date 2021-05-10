@@ -64,12 +64,7 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
                     piocherCarte();
                     termineTour();
                     break;
-<<<<<<< HEAD
-                case 13: // +4
-                    carteSpeciale = true;
-=======
                 case 13:
->>>>>>> SDL_MENU_FIX_WARNINGS
                     joueursBot[indexBot].setCartePlus4(newIndice);
                     termineTour();
 
