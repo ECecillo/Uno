@@ -15,6 +15,7 @@ VarianteEchange::~VarianteEchange()
 
 void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
+    cout << "POSER CARTE ECHANGE" << endl;
     if (joueurActif >= nombreJoueurs) // bot
     {
         int indexBot = joueurActif - nombreJoueurs;
@@ -153,10 +154,12 @@ void VarianteEchange::poserCarte(const unsigned int &indiceCarte, string &messag
 // echange la main du bot avec un autre joueur
 void VarianteEchange::echangeJeuVersionBot()
 {
+
     unsigned int indexBot = joueurActif - nombreJoueurs;
     unsigned int nombreJoueurMax = nombreJoueurs + nombreIA;
     // On génère un indice entre 0 et le nombre total de joueur + IA.
     unsigned int numJoueur = rand() % nombreJoueurMax;
+    cout << "Le bot va échanger son Jeu avec le joueur " << numJoueur << endl;
     assert(numJoueur < nombreJoueurMax);
     if (numJoueur == joueurActif)
     { // On teste quand même si on est pas avec le même indice que le bot qui joue.
@@ -164,7 +167,7 @@ void VarianteEchange::echangeJeuVersionBot()
     }
     if (numJoueur >= nombreJoueurs && numJoueur != joueurActif)
     { // Si le nombre est un indice d'un bot alors.
-
+        cout << "Echange entre Bot "<< endl;
         // On copie les données du bot dans l'autre :
         joueursBot[indexBot].copieNbCarte(joueursBot[numJoueur]);
         // On échange les mains.
@@ -172,6 +175,7 @@ void VarianteEchange::echangeJeuVersionBot()
     }
     else if (numJoueur < nombreJoueurs)
     {
+        cout << "Echange entre bot et Joueur" << endl;
         // On remet à 0 les données du bot.
         joueursBot[indexBot].remetNbCarteZero();
         // On met les nouveaux nombres de carte dans le joueursBot qui va recevoir les cartes du joueur.
