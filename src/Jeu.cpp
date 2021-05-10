@@ -660,9 +660,8 @@ void Jeu::testRegression()
 {
     // test du constructeur
     assert(sensJeu == 1);
-
     // test de initCarte
-    assert(pioche.size() == 108);
+    assert(pioche.size() == (107 - (nombreJoueurs * 7 + nombreIA * 7)));
 
     // test de initTalon
     assert(talon.size() == 1);
