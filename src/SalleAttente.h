@@ -61,7 +61,7 @@ public:
 		* Dessin de la table du Joueur pour l'affichage txt.
 		* 
 		*/
-		char salle [20][80];// 
+		char salle [20][80];
 
 		/**
 		* @brief
