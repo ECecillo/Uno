@@ -1086,7 +1086,7 @@ void sdlJeu::sdlMenu()
                 posSourisY = events.button.y;
 
                 // On clique sur jouer et ça lance la salle d'attente (voir si il faut pas enlever des trucs).
-                if ((posSourisX > positionTexte[1].x && posSourisY > positionTexte[1].y) &&                              // Point en haut à gauche
+                if ((posSourisX > positionTexte[1].x && posSourisY > positionTexte[1].y) &&                        // Point en haut à gauche
                     (posSourisX > positionTexte[1].x && posSourisY < positionTexte[1].y + HauteurEcran / 12) &&    // Point en bas à gauche
                     (posSourisX < (positionTexte[1].x + LargeurEcran / 8) && (posSourisY > positionTexte[1].y)) && // Point en haut à droite
                     (posSourisX < (positionTexte[1].x + LargeurEcran / 8) && (posSourisY < positionTexte[1].y + HauteurEcran / 12)))
@@ -1097,7 +1097,7 @@ void sdlJeu::sdlMenu()
                     isOpen = false;
                 }
                 // On clique sur Reglage
-                if ((posSourisX > positionTexte[2].x && posSourisY > positionTexte[2].y) &&                              // Point en haut à gauche
+                if ((posSourisX > positionTexte[2].x && posSourisY > positionTexte[2].y) &&                        // Point en haut à gauche
                     (posSourisX > positionTexte[2].x && posSourisY < positionTexte[2].y + HauteurEcran / 12) &&    // Point en bas à gauche
                     (posSourisX < (positionTexte[2].x + LargeurEcran / 8) && (posSourisY > positionTexte[2].y)) && // Point en haut à droite
                     (posSourisX < (positionTexte[2].x + LargeurEcran / 8) && (posSourisY < positionTexte[2].y + HauteurEcran / 12)))
@@ -1107,7 +1107,7 @@ void sdlJeu::sdlMenu()
                     Mix_PlayChannel(1, sons[2], 0); // On joue le son selection 1 fois.
                 }
                 // On clique sur Regles
-                if ((posSourisX > positionTexte[3].x && posSourisY > positionTexte[3].y) &&                              // Point en haut à gauche
+                if ((posSourisX > positionTexte[3].x && posSourisY > positionTexte[3].y) &&                        // Point en haut à gauche
                     (posSourisX > positionTexte[3].x && posSourisY < positionTexte[3].y + HauteurEcran / 12) &&    // Point en bas à gauche
                     (posSourisX < (positionTexte[3].x + LargeurEcran / 8) && (posSourisY > positionTexte[3].y)) && // Point en haut à droite
                     (posSourisX < (positionTexte[3].x + LargeurEcran / 8) && (posSourisY < positionTexte[3].y + HauteurEcran / 12)))
@@ -1116,7 +1116,7 @@ void sdlJeu::sdlMenu()
                     Mix_PlayChannel(1, sons[2], 0); // On joue le son selection 1 fois.
                 }
                 // On clique sur quitter
-                if ((posSourisX > positionTexte[4].x && posSourisY > positionTexte[4].y) &&                              // Point en haut à gauche
+                if ((posSourisX > positionTexte[4].x && posSourisY > positionTexte[4].y) &&                        // Point en haut à gauche
                     (posSourisX > positionTexte[4].x && posSourisY < positionTexte[4].y + HauteurEcran / 12) &&    // Point en bas à gauche
                     (posSourisX < (positionTexte[4].x + LargeurEcran / 8) && (posSourisY > positionTexte[4].y)) && // Point en haut à droite
                     (posSourisX < (positionTexte[4].x + LargeurEcran / 8) && (posSourisY < positionTexte[4].y + HauteurEcran / 12)))
@@ -1320,9 +1320,9 @@ void sdlJeu::sdlReglage(Menu &menu)
                 cout << posResX << " " << posResY << endl;
                 cout << posSourisX << " " << posSourisY << endl;
 
-                if ((posSourisX > tabPositionTitre[3].x && posSourisY > tabPositionTitre[3].y) &&                                                      // Point en haut à gauche
-                    (posSourisX < (tabPositionTitre[3].x + LargeurEcran / 8) && (posSourisY > tabPositionTitre[3].y)) &&                         // Point en haut à droite
-                    (posSourisX > tabPositionTitre[3].x && posSourisY < tabPositionTitre[3].y + HauteurEcran / 18) &&                            // Point en bas à gauche
+                if ((posSourisX > tabPositionTitre[3].x && posSourisY > tabPositionTitre[3].y) &&                                          // Point en haut à gauche
+                    (posSourisX < (tabPositionTitre[3].x + LargeurEcran / 8) && (posSourisY > tabPositionTitre[3].y)) &&                   // Point en haut à droite
+                    (posSourisX > tabPositionTitre[3].x && posSourisY < tabPositionTitre[3].y + HauteurEcran / 18) &&                      // Point en bas à gauche
                     (posSourisX < (tabPositionTitre[3].x + LargeurEcran / 8) && (posSourisY < tabPositionTitre[3].y + HauteurEcran / 18))) // Point en bas à droite.
                 {
                     openMenu = true;
@@ -1330,27 +1330,27 @@ void sdlJeu::sdlReglage(Menu &menu)
                 }
 
                 // Pour les résolutions
-                if ((posSourisX > tabPositionRes[0].x && posSourisY > tabPositionRes[0].y) &&                                                      // Point en haut à gauche
-                    (posSourisX < (tabPositionRes[0].x + LargeurEcran / 8) && (posSourisY > tabPositionRes[0].y)) &&                         // Point en haut à droite
-                    (posSourisX > tabPositionRes[0].x && posSourisY < tabPositionRes[0].y + HauteurEcran / 18) &&                            // Point en bas à gauche
+                if ((posSourisX > tabPositionRes[0].x && posSourisY > tabPositionRes[0].y) &&                                          // Point en haut à gauche
+                    (posSourisX < (tabPositionRes[0].x + LargeurEcran / 8) && (posSourisY > tabPositionRes[0].y)) &&                   // Point en haut à droite
+                    (posSourisX > tabPositionRes[0].x && posSourisY < tabPositionRes[0].y + HauteurEcran / 18) &&                      // Point en bas à gauche
                     (posSourisX < (tabPositionRes[0].x + LargeurEcran / 8) && (posSourisY < tabPositionRes[0].y + HauteurEcran / 18))) // Point en bas à droite.
                 {
                     modifFichierRes(800, 800);
                     Mix_PlayChannel(1, sons[2], 0); // On joue le son valider 1 fois.
                     // Afficher : La résolution sera changé au redémarrage.
                 }
-                if ((posSourisX > tabPositionRes[1].x && posSourisY > tabPositionRes[1].y) &&                                                      // Point en haut à gauche
-                    (posSourisX < (tabPositionRes[1].x + LargeurEcran / 8) && (posSourisY > tabPositionRes[1].y)) &&                         // Point en haut à droite
-                    (posSourisX > tabPositionRes[1].x && posSourisY < tabPositionRes[1].y + HauteurEcran / 18) &&                            // Point en bas à gauche
+                if ((posSourisX > tabPositionRes[1].x && posSourisY > tabPositionRes[1].y) &&                                          // Point en haut à gauche
+                    (posSourisX < (tabPositionRes[1].x + LargeurEcran / 8) && (posSourisY > tabPositionRes[1].y)) &&                   // Point en haut à droite
+                    (posSourisX > tabPositionRes[1].x && posSourisY < tabPositionRes[1].y + HauteurEcran / 18) &&                      // Point en bas à gauche
                     (posSourisX < (tabPositionRes[1].x + LargeurEcran / 8) && (posSourisY < tabPositionRes[1].y + HauteurEcran / 18))) // Point en bas à droite.
                 {
                     // Afficher : La résolution sera changé au redémarrage.
                     modifFichierRes(1280, 720);
                     Mix_PlayChannel(1, sons[2], 0); // On joue le son valider 1 fois.
                 }
-                if ((posSourisX > tabPositionRes[2].x && posSourisY > tabPositionRes[2].y) &&                                                      // Point en haut à gauche
-                    (posSourisX < (tabPositionRes[2].x + LargeurEcran / 8) && (posSourisY > tabPositionRes[2].y)) &&                         // Point en haut à droite
-                    (posSourisX > tabPositionRes[2].x && posSourisY < tabPositionRes[2].y + HauteurEcran / 18) &&                            // Point en bas à gauche
+                if ((posSourisX > tabPositionRes[2].x && posSourisY > tabPositionRes[2].y) &&                                          // Point en haut à gauche
+                    (posSourisX < (tabPositionRes[2].x + LargeurEcran / 8) && (posSourisY > tabPositionRes[2].y)) &&                   // Point en haut à droite
+                    (posSourisX > tabPositionRes[2].x && posSourisY < tabPositionRes[2].y + HauteurEcran / 18) &&                      // Point en bas à gauche
                     (posSourisX < (tabPositionRes[2].x + LargeurEcran / 8) && (posSourisY < tabPositionRes[2].y + HauteurEcran / 18))) // Point en bas à droite.
                 {
                     // Afficher : La résolution sera changé au redémarrage.
@@ -1361,9 +1361,9 @@ void sdlJeu::sdlReglage(Menu &menu)
                 {
                     for (int i = 0; i < 11; i++)
                     {
-                        if ((posSourisX > positionEchelle[i].x && posSourisY > positionEchelle[i].y) &&                                                       // Point en haut à gauche
-                            (posSourisX < (positionEchelle[i].x + LargeurEcran / 50) && (posSourisY > positionEchelle[i].y)) &&                         // Point en haut à droite
-                            (posSourisX > positionEchelle[i].x && posSourisY < positionEchelle[i].y + HauteurEcran / 18) &&                             // Point en bas à gauche
+                        if ((posSourisX > positionEchelle[i].x && posSourisY > positionEchelle[i].y) &&                                           // Point en haut à gauche
+                            (posSourisX < (positionEchelle[i].x + LargeurEcran / 50) && (posSourisY > positionEchelle[i].y)) &&                   // Point en haut à droite
+                            (posSourisX > positionEchelle[i].x && posSourisY < positionEchelle[i].y + HauteurEcran / 18) &&                       // Point en bas à gauche
                             (posSourisX < (positionEchelle[i].x + LargeurEcran / 50) && (posSourisY < positionEchelle[i].y + HauteurEcran / 18))) // Point en bas à droite.
                         {
                             choixVolume = i;
@@ -1421,7 +1421,7 @@ void sdlJeu::sdlReglage(Menu &menu)
             SDL_RenderClear(renderer);
 
             fondMenu.draw(renderer, 0, 0, LargeurEcran, HauteurEcran);
-            
+
             for (int i = 0; i < 4; i++)
             {
                 SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);                            // On passe sur la couleur du texte.
@@ -1471,7 +1471,6 @@ void sdlJeu::situationUno(Jeu &jeu)
     {
         if (SDL_GetTicks() - temps0 < 2000) // temps inférieur à 2000 ms pour cliquer sur Uno
         {
-            cout << "Attente Uno" << endl;
             while (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN)
             {
                 int sourisX = event.button.x;
@@ -1561,7 +1560,6 @@ void sdlJeu::sdlEchange(Jeu &jeu)
         SDL_Quit();
         exit(1);
     }
-
     SDL_Renderer *rendererEchange = SDL_CreateRenderer(choixEchange, -1, SDL_RENDERER_ACCELERATED);
     SDL_SetRenderDrawColor(rendererEchange, 0, 0, 255, 255);
     SDL_RenderClear(rendererEchange);
@@ -1574,13 +1572,15 @@ void sdlJeu::sdlEchange(Jeu &jeu)
     font_im.setSurface(TTF_RenderText_Solid(font, "Echange avec le joueur", noir));
     font_im.loadFromCurrentSurface(rendererEchange);
     SDL_RenderCopy(rendererEchange, font_im.getTexture(), NULL, &texte);
-    unsigned int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs - 1)) / 2;
-    for (unsigned int i = 0; i < jeu.nombreJoueurs + jeu.nombreIA; i++)
+    unsigned int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs + jeu.nombreIA - 1)) / 2;
+    int indiceBot = 0;
+    for (unsigned int i = 0; i < ((jeu.nombreJoueurs + jeu.nombreIA) -1); i++)
     {
         texte.x = pos + (LargeurEcran * 5 / 96) * i;
         texte.y = HauteurEcran * 25 / 216;
         texte.w = (LargeurEcran * 5 / 96);
         texte.h = HauteurEcran * 5 / 108;
+        cout << i << endl;
         if (i < jeu.joueurActif)
         {
             cout << "Affiche avant le joueur actuel" << endl;
@@ -1589,18 +1589,28 @@ void sdlJeu::sdlEchange(Jeu &jeu)
         else
         {
             if (i < jeu.nombreJoueurs - 1 && jeu.nombreJoueurs != 1)
-            { // On doit afficher les joueurs après le joueur actif.
-                i += 1; // On ajoute un 1 pour réduire 
+            {           // On doit afficher les joueurs après le joueur actif.
+                //i += 1; // On ajoute un 1 pour réduire
                 cout << "Affiche le nom des joueurs après celui actuel" << endl;
-                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[i].nom.c_str(), noir));
+                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[i + 1].nom.c_str(), noir));
             }
             else if (i >= jeu.nombreJoueurs - 1 && i != 0)
-            { // Si on 
-                cout << "Affichel les noms des bots après celui actuel" << endl;
-                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[i - jeu.nombreJoueurs].nom.c_str(), noir));
+            { // Si on
+                cout << "Affiche les noms des bots après celui actuel" << endl;
+                if (indiceBot == 0)
+                {
+                    font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[indiceBot].nom.c_str(), noir));
+                    indiceBot += 1;
+                }
+                else
+                {
+                    font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[indiceBot].nom.c_str(), noir));
+                    indiceBot += 1;
+                }
             }
-            else if(jeu.nombreJoueurs == 1 && i == 0)
+            else if (jeu.nombreJoueurs == 1 && i == 0)
             { // Si on a 1 seul Joueur et au moins 1 bots.
+                cout << "Un seul Joueur avec plus de 1 bot" << endl;
                 font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[i].nom.c_str(), noir));
             }
         }
@@ -1856,7 +1866,7 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
             if (jeu.statut_Uno)
             {
                 if (indiceJoueur < jeu.nombreJoueurs)
-                { // C'était un joueur Humain qui jouait juste avant.
+                {                            // C'était un joueur Humain qui jouait juste avant.
                     situationContreUno(jeu); // Le bot va Contre Uno direct.
                 }
                 else // Le joueur d'avant était un bot.
@@ -1916,7 +1926,7 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                     jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
                     jeu.pioche.pop();
                 }
-                else if(jeu.nombreIA != 0)
+                else if (jeu.nombreIA != 0)
                 { // Si il y a des bots en plus du Joueur n mais que le Joueur n n'a pas appuyé sur contre Uno les bots contre Uno direct.
                     cout << "Le bot fait piocher le joueur alors que c'est le tour du Joueur n" << endl;
                     jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());

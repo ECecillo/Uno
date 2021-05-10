@@ -280,6 +280,7 @@ void Jeu::piocherCarte()
 // fait poser une carte sur le talon
 void Jeu::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
+    cout << "Poser carte normale" << endl;
     assert(indiceCarte >= 0);
     if (joueurActif >= nombreJoueurs) // on a affaire à un bot.
     {
