@@ -24,14 +24,11 @@ public:
 		VarianteTourne();
 
 		/**
-		* @brief
-		* Constructeur, avec le tableau de joueurs
-		* 
-		* @param 
-		* nombre de joueurs 
-		* @param
-		* nombre d'IA
-		*/
+		 * @brief 
+		 * Constructeur, avec le tableau de joueurs
+		 * @param nbjoueurs : le nombre de Joueur
+		 * @param nbIA : le nombre d'IA.
+		 */
 		VarianteTourne(const unsigned int nbjoueurs, const unsigned int nbIA);
 		
 		/**

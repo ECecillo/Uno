@@ -179,10 +179,10 @@ Pour générer la doc sous doxygen il faudra vous munir des paquets nécessaires
     sudo apt install doxygen
     
     # Generer la documentation:
-    doxygen doc/image.doxy
+    cd doc && doxygen image.doxy
     
     # La page principale générée avec Firefox (ou autre browser):
-    firefox doc/html/index.html
+    firefox html/index.html
 
 
 Vous pouvez modifier les propriétés de la doc en allant dans le fichier **doc/image.doxy**
