@@ -10,8 +10,8 @@
 
 void changeCouleurCarte(Jeu &jeu, Fenetre win)
 {
-    int indiceCarte = jeu.joueurs[jeu.joueurActif].indiceEtoile;
-    int numeroCarte = jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur();
+    //int indiceCarte = jeu.joueurs[jeu.joueurActif].indiceEtoile;
+    //unsigned int numeroCarte = jeu.joueurs[jeu.joueurActif].main[indiceCarte].getValeur();
     int c;
 
     bool choixCouleur = true;
@@ -195,7 +195,7 @@ void txtBoucle(Jeu &jeu) //
         {
             indiceJoueur = jeu.joueurActif;
             c = win.getCh();  // On récupère le caractère de la touche appuyé et on le met dans c.
-            sprintf(&touche, "%c", c);
+            printf("%s", &touche);
             printf(&touche, win);
             
             switch (c)
@@ -234,8 +234,7 @@ void txtBoucle(Jeu &jeu) //
                     if (jeu.casPart == 5) // variante suite
                     {
                         char reponse = 'O';
-                        int sourisY;
-                        int carteTalon = jeu.talon.back().getValeur();
+                        //int carteTalon = jeu.talon.back().getValeur();
 
                         while (reponse == 'O' && jeu.talon.back().getValeur() < 7)
                         {
@@ -264,7 +263,7 @@ void txtBoucle(Jeu &jeu) //
                     if (jeu.casPart == 1) // variante doublon
                     {
                         int indice = -1;
-                        for (int i = 0; i < jeu.joueurs[jeu.joueurActif].main.size(); i++)
+                        for (unsigned int i = 0; i < jeu.joueurs[jeu.joueurActif].main.size(); i++)
                         {
                             if ((jeu.talon.back().getValeur() == 13 && jeu.joueurs[jeu.joueurActif].main[i].getValeur() == 13) || (jeu.talon.back().getValeur() == 14 && jeu.joueurs[jeu.joueurActif].main[i].getValeur() == 14)) //cas joker et +4, pas besoin de tester la couleur
                             {

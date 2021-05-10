@@ -31,11 +31,11 @@ void Bot::trierMain()
 {
     Carte cMin;
     int indMin;
-    for (int i = 0; i < main.size(); i++)
+    for (unsigned int i = 0; i < main.size(); i++)
     {
         cMin = main[i];
         indMin = i;
-        for (int j = i + 1; j < main.size(); j++)
+        for (unsigned int j = i + 1; j < main.size(); j++)
             if (main[j] < cMin)
             {
                 cMin = main[j];
@@ -68,12 +68,13 @@ int Bot::carteMemeCouleurTalon(const Jeu &jeu) const
     default:
         break;
     }
+    return -1; // Erreur.
 }
 int Bot::cartePourCumul(const Jeu &jeu, int &c, int &indiceCarte)
 {
     int indexBot = numeroBot - 1;
 
-    int i = 0;
+    unsigned int i = 0;
     bool aTrouveValeur = false;
     do
     {
@@ -104,6 +105,7 @@ int Bot::cartePourCumul(const Jeu &jeu, int &c, int &indiceCarte)
         cout << "On a pas de carte +2 ou +4." << endl;
         return 0;
     }
+    return -1;
 }
 
 // Compte le nombre de cartes de même valeur que le talon
@@ -115,11 +117,13 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c, int &indiceCarte)
     // On créer une nouvelle variable pour mettre le bonne indice du bot que l'on regarde.
     int indexBot = numeroBot - 1;
     //cout << " CARTE MEME VALEUR ########### L'actuel carte du talon est : " << jeu.talon.back().getValeur() << " et sa couleur est : " << (jeu.talon.back()).getCouleur() << endl;
-    if ((jeu.casPart % 2 == 0 && jeu.casPart != 0) && jeu.talon.back().getValeur() == 13 || jeu.talon.back().getValeur() == 12)
+    if ((jeu.casPart % 2 == 0 && jeu.casPart != 0) && (jeu.talon.back().getValeur() == 13 || jeu.talon.back().getValeur() == 12))
     {
-        return cartePourCumul(jeu, c, indiceCarte);
+        int resCumul =  cartePourCumul(jeu, c, indiceCarte);
+        assert(resCumul >= 0);
+        return resCumul;
     }
-    for (int i = 0; i < jeu.joueursBot[indexBot].main.size(); i++)
+    for (unsigned int i = 0; i < jeu.joueursBot[indexBot].main.size(); i++)
     {
         cout << "On visite la main du Bot" << endl;
         if (jeu.joueursBot[indexBot].main[i].getValeur() == 13)
@@ -138,7 +142,7 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c, int &indiceCarte)
             // On récupère la Couleur de la carte qui a la même valeur que talon
             int couleurCarte = jeu.joueursBot[indexBot].main[i].getCouleur();
             // Variable pour boucle tant que.
-            int k = 0;
+            unsigned int k = 0;
             // variable temp qui permet de compter le nombre de carte que l'on comparera si jamais au nombre de carte déjà trouvé dans d'autre couleur.
             int compareValeur = 0;
             switch (couleurCarte)
@@ -298,7 +302,7 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
     int randomNumber;
     srand(time(NULL));
     bool estJokerPlus = false;
-    if (carteSpeciale >= 0 && main[carteSpeciale].getValeur() == 13 || main[carteSpeciale].getValeur() == 14) // On change la couleur du joker ou du plus 4 avec la meilleur couleur a jouer.
+    if ((carteSpeciale >= 0) && (main[carteSpeciale].getValeur() == 13 || main[carteSpeciale].getValeur() == 14)) // On change la couleur du joker ou du plus 4 avec la meilleur couleur a jouer.
     {
         main[carteSpeciale].setCouleur(couleur);
         estJokerPlus = true;
@@ -508,7 +512,7 @@ void Bot::choixJeu(Jeu &jeu)
     cout << "L'indice de la carte du Plus 4 est : " << indCartePlus4 << endl;
     assert(nbCarteCouleur >= 0 || nbCarteValeur >= 0);
     // On compare les deux en prenant en compte que c'est mieux de finir une couleur avant d'en changer
-    if (jeu.casPart % 2 == 0 && jeu.talon.back().getValeur() == 12 || jeu.talon.back().getValeur() == 13)
+    if ((jeu.casPart % 2 == 0) && (jeu.talon.back().getValeur() == 12 || jeu.talon.back().getValeur() == 13))
     {
         if (nbCarteValeur == 0)
         { // On est dans le cas où le bot ne peut pas jouer car il n'a pas de carte +2 ou +4 ou parce qu'il n'a pas de +4.

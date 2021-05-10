@@ -127,11 +127,11 @@ void Joueur::trierMain()
 {
     Carte cMin;
     int indMin;
-    for (int i = 0; i < main.size(); i++)
+    for (unsigned int i = 0; i < main.size(); i++)
     {
         cMin = main[i];
         indMin = i;
-        for (int j = i + 1; j < main.size(); j++)
+        for (unsigned int j = i + 1; j < main.size(); j++)
             if (main[j] < cMin)
             {
                 cMin = main[j];
