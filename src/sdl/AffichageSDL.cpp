@@ -1575,7 +1575,7 @@ void sdlJeu::sdlEchange(Jeu &jeu)
     font_im.loadFromCurrentSurface(rendererEchange);
     SDL_RenderCopy(rendererEchange, font_im.getTexture(), NULL, &texte);
     unsigned int pos = ((LargeurEcran * 25 / 48) - (LargeurEcran * 5 / 96) * (jeu.nombreJoueurs - 1)) / 2;
-    for (unsigned int i = 0; i < jeu.nombreJoueurs + jeu.nombreIA - 1; i++)
+    for (unsigned int i = 0; i < jeu.nombreJoueurs + jeu.nombreIA; i++)
     {
         texte.x = pos + (LargeurEcran * 5 / 96) * i;
         texte.y = HauteurEcran * 25 / 216;
@@ -1588,15 +1588,20 @@ void sdlJeu::sdlEchange(Jeu &jeu)
         }
         else
         {
-            if (i < jeu.nombreJoueurs)
-            {
+            if (i < jeu.nombreJoueurs - 1 && jeu.nombreJoueurs != 1)
+            { // On doit afficher les joueurs après le joueur actif.
+                i += 1; // On ajoute un 1 pour réduire 
                 cout << "Affiche le nom des joueurs après celui actuel" << endl;
-                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[i + 1].nom.c_str(), noir));
+                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueurs[i].nom.c_str(), noir));
             }
-            else if (i >= jeu.nombreJoueurs)
-            {
+            else if (i >= jeu.nombreJoueurs - 1 && i != 0)
+            { // Si on 
                 cout << "Affichel les noms des bots après celui actuel" << endl;
-                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[i + 1].nom.c_str(), noir));
+                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[i - jeu.nombreJoueurs].nom.c_str(), noir));
+            }
+            else if(jeu.nombreJoueurs == 1 && i == 0)
+            { // Si on a 1 seul Joueur et au moins 1 bots.
+                font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[i].nom.c_str(), noir));
             }
         }
         font_im.loadFromCurrentSurface(rendererEchange);
@@ -1820,11 +1825,13 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
     // tant que ce n'est pas la fin ...
     while (!quit)
     {
+        cout << "Joueur actif debut boucle" << endl;
         cout << jeu.joueurActif << endl;
         if (jeu.joueurActif >= jeu.nombreJoueurs)
         {
-            if (jeu.joueursBot[jeu.joueurActif].main.size() == 0)
+            if (jeu.joueursBot[jeu.joueurActif - jeu.nombreJoueurs].main.size() == 0)
             {
+                cout << "Le bot a plus de carte c'est la fin du Jeu." << endl;
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                 SDL_RenderClear(renderer);
                 SDL_Rect texte;
@@ -1879,6 +1886,7 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                 else // Si le statut est encore à true alors on a pas appuyé donc on ne le fait pas piocher.
                     jeu.statut_Uno = false;
             }
+            cout << "Bot actif Joue" << endl;
             jeu.joueursBot[jeu.joueurActif - jeu.nombreJoueurs].choixJeu(jeu);
             if (jeu.talon.back().getValeur() == 13 || jeu.talon.back().getValeur() == 14)
             { // On affiche la nouvelle couleur posé par le bot quand c'est un +4 ou joker.
@@ -1907,6 +1915,15 @@ void sdlJeu::sdlBoucleJeu(Jeu &jeu)
                     jeu.pioche.pop();
                     jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
                     jeu.pioche.pop();
+                }
+                else if(jeu.nombreIA != 0)
+                { // Si il y a des bots en plus du Joueur n mais que le Joueur n n'a pas appuyé sur contre Uno les bots contre Uno direct.
+                    cout << "Le bot fait piocher le joueur alors que c'est le tour du Joueur n" << endl;
+                    jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
+                    jeu.pioche.pop();
+                    jeu.joueurs[indiceJoueur].main.push_back(jeu.pioche.top());
+                    jeu.pioche.pop();
+                    jeu.statut_Uno = false;
                 }
                 else
                 {

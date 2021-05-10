@@ -162,6 +162,7 @@ void VarianteEchange::echangeJeuVersionBot()
     unsigned int nombreJoueurMax = nombreJoueurs + nombreIA;
     // On génère un indice entre 0 et le nombre total de joueur + IA.
     unsigned int numJoueur = rand() % nombreJoueurMax;
+    cout << "Le bot echange son Jeu avec le joueur num " << numJoueur << endl;
     assert(numJoueur < nombreJoueurMax);
     if (numJoueur == joueurActif)
     { // On teste quand même si on est pas avec le même indice que le bot qui joue.
