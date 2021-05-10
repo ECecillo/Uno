@@ -119,7 +119,7 @@ int Bot::carteMemeValeurTalon(const Jeu &jeu, int &c, int &indiceCarte)
     //cout << " CARTE MEME VALEUR ########### L'actuel carte du talon est : " << jeu.talon.back().getValeur() << " et sa couleur est : " << (jeu.talon.back()).getCouleur() << endl;
     if ((jeu.casPart % 2 == 0 && jeu.casPart != 0) && (jeu.talon.back().getValeur() == 13 || jeu.talon.back().getValeur() == 12))
     {
-        int resCumul =  cartePourCumul(jeu, c, indiceCarte);
+        int resCumul = cartePourCumul(jeu, c, indiceCarte);
         assert(resCumul >= 0);
         return resCumul;
     }
@@ -320,7 +320,12 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
         else if (carteSpeciale >= 0) // Pas nécessairement un joker.
         {
             changeIndiceCarteSpeciale(carteSpeciale);
-            nbCarteRouge--;
+            if (nbCarteRouge == 0)
+            {
+                nbCarteRouge = 0;
+            }
+            else
+                nbCarteRouge--;
             jeu.poserCarte(carteSpeciale, er);
         }
         else
@@ -329,14 +334,24 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
             if (nbCarteRouge == 1)
             {
                 changeIndiceCarteSpeciale(0);
-                nbCarteRouge--;
+                if (nbCarteRouge == 0)
+                {
+                    nbCarteRouge = 0;
+                }
+                else
+                    nbCarteRouge--;
                 jeu.poserCarte(0, er);
             }
             else
             {
                 max = rand() % nbCarteRouge;
                 changeIndiceCarteSpeciale(max);
-                nbCarteRouge--;
+                if (nbCarteRouge == 0)
+                {
+                    nbCarteRouge = 0;
+                }
+                else
+                    nbCarteRouge--;
                 jeu.poserCarte(max, er);
             }
         }
@@ -350,7 +365,12 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
         }
         else if (carteSpeciale >= 0)
         {
-            nbCarteVert--;
+            if (nbCarteVert == 0)
+            {
+                nbCarteVert = 0;
+            }
+            else
+                nbCarteVert--;
             changeIndiceCarteSpeciale(carteSpeciale);
             jeu.poserCarte(carteSpeciale, er);
         }
@@ -365,14 +385,24 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
             if (min == max)
             {
                 changeIndiceCarteSpeciale(max);
-                nbCarteVert--;
+                if (nbCarteVert == 0)
+                {
+                    nbCarteVert = 0;
+                }
+                else
+                    nbCarteVert--;
                 jeu.poserCarte(max, er);
             }
             else
             {
                 randomNumber = (rand() % (max - min) + min);
                 changeIndiceCarteSpeciale(randomNumber);
-                nbCarteVert--;
+                if (nbCarteVert == 0)
+                {
+                    nbCarteVert = 0;
+                }
+                else
+                    nbCarteVert--;
                 jeu.poserCarte(randomNumber, er);
             }
         }
@@ -387,7 +417,12 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
         else if (carteSpeciale >= 0)
         {
             changeIndiceCarteSpeciale(carteSpeciale);
-            nbCarteBleu--;
+            if (nbCarteBleu == 0)
+            {
+                nbCarteBleu = 0;
+            }
+            else
+                nbCarteBleu--;
             jeu.poserCarte(carteSpeciale, er);
         }
         else
@@ -402,14 +437,24 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
             if (min == max)
             {
                 changeIndiceCarteSpeciale(max);
-                nbCarteBleu--;
+                if (nbCarteBleu == 0)
+                {
+                    nbCarteBleu = 0;
+                }
+                else
+                    nbCarteBleu--;
                 jeu.poserCarte(max, er);
             }
             else
             {
                 randomNumber = (rand() % (max - min) + min);
                 changeIndiceCarteSpeciale(randomNumber);
-                nbCarteBleu--;
+                if (nbCarteBleu == 0)
+                {
+                    nbCarteBleu = 0;
+                }
+                else
+                    nbCarteBleu--;
                 jeu.poserCarte(randomNumber, er);
             }
         }
@@ -420,7 +465,12 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
         //cout <<  "Nombre carte Rouge " << nbCarteJaune << endl;
         if (carteSpeciale >= 0)
         {
-            nbCarteJaune--;
+            if (nbCarteJaune == 0)
+            {
+                nbCarteJaune = 0;
+            }
+            else
+                nbCarteJaune--;
             jeu.poserCarte(carteSpeciale, er);
         }
         else
@@ -436,14 +486,24 @@ void Bot::joueCouleurSelonEntier(Jeu &jeu, int couleur, int carteSpeciale)
             if (min == max)
             {
                 changeIndiceCarteSpeciale(max);
-                nbCarteJaune--;
+                if (nbCarteJaune == 0)
+                {
+                    nbCarteJaune = 0;
+                }
+                else
+                    nbCarteJaune--;
                 jeu.poserCarte(max, er);
             }
             else
             {
                 randomNumber = (rand() % (max - min) + min);
                 changeIndiceCarteSpeciale(randomNumber);
-                nbCarteJaune--;
+                if (nbCarteJaune == 0)
+                {
+                    nbCarteJaune = 0;
+                }
+                else
+                    nbCarteJaune--;
                 jeu.poserCarte(randomNumber, er);
             }
         }
