@@ -3,7 +3,7 @@ SRCS_TEST = $(CORE) core/mainTest.cpp
 FINAL_TARGET_TEST = main_test
 DEFINE_TEST = -DJEU_TEST
 
-SRCS_TXT = $(CORE) txt/AffichageTxt.cpp txt/Fenetre.cpp txt/SalleAttente.cpp txtmainTxt.cpp 
+SRCS_TXT = $(CORE) txt/AffichageTxt.cpp txt/Fenetre.cpp txt/SalleAttente.cpp mainTxt.cpp 
 FINAL_TARGET_TXT = uno_txt
 DEFINE_TXT = -DJEU_TXT
 

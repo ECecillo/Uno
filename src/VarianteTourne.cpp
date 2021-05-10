@@ -8,9 +8,14 @@ VarianteTourne::~VarianteTourne()
 {
     delete[] joueurs;
     joueurs = NULL;
+
+    delete[] joueursBot;
+    joueursBot = NULL;
+
     sensJeu = 1;
     joueurActif = 0;
     nombreJoueurs = 0;
+    nombreIA = 0;
 }
 
 void VarianteTourne::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
