@@ -1610,11 +1610,7 @@ void sdlJeu::sdlEchange(Jeu &jeu)
             }
             else if (i >= jeu.nombreJoueurs)
             {
-<<<<<<< HEAD
-                
-=======
                 cout << "Affichel les noms des bots après celui actuel" << endl;
->>>>>>> SDL_MENU_FIX_WARNINGS
                 font_im.setSurface(TTF_RenderText_Solid(font, jeu.joueursBot[i + 1].nom.c_str(), noir));
             }
         }
