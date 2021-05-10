@@ -1,6 +1,4 @@
-#include "AffichageTxt.h"
-#include "Fenetre.h"
-#include <SalleAttente.h>
+#include "Jeu.h"
 #include <iostream>
 
 using namespace std;
