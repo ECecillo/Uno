@@ -143,7 +143,18 @@ public:
 		*/
 	bool operator==(const Carte &c);
 
+	/**
+	 * @brief 
+	 * Affiche le numéro et la couleur de la carte.
+	 * @param flux : le flux de la sortie standard. 
+	 */
 	void afficher(std::ostream &flux) const;
+	/**
+	 * @brief 
+	 * Surcharge de l'opérateur cout.
+	 * @param out 
+	 * @return ostream& 
+	 */
 	ostream& operator <<(ostream& out);
 
 };
