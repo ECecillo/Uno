@@ -1,13 +1,13 @@
-CORE = Joueur.cpp Jeu.cpp Bot.cpp Carte.cpp VarianteTourne.cpp VarianteDoublon.cpp VarianteEchange.cpp VarianteSuite.cpp VarianteCumul.cpp Menu.cpp
-SRCS_TEST = $(CORE) mainTest.cpp
+CORE = core/Joueur.cpp core/Jeu.cpp core/Bot.cpp core/Carte.cpp core/VarianteTourne.cpp core/VarianteDoublon.cpp core/VarianteEchange.cpp core/VarianteSuite.cpp core/VarianteCumul.cpp core/Menu.cpp
+SRCS_TEST = $(CORE) core/mainTest.cpp
 FINAL_TARGET_TEST = main_test
 DEFINE_TEST = -DJEU_TEST
 
-SRCS_TXT = $(CORE) AffichageTxt.cpp Fenetre.cpp SalleAttente.cpp mainTxt.cpp 
+SRCS_TXT = $(CORE) txt/AffichageTxt.cpp txt/Fenetre.cpp txt/SalleAttente.cpp txtmainTxt.cpp 
 FINAL_TARGET_TXT = uno_txt
 DEFINE_TXT = -DJEU_TXT
 
-SRCS_SDL = $(CORE) AffichageSDL.cpp mainSDL.cpp
+SRCS_SDL = $(CORE) sdl/AffichageSDL.cpp sdl/mainSDL.cpp
 FINAL_TARGET_SDL = uno_sdl
 DEFINE_SDL = -DJEU_SDL
 
