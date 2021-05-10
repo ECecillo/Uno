@@ -1,5 +1,3 @@
-#include <iostream>
-#include <cassert>
 #include "SalleAttente.h"
 
 using namespace std;

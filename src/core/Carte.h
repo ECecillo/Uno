@@ -1,6 +1,7 @@
 #ifndef CARTE_H
 #define CARTE_H
 
+#include <cassert>
 #include <iostream>
 using namespace std;
 

@@ -1,19 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <stack> // Pour les piles.
-#include <set>   // utile dans initCarte
-#include <cassert>
-#include <algorithm>
-#include <string.h>
 #include <Jeu.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <time.h>
-#include <random>
-#include <chrono>
-#include <Bot.h>
-
-using namespace std;
 
 // constructeur par défaut
 Jeu::Jeu()

@@ -1,7 +1,5 @@
 #include <Menu.h>
 
-using namespace std;
-
 Menu::Menu()
 { // On initialise les tableaux avec les chaines :
     initNomMenu();

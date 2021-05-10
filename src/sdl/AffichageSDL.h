@@ -9,8 +9,16 @@
 #include <Menu.h>
 #include <fstream>
 #include <sstream>
-
-//#include <cstring>
+#include <cassert>
+#include <time.h>
+#include <stdlib.h>
+#include "VarianteDoublon.h"
+#include "VarianteEchange.h"
+#include "VarianteTourne.h"
+#include "VarianteSuite.h"
+#include "VarianteCumul.h"
+#include "AffichageSDL.h"
+#include <iostream>
 
 #include "Jeu.h"
 

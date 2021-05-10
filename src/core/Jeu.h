@@ -3,10 +3,20 @@
 
 #include <stack> // Pour les piles.
 #include <queue>
-
 #include <Joueur.h>
 #include <Carte.h>
 #include <Bot.h>
+#include <iostream>
+#include <vector>
+#include <set>   // utile dans initCarte
+#include <cassert>
+#include <algorithm>
+#include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
+#include <random>
+#include <chrono>
 
 using namespace std;
 
