@@ -16,7 +16,7 @@ VarianteDoublon::~VarianteDoublon()
 void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messageErreur)
 {
     assert(indiceCarte >= 0);
-    if (joueurActif >= nombreJoueurs)
+    if (joueurActif >= nombreJoueurs) // bot
     {
         int indexBot = joueurActif - nombreJoueurs;
         if (carteValide(joueursBot[indexBot].main[indiceCarte]))
@@ -31,11 +31,6 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
                 joueursBot[indexBot].main.erase(joueursBot[indexBot].main.begin() + indice);
             }
 
-            // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
-            //joueursBot[indexBot].modifMainTxt();
-            // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
-            //joueursBot[indexBot].modifTalonPiocheTxt(talon, pioche);
-
             // gestion des cartes spéciales
             bool carteSpeciale = false;
             if (!testUno()) // Si on est pas dans le cas du Uno
@@ -44,14 +39,13 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
                 // gestion des cartes spéciales
                 switch ((talon.back()).getValeur())
                 {
-                case 10:
-                    cout << "Inverse" << endl;
+                case 10: // inverse
                     if (sensJeu == 1)
                         sensJeu = 0;
                     else
                         sensJeu = 1;
                     break;
-                case 11:
+                case 11: // passe
                     if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 1) // Si On passe le tour du dernier joueur on revient au premier.
                         joueurActif = 0;
                     else if (joueurActif == nombreJoueurs + nombreIA - 1 && sensJeu == 0)
@@ -64,7 +58,7 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
 
                     termineTour();
                     break;
-                case 12:
+                case 12: // +2
                     termineTour();
 
                     piocherCarte();
@@ -72,7 +66,7 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
                     carteSpeciale = true;
                     termineTour();
                     break;
-                case 13:
+                case 13: // +4
                     carteSpeciale = true;
                     joueursBot[indexBot].setCartePlus4(newIndice);
                     termineTour();
@@ -82,7 +76,7 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
                     //termineTour();
 
                     break;
-                case 14:
+                case 14: // joker
                     joueursBot[indexBot].setCarteJoker(newIndice);
                     termineTour();
                     carteSpeciale = true;
@@ -103,7 +97,7 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
             cout << messageErreur << endl;
         }
     }
-    else
+    else // humain
     {
         if (carteValide(joueurs[joueurActif].main[indiceCarte]))
         {                                                       // La carte qu'il veut poser est valide
@@ -113,37 +107,36 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
             testUno();
             casPart = 1;
             
-            // On appelle la fonction/Procédure qui efface le cadre de la carte et le texte.
+            // On appelle la procédure qui efface le cadre de la carte et le texte.
             joueurs[joueurActif].modifMainTxt();
-            // On appelle la F°/Proc qui met à jour la carte sur laquelle on joue.
+            // On appelle la procédure qui met à jour la carte sur laquelle on joue.
             joueurs[joueurActif].modifTalonPiocheTxt(talon, pioche);
 
             // gestion des cartes spéciales
             switch ((talon.back()).getValeur())
             {
-            case 10:
-                cout << "Inverse" << endl;
+            case 10: // inverse
                 if (sensJeu == 1)
                     sensJeu = 0;
                 else
                     sensJeu = 1;
                 break;
-            case 11:
+            case 11: // passe
                 termineTour();
                 break;
-            case 12:
+            case 12: // +2
                 termineTour();
 
                 piocherCarte();
                 piocherCarte();
                 break;
-            case 13:
+            case 13: // +4
                 termineTour();
 
                 for (unsigned int i = 0; i < 4; i++)
                     piocherCarte();
                 break;
-            case 14:
+            case 14: // joker
                 break;
             }
             if(casPart != 1) termineTour();
@@ -161,12 +154,12 @@ void VarianteDoublon::poserCarte(const unsigned int &indiceCarte, string &messag
 int VarianteDoublon::indiceDoublon(Carte c, vector<Carte> m)
 {
     for (int i = 0; i < m.size(); i++)
-    {
+    {   
         if ((c.getValeur() == 13 && m[i].getValeur() == 13) || (c.getValeur() == 14 && m[i].getValeur() == 14)) //cas joker et +4, pas besoin de tester la couleur
         {
             return i;
         }
-        else if (c.getValeur() == m[i].getValeur() && c.getCouleur() == m[i].getCouleur())
+        else if (c.getValeur() == m[i].getValeur() && c.getCouleur() == m[i].getCouleur()) // pour les autres cartes, on teste aussi la couleur
         {
             return i;
         }

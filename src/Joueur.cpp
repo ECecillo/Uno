@@ -103,6 +103,7 @@ void Joueur::insererCarteAdversairePositionJ(const unsigned int indj, const Joue
 {
     assert(indj<180);
     int i = 0;
+    // nom du joueur
     while (j.nom[i]!='\0') 
     {
         tableJoueur[0][indj+i]=j.nom[i];
@@ -154,11 +155,13 @@ void Joueur::effacerMainTxt()
 void Joueur::dessinerMainTxt()
 {
     int ind = 0;
+    // le nom
     while (nom[ind]!='\0') 
     {
         tableJoueur[21][0+ind]=nom[ind];
         ind++;
     }
+    // les cartes
     for (unsigned int i = 0; i < main.size(); i++)
     {
         if (indiceEtoile == i) // On affiche le curseur dans la carte à l'indice i.
@@ -187,11 +190,12 @@ void Joueur::modifTalonPiocheTxt(const queue<Carte> &t, const stack<Carte> &p)
     // écrit la carte du talon dans tableJoueur
     unsigned int v = t.back().getValeur();
     unsigned int c = t.back().getCouleur();
+    // écrit la valeur numérique de la carte
     for (int i = 0; i < 5; i++)
         tableJoueur[15][103 + i] = ' ';
     if (v >= 0 && v <= 9)
         tableJoueur[15][105] = '0' + v;
-    else
+    else // écrit le symbole de la carte
         switch (v)
         {
         case 10:
@@ -220,6 +224,7 @@ void Joueur::modifTalonPiocheTxt(const queue<Carte> &t, const stack<Carte> &p)
             tableJoueur[15][107] = 'r';
             break;
         }
+    // écrit la couleur
     for (int i = 0; i < 5; i++)
         tableJoueur[16][103 + i] = ' ';
     switch (c)
